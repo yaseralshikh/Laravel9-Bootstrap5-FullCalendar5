@@ -26,6 +26,7 @@ class Calendar extends Component
             'title'   => $this->title,
             'start'   => $this->start,
             'end'     => $this->end,
+            'color'     => '#298A08',
         ]);
 
         $this->reset();
