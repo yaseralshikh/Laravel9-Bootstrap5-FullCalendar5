@@ -71,12 +71,12 @@
 
                         <div class="mb-3">
                             {{-- <label for="start1" class="col-form-label">Start:</label> --}}
-                            <input type="hidden" wire:model.defer="start" class="form-control" id="start1">
+                            <input type="date" wire:model.defer="start" class="form-control" id="start1">
                         </div>
 
                         <div class="mb-3">
                             {{-- <label for="end1" class="col-form-label">End:</label> --}}
-                            <input type="hidden" wire:model.defer="end" class="form-control" id="end1">
+                            <input type="date" wire:model.defer="end" class="form-control" id="end1">
                         </div>
 
                         <div class="d-flex justify-content-between mt-5">
@@ -111,6 +111,7 @@
                 });
 
                 const calendarEl = document.getElementById('calendar');
+                const checkbox = document.getElementById('drop-remove');
                 const calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'dayGridMonth',
                     timeZone: 'local',
@@ -120,9 +121,11 @@
                     hiddenDays: [ 5,6 ],
                     //weekends: false,
                     //firstDay:0,
-                    dayMaxEvents: true, // allow "more" link when too many events
                     //themeSystem: 'bootstrap5',
+                    dayMaxEvents: 4, // allow "more" link when too many events
                     selectable: true,
+                    droppable: true, // this allows things to be dropped onto the calendar
+                    editable: true,
 
                     select: function({startStr,endStr}){
                         @this.start = startStr;
@@ -150,6 +153,25 @@
                         });
                         //info.el.style.backgroundColor = '#EFFBF8'
                     },
+
+                    drop: function(event) {
+                        // is the "remove after drop" checkbox checked?
+                        if (checkbox.checked) {
+                            // if so, remove the element from the "Draggable Events" list
+                            event.draggedEl.parentNode.removeChild(event.draggedEl);
+                        }
+                    },
+                    eventDrop: info => @this.eventDrop(info.event, info.oldEvent),
+                    loading: function(isLoading) {
+                        if (!isLoading) {
+                            // Reset custom events
+                            this.getEvents().forEach(function(e){
+                                if (e.source === null) {
+                                    e.remove();
+                                }
+                            });
+                        }
+                    }
 
                 });
                 calendar.addEventSource({

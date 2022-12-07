@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Event;
 use Livewire\Component;
+use Carbon\Carbon;
 
 class Calendar extends Component
 {
@@ -49,6 +50,18 @@ class Calendar extends Component
         Event::findOrFail($this->event_id)->delete();
 
         $this->dispatchBrowserEvent('closeModalEdit', ['close' => true]);
+        $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
+    }
+
+    public function eventDrop($event, $oldEvent)
+    {
+        $eventStart =  Carbon::create($event['start'])->toDateString();
+        $eventEnd =  Carbon::create($event['end'])->toDateString();
+
+        $eventdata = Event::find($event['id']);
+        $eventdata->start = $eventStart;
+        $eventdata->end = $eventEnd;
+        $eventdata->save();
         $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
     }
 
