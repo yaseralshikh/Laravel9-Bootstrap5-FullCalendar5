@@ -1,4 +1,4 @@
-<div wire:ignore>
+<div>
 
     @push('styles')
         <style>
@@ -7,10 +7,10 @@
     @endpush
 
     {{-- Calender --}}
-    <div id="calendar"></div>
+    <div id="calendar" wire:ignore></div>
 
     {{-- Create Event Modal --}}
-    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -41,7 +41,7 @@
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                     </form>
                 </div>
@@ -50,7 +50,7 @@
     </div>
 
     {{-- Edit Event Modal --}}
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -112,6 +112,7 @@
 
                 const calendarEl = document.getElementById('calendar');
                 const checkbox = document.getElementById('drop-remove');
+                const tooltip = null;
                 const calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'dayGridMonth',
                     timeZone: 'local',
@@ -143,15 +144,32 @@
 
                     // for show Tooltips //
                     eventDidMount: function (info) {
-                        $(info.el).popover({
-                            title: info.event.title,
+                        // $(info.el).popover({
+                        //     title: info.event.title,
+                        //     placement: 'top',
+                        //     trigger: 'hover',
+                        //     //content: dayjs(info.event.startStr).format('YYYY-MM-DD'),
+                        //     //content: info.event.extendedProps.user_id,
+                        //     container: 'body',
+                        // });
+                        //info.el.style.backgroundColor = '#EFFBF8'
+                    },
+
+                    eventMouseEnter: function (info) {
+                        $(info.el).tooltip({
+                            title: info.event.title + '<br />' + info.event.extendedProps.user_id,
+                            html: true,
+                            content:'ssss',
                             placement: 'top',
                             trigger: 'hover',
-                            //content: dayjs(info.event.startStr).format('YYYY-MM-DD'),
-                            content: info.event.extendedProps.user_id,
-                            container: 'body',
+                            container: 'body'
                         });
-                        //info.el.style.backgroundColor = '#EFFBF8'
+                    },
+
+                    eventMouseLeave:  function(info) {
+                        if (tooltip) {
+                            tooltip.dispose();
+                        }
                     },
 
                     drop: function(event) {

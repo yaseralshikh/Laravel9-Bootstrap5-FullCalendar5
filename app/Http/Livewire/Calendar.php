@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Event;
 use Livewire\Component;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class Calendar extends Component
 {
@@ -14,7 +15,7 @@ class Calendar extends Component
     public $event_id;
 
     protected $rules = [
-        'title' => 'required|string',
+        'title' => 'required',
     ];
 
     public function save()
