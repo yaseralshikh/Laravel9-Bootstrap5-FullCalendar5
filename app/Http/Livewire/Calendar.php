@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Event;
 use Livewire\Component;
 use Carbon\Carbon;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Calendar extends Component
 {
@@ -32,6 +33,13 @@ class Calendar extends Component
         $this->reset();
         $this->dispatchBrowserEvent('closeModalCreate', ['close' => true]);
         $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
+        $this->dispatchBrowserEvent('swal', [
+            'title' => 'Event Saved',
+            'timer'=>2000,
+            'icon'=>'success',
+            'toast'=>true,
+            'position'=>'center'
+        ]);
     }
 
     public function update()
@@ -44,6 +52,13 @@ class Calendar extends Component
 
         $this->dispatchBrowserEvent('closeModalEdit', ['close' => true]);
         $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
+        $this->dispatchBrowserEvent('swal', [
+            'title' => 'Event updated',
+            'timer'=>2000,
+            'icon'=>'success',
+            'toast'=>true,
+            'position'=>'center'
+        ]);
     }
 
     public function delete()
@@ -52,6 +67,13 @@ class Calendar extends Component
 
         $this->dispatchBrowserEvent('closeModalEdit', ['close' => true]);
         $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
+        $this->dispatchBrowserEvent('swal', [
+            'title' => 'Event deleted',
+            'timer'=>3000,
+            'icon'=>'success',
+            'toast'=>true,
+            'position'=>'center'
+        ]);
     }
 
     public function eventDrop($event, $oldEvent)
@@ -64,6 +86,13 @@ class Calendar extends Component
         $eventdata->end = $eventEnd;
         $eventdata->save();
         $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
+        $this->dispatchBrowserEvent('swal', [
+            'title' => 'Event updated',
+            'timer'=>2000,
+            'icon'=>'success',
+            'toast'=>true,
+            'position'=>'center'
+        ]);
     }
 
     public function render()

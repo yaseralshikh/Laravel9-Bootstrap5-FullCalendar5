@@ -223,6 +223,10 @@
                         calendar.setOption('locale', this.value);
                     }
                 });
+
+                window.addEventListener('swal',function(e){
+                    Swal.fire(e.detail);
+                });
             });
         </script>
     @endpush
