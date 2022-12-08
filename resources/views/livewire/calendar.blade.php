@@ -143,17 +143,17 @@
                     },
 
                     // for show Tooltips //
-                    eventDidMount: function (info) {
-                        // $(info.el).popover({
-                        //     title: info.event.title,
-                        //     placement: 'top',
-                        //     trigger: 'hover',
-                        //     //content: dayjs(info.event.startStr).format('YYYY-MM-DD'),
-                        //     //content: info.event.extendedProps.user_id,
-                        //     container: 'body',
-                        // });
-                        //info.el.style.backgroundColor = '#EFFBF8'
-                    },
+                    // eventDidMount: function (info) {
+                    //     $(info.el).popover({
+                    //         title: info.event.title,
+                    //         placement: 'top',
+                    //         trigger: 'hover',
+                    //         //content: dayjs(info.event.startStr).format('YYYY-MM-DD'),
+                    //         //content: info.event.extendedProps.user_id,
+                    //         container: 'body',
+                    //     });
+                    //     info.el.style.backgroundColor = '#EFFBF8'
+                    // },
 
                     eventMouseEnter: function (info) {
                         $(info.el).tooltip({
