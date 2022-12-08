@@ -62,6 +62,7 @@
                         <div class="mb-3">
                             <label for="title1" class="col-form-label">Title:</label>
                             <input type="text" wire:model.defer="title" class="form-control @error('title') is-invalid @enderror" id="title1">
+
                             @error('title')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -115,6 +116,10 @@
                 const tooltip = null;
                 const calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'dayGridMonth',
+                    headerToolbar: {
+                        right: 'title',
+                        left: 'dayGridMonth,listWeek,prev,next today'
+                    },
                     timeZone: 'local',
                     locale: 'ar-sa',
                     displayEventTime : false,
@@ -123,7 +128,7 @@
                     //weekends: false,
                     //firstDay:0,
                     //themeSystem: 'bootstrap5',
-                    dayMaxEvents: 4, // allow "more" link when too many events
+                    dayMaxEvents: 2, // allow "more" link when too many events
                     selectable: true,
                     droppable: true, // this allows things to be dropped onto the calendar
                     editable: true,
@@ -192,6 +197,7 @@
                     }
 
                 });
+
                 calendar.addEventSource({
                     url: '/api/calendar/events'
                 });
