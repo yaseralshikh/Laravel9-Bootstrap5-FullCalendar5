@@ -5,7 +5,6 @@ namespace App\Http\Livewire;
 use App\Models\Event;
 use Livewire\Component;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Validator;
 
 class Calendar extends Component
 {
