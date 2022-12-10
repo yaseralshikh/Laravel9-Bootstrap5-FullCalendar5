@@ -6,22 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Event extends Model
+class School extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'semester',
-        'title',
-        'start',
-        'end',
-        'user_id',
-        'color',
-        'status',
+        'name',
+        'level_id',
+        'director',
+        'mobile',
+        'idcard',
     ];
 
-    public function user(): BelongsTo
+    public function level(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Level::class);
     }
 }

@@ -10,7 +10,7 @@
                     <div class="card-body">
                         <form method="POST" action="{{ route('register') }}">
                             @csrf
-
+                            <!-- Name -->
                             <div class="mb-3 row">
                                 <label for="name" class="col-md-4 col-form-label text-end">
                                     {{ __('Name') }} :
@@ -27,7 +27,7 @@
                                     @enderror
                                 </div>
                             </div>
-
+                            <!-- E-Mail Address -->
                             <div class="mb-3 row">
                                 <label for="email" class="col-md-4 col-form-label text-end">
                                     {{ __('E-Mail Address') }} :
@@ -44,7 +44,31 @@
                                     @enderror
                                 </div>
                             </div>
+                            <!-- Specialization -->
+                            <div class="mb-3 row">
+                                <label for="specialization_id" class="col-md-4 col-form-label text-end">
+                                    {{ __('Specialization') }} :
+                                </label>
 
+                                <div class="col-md-6">
+                                    {{-- <input id="specialization" type="text" class="form-control @error('specialization') is-invalid @enderror"
+                                        name="specialization" value="{{ old('specialization') }}" required autocomplete="specialization" autofocus> --}}
+
+                                    <select name="specialization_id" class="form-select" aria-label="Default select example" @error('specialization_id') is-invalid @enderror>
+                                        {{-- <option selected>Open this select menu</option> --}}
+                                        @foreach ($specializations as $specialization)
+                                            <option value="{{ $specialization->id }}">{{ $specialization->name }}</option>
+                                        @endforeach
+                                    </select>
+
+                                    @error('specialization_id')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <!-- Password -->
                             <div class="mb-3 row">
                                 <label for="password" class="col-md-4 col-form-label text-end">
                                     {{ __('Password') }} :
@@ -62,7 +86,7 @@
                                     @enderror
                                 </div>
                             </div>
-
+                            <!-- Confirm Password -->
                             <div class="mb-3 row">
                                 <label for="password-confirm" class="col-md-4 col-form-label text-end">
                                     {{ __('Confirm Password') }} :

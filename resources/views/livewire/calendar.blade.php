@@ -2,7 +2,11 @@
 
     @push('styles')
         <style>
-
+            .fc .fc-toolbar {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
         </style>
     @endpush
 
@@ -19,9 +23,30 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="save">
+                        <!-- Semester -->
                         <div class="mb-3">
-                            <label for="title" class="col-form-label">Title:</label>
-                            <input type="text" wire:model.defer="title" class="form-control @error('title') is-invalid @enderror" id="title">
+                            <label for="semester" class="form-label">{{ __('Semester') }} :</label>
+                            <select name="semester" wire:model.defer="semester" class="form-select  @error('semester') is-invalid @enderror" id="semester">
+                                @foreach ($semesterItems as $item)
+                                    <option value="{{ $item }}">{{ $item }}</option>
+                                @endforeach
+                            </select>
+
+                            @error('semester')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="title" class="col-form-label">المهمة:</label>
+                            {{-- <input type="text" wire:model.defer="title" class="form-control @error('title') is-invalid @enderror" id="title"> --}}
+                            <select name="title" wire:model.defer="title" class="form-select  @error('title') is-invalid @enderror" id="title">
+                                @foreach ($schools as $school)
+                                    <option value="{{ $school->name }}">{{ $school->name }}</option>
+                                @endforeach
+                            </select>
                             @error('title')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -60,8 +85,28 @@
                 <div class="modal-body">
                     <form wire:submit.prevent="update">
                         <div class="mb-3">
+                            <label for="semester1" class="col-form-label">Semester :</label>
+
+                            <select wire:model.defer="semester" class="form-select  @error('semester') is-invalid @enderror" id="semester1">
+                                @foreach ($semesterItems as $item)
+                                    <option value="{{ $item }}">{{ $item }}</option>
+                                @endforeach
+                            </select>
+
+                            @error('semester')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
                             <label for="title1" class="col-form-label">Title:</label>
-                            <input type="text" wire:model.defer="title" class="form-control @error('title') is-invalid @enderror" id="title1">
+                            <select wire:model.defer="title" class="form-select  @error('title') is-invalid @enderror" id="title1">
+                                @foreach ($schools as $school)
+                                    <option value="{{ $school->name }}">{{ $school->name }}</option>
+                                @endforeach
+                            </select>
 
                             @error('title')
                                 <span class="invalid-feedback" role="alert">
@@ -71,12 +116,12 @@
                         </div>
 
                         <div class="mb-3">
-                            {{-- <label for="start1" class="col-form-label">Start:</label> --}}
+                            <label for="start1" class="col-form-label">Start:</label>
                             <input type="date" wire:model.defer="start" class="form-control" id="start1">
                         </div>
 
                         <div class="mb-3">
-                            {{-- <label for="end1" class="col-form-label">End:</label> --}}
+                            <label for="end1" class="col-form-label">End:</label>
                             <input type="date" wire:model.defer="end" class="form-control" id="end1">
                         </div>
 
@@ -98,6 +143,7 @@
             document.addEventListener('DOMContentLoaded', function() {
                 const createModalEl = document.getElementById('createModal');
                 createModalEl.addEventListener('hidden.bs.modal', event => {
+                    @this.semester = '';
                     @this.title = '';
                     @this.start = '';
                     @this.end = '';
@@ -106,6 +152,7 @@
                 const editModalEl = document.getElementById('editModal');
                 editModalEl.addEventListener('hidden.bs.modal', event => {
                     @this.event_id = '';
+                    @this.semester = '';
                     @this.title = '';
                     @this.start = '';
                     @this.end = '';
@@ -134,6 +181,8 @@
                     editable: true,
 
                     select: function({startStr,endStr}){
+                        const semester = $('#semester').val();
+                        @this.semester = semester;
                         @this.start = startStr;
                         @this.end = endStr;
                         $('#createModal').modal('toggle');
@@ -141,6 +190,7 @@
 
                     eventClick: function({event}) {
                         @this.event_id = event.id;
+                        @this.semester = event.extendedProps.semester;
                         @this.title = event.title;
                         @this.start = dayjs(event.startStr).format('YYYY-MM-DD');
                         @this.end = dayjs(event.endStr).format('YYYY-MM-DD');
@@ -162,7 +212,7 @@
 
                     eventMouseEnter: function (info) {
                         $(info.el).tooltip({
-                            title: info.event.title + '<br />' + info.event.extendedProps.user_id,
+                            title: info.event.title + '<br />' + info.event.extendedProps.semester + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
                             html: true,
                             content:'ssss',
                             placement: 'top',

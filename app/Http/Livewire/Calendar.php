@@ -2,19 +2,22 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Event;
-use Livewire\Component;
 use Carbon\Carbon;
+use App\Models\Event;
+use App\Models\School;
+use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Calendar extends Component
 {
+    public $semester;
     public $title;
     public $start;
     public $end;
     public $event_id;
 
     protected $rules = [
+        'semester' => 'required',
         'title' => 'required',
     ];
 
@@ -24,6 +27,7 @@ class Calendar extends Component
 
         Event::create([
             'user_id' => auth()->user()->id,
+            'semester' => $this->semester,
             'title'   => $this->title,
             'start'   => $this->start,
             'end'     => $this->end,
@@ -44,11 +48,15 @@ class Calendar extends Component
 
     public function update()
     {
+        $this->validate();
+
         Event::findOrFail($this->event_id)->update([
-            'title'   => $this->title,
-            'start'   => $this->start,
-            'end'     => $this->end,
+            'semester'  => $this->semester,
+            'title'     => $this->title,
+            'start'     => $this->start,
+            'end'       => $this->end,
         ]);
+
 
         $this->dispatchBrowserEvent('closeModalEdit', ['close' => true]);
         $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
@@ -76,7 +84,7 @@ class Calendar extends Component
         ]);
     }
 
-    public function eventDrop($event, $oldEvent)
+    public function eventDrop($event)
     {
         $eventStart =  Carbon::create($event['start'])->toDateString();
         $eventEnd =  Carbon::create($event['end'])->toDateString();
@@ -97,6 +105,8 @@ class Calendar extends Component
 
     public function render()
     {
-        return view('livewire.calendar');
+        $schools = School::all();
+        $semesterItems = ['ألفصل الدراسي الأول','الفصل الدراسي الثاني','الفصل الدراسي الثالث'];
+        return view('livewire.calendar', compact('schools','semesterItems'));
     }
 }
