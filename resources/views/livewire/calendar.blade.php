@@ -27,6 +27,7 @@
                         <div class="mb-3">
                             <label for="semester" class="form-label">{{ __('Semester') }} :</label>
                             <select name="semester" wire:model.defer="semester" class="form-select  @error('semester') is-invalid @enderror" id="semester">
+                                <option value="" selected>Choise :</option>
                                 @foreach ($semesterItems as $item)
                                     <option value="{{ $item }}">{{ $item }}</option>
                                 @endforeach
@@ -43,6 +44,7 @@
                             <label for="title" class="col-form-label">المهمة:</label>
                             {{-- <input type="text" wire:model.defer="title" class="form-control @error('title') is-invalid @enderror" id="title"> --}}
                             <select name="title" wire:model.defer="title" class="form-select  @error('title') is-invalid @enderror" id="title">
+                                <option value="" selected>Choise :</option>
                                 @foreach ($schools as $school)
                                     <option value="{{ $school->name }}">{{ $school->name }}</option>
                                 @endforeach
@@ -189,12 +191,23 @@
                     },
 
                     eventClick: function({event}) {
-                        @this.event_id = event.id;
-                        @this.semester = event.extendedProps.semester;
-                        @this.title = event.title;
-                        @this.start = dayjs(event.startStr).format('YYYY-MM-DD');
-                        @this.end = dayjs(event.endStr).format('YYYY-MM-DD');
-                        $('#editModal').modal('toggle');
+                        if (event.extendedProps.status) {
+                            Swal.fire({
+                                title: 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد من المكتب',
+                                timer: 4000,
+                                icon: 'error',
+                                toast: true,
+                                showConfirmButton: false,
+                                position: 'center'
+                            })
+                        } else {
+                            @this.event_id = event.id;
+                            @this.semester = event.extendedProps.semester;
+                            @this.title = event.title;
+                            @this.start = dayjs(event.startStr).format('YYYY-MM-DD');
+                            @this.end = dayjs(event.endStr).format('YYYY-MM-DD');
+                            $('#editModal').modal('toggle');
+                        }
                     },
 
                     // for show Tooltips //
@@ -239,9 +252,7 @@
                         if (!isLoading) {
                             // Reset custom events
                             this.getEvents().forEach(function(e){
-                                if (e.source === null) {
-                                    e.remove();
-                                }
+                                if (e.source === null) { e.remove(); }
                             });
                         }
                     }
