@@ -67,6 +67,9 @@
 
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <li>
+                                        @role(['admin|superadmin'])
+                                            <a class="dropdown-item" href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
+                                        @endrole
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}

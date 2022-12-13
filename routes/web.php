@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Livewire\Backend\Dashboard;
+use App\Http\Livewire\Backend\Users\ListUsers;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +22,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'role:admin|superadmin']], function () {
+    Route::get('/', Dashboard::class)->name('dashboard');
+    Route::get('users', ListUsers::class)->name('users');
+});

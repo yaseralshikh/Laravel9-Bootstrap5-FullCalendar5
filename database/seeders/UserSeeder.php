@@ -15,12 +15,14 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
+        $user = \App\Models\User::create([
             'name' => 'Yaser Alshikh',
             'email' => 'yaseralshikh@gmail.com',
             'specialization_id' => 14,
             'password' => bcrypt('123123123'),
             'status' => 1,
         ]);
+
+        $user->attachRole('superadmin');
     }
 }

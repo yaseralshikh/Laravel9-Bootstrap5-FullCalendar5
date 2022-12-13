@@ -39,7 +39,7 @@ class Calendar extends Component
               break;
             default:
                 $color = '#298A08';
-          }
+        }
 
         Event::create([
             'user_id' => auth()->user()->id,
