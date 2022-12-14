@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use PDF;
 
 class ListUsers extends Component
 {
@@ -430,21 +431,19 @@ class ListUsers extends Component
         }
     }
 
-    // public function exportPDF()
-    // {
-    //     return response()->streamDownload(function(){
-    //         if ($this->selectedRows) {
-    //             $users = User::whereIn('id', $this->selectedRows)->orderBy('name', 'asc')->get();
-    //         } else {
-    //             //$users = $this->users;
-    //             $users = User::orderBy('name', 'asc')->get();
-    //         }
-
-    //         $pdf = PDF::loadView('livewire.backend.admin.users.users_pdf',['users' => $users]);
-    //         return $pdf->stream('users');
-
-    //     },'users.pdf');
-    // }
+    public function exportPDF()
+    {
+        return response()->streamDownload(function(){
+            if ($this->selectedRows) {
+                $users = User::whereIn('id', $this->selectedRows)->orderBy('name', 'asc')->get();
+            } else {
+                //$users = $this->users;
+                $users = User::orderBy('name', 'asc')->get();
+            }
+            $pdf = PDF::loadView('livewire.backend.users.users_pdf',['users' => $users]);
+            return $pdf->stream('users');
+        },'users.pdf');
+    }
 
     public function render()
     {

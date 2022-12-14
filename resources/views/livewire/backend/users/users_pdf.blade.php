@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 	<head>
 		<meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<title>responsive HTML Users List</title>
 		<!-- Invoice styling -->
 		<style>
@@ -40,13 +41,11 @@
                 <thead class="">
                     <tr>
                         <th>#</th>
-                        <th>name</th>
-                        <th>username</th>
-                        <th>Phone</th>
-                        <th>email</th>
-                        <th>description</th>
-                        <th>address</th>
-                        <th>role</th>
+                        <th>Name</th>
+                        <th>ُmail</th>
+                        <th>Specialization</th>
+                        <th>Role</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,12 +53,10 @@
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $user->name }}</td>
-                            <td>{{ $user->username }}</td>
-                            <td>{{ $user->phone }}</td>
                             <td>{{ $user->email }}</td>
-                            <td>{{ $user->description }}</td>
-                            <td>{{ $user->address }}</td>
+                            <td>{{ $user->specialization->name }}</td>
                             <td>{{ $user->roles[0]->name }}</td>
+                            <td>{{ $user->status }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -76,7 +73,5 @@
                 هذا النص يمكن أن يتم تركيبه على أي تصميم دون مشكلة فلن يبدو وكأنه نص منسوخ، غير منظم، غير منسق، أو حتى غير مفهوم. لأنه مازال نصاً بديلاً ومؤقتاً.
             </p>
 		</div>
-        <script src="{{ asset('backend/plugins/jquery/jquery.min.js') }}"></script>
-        <script src="{{ asset('backend/js/jquery.printPage.js') }}" type="text/javascript"></script>
 	</body>
 </html>
