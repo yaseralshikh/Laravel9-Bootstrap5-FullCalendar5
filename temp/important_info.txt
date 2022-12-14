@@ -1,0 +1,64 @@
+git exist branch from GitHub :
+git clone -b laratrust https://github.com/yaseralshikh/laravel8_laratrust2.git
+-------------------
+after git colne :
+(( Edit .env file ))
+composer update
+cp .env.example .env
+php artisan key:generate
+npm i ; npm run dev
+------------------
+php artisan view:clear 
+php artisan route:clear 
+php artisan route:cache
+php artisan config:clear  
+php artisan config:cache  
+php artisan clear-compiled  
+php artisan cache:clear 
+# Clear the old boostrap/cache/compiled.php
+php artisan clear-compiled
+# Recreate boostrap/cache/compiled.php
+php artisan optimize
+composer dump-autoload
+-------------------
+php artisan migrate:fresh --seed
+php artisan route:cache
+-------------------
+info about branch system :
+git branch --show-current
+git branch Dashboard
+git checkout Dashboard
+git branch -d checkout
+-------------------
+for Push files to repositorie on github :
+git status
+git add .
+git commit -m "Constructed index Dashboard"
+git push -u origin Laratrust
+
+
+
+
+git init
+
+git remote add origin https://gitlab.com/crew-chief-systems/bot
+
+git remote -v (for checking current repository)
+
+git add -A(add all files)
+
+git commit -m 'Added my project'
+
+git pull --rebase origin master
+
+git push  origin master
+
+
+
+-------------------
+
+https://github.com/mccarlosen/laravel-mpdf
+
+to fix pdf problem :
+
+composer require psr/log ^2.0
