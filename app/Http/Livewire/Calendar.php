@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\School;
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Calendar extends Component
 {
@@ -49,6 +48,8 @@ class Calendar extends Component
             'end'     => $this->end,
             'color'     => $color,
         ]);
+
+        $this->events =
 
         $this->reset();
         $this->dispatchBrowserEvent('closeModalCreate', ['close' => true]);
@@ -123,28 +124,38 @@ class Calendar extends Component
     public function eventDrop($event)
     {
         $eventdata = Event::find($event['id']);
+        if ($eventdata->user_id == auth()->user()->id) {
+            if ($eventdata->status) {
+                $this->dispatchBrowserEvent('swal', [
+                    'title'                 => 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد من المكتب',
+                    'timer'                 =>4000,
+                    'icon'                  =>'error',
+                    'toast'                 =>true,
+                    'showConfirmButton'     => false,
+                    'position'              =>'center'
+                ]);
+            } else {
+                $eventStart =  Carbon::create($event['start'])->toDateString();
+                $eventEnd =  Carbon::create($event['end'])->toDateString();
 
-        if ($eventdata->status) {
-            $this->dispatchBrowserEvent('swal', [
-                'title'                 => 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد من المكتب',
-                'timer'                 =>4000,
-                'icon'                  =>'error',
-                'toast'                 =>true,
-                'showConfirmButton'     => false,
-                'position'              =>'center'
-            ]);
+                $eventdata->start = $eventStart;
+                $eventdata->end = $eventEnd;
+                $eventdata->save();
+
+                $this->dispatchBrowserEvent('swal', [
+                    'title'                 => 'Event updated',
+                    'timer'                 =>2000,
+                    'icon'                  =>'success',
+                    'toast'                 =>true,
+                    'showConfirmButton'     => false,
+                    'position'              =>'center'
+                ]);
+            }
         } else {
-            $eventStart =  Carbon::create($event['start'])->toDateString();
-            $eventEnd =  Carbon::create($event['end'])->toDateString();
-
-            $eventdata->start = $eventStart;
-            $eventdata->end = $eventEnd;
-            $eventdata->save();
-
             $this->dispatchBrowserEvent('swal', [
-                'title'                 => 'Event updated',
+                'title'                 => 'لا تملك الصلاحية للتعديل !!',
                 'timer'                 =>2000,
-                'icon'                  =>'success',
+                'icon'                  =>'error',
                 'toast'                 =>true,
                 'showConfirmButton'     => false,
                 'position'              =>'center'
@@ -158,6 +169,7 @@ class Calendar extends Component
     {
         $schools = School::all();
         $semesterItems = ['ألفصل الدراسي الأول','الفصل الدراسي الثاني','الفصل الدراسي الثالث'];
-        return view('livewire.calendar', compact('schools','semesterItems'));
+
+        return view('livewire.calendar', compact('schools', 'semesterItems'));
     }
 }

@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
-                            <div>{{ __('Dashboard') }}</div>
+                            <div>{{ __('اجندة المواعيد') }}</div>
                             {{-- Localization  Aria --}}
                             <div>
                                 <select class="form-select form-select-sm" id='locale-selector' aria-label=".form-select-sm Locales">

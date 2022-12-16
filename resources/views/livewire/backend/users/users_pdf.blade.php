@@ -19,8 +19,15 @@
                 border: 1px solid;
                 text-align: center;
             }
+            thead, tr ,th{
+                padding: 10px;
+            }
+            .counter{
+                padding: 10px;
+                text-align: left;
+            }
             th{
-                background-color: rgb(205, 205, 205);
+                background-color: rgb(225, 222, 222);
             }
             table {
                 width: 100%;
@@ -42,7 +49,7 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>
-                        <th>ُmail</th>
+                        <th>Mile</th>
                         <th>Specialization</th>
                         <th>Role</th>
                         <th>Status</th>
@@ -62,7 +69,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="8">Users : {{ $users->count() }}</th>
+                        <th class="counter" colspan="8">Users : {{ $users->count() }}</th>
                     </tr>
                 </tfoot>
             </table>

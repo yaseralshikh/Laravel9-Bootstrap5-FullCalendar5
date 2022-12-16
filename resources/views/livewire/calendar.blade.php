@@ -1,32 +1,56 @@
 <div>
 
-    @push('styles')
-        <style>
-            .fc .fc-toolbar {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-        </style>
+    @push('style')
+    <style>
+        .fc .fc-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            /* justify-content: center; */
+            font-size: 14px;
+            background-color: rgb(243, 243, 243);
+        }
+        .fc .fc-col-header {
+            background-color: rgb(51, 81, 133);
+        }
+
+        .fc-col-header-cell-cushion{
+            color:rgb(255, 254, 254);
+        }
+    </style>
     @endpush
+
+    <div class="alert alert-success" dir="rtl" role="alert">
+        <h4 class="alert-heading">ملاحظة :</h4>
+        <ul class="list-group list-group-flush">
+            <li>الالتزام بإعداد الخطة الاسبوعية قبل نهاية دوام كل يوم ثلاثاء من كل اسبوع دراسي.</li>
+            <li>مراعاة عدم حضور اكثر من مشرفين في المدرسة الواحدة.</li>
+            <li>الالتزام بالأيام المكتبية المتفق عليها حسب تعليمات إدارة المكتب.</li>
+            <li>التعديل عند اللزوم قبل اعتماد الخطط.</li>
+        </ul>
+        <hr>
+        <p class="mb-0">مع تحيات ادارة مكتب التعليم بوسط جازان - بنين.</p>
+    </div>
 
     {{-- Calender --}}
     <div id="calendar" wire:ignore></div>
 
     {{-- Create Event Modal --}}
-    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true" wire:ignore.self>
+    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true"
+        wire:ignore.self>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="createModalLabel">Create New Event</h1>
-                    {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
+                    {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    --}}
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="save">
                         <!-- Semester -->
                         <div class="mb-3">
                             <label for="semester" class="form-label">{{ __('Semester') }} :</label>
-                            <select name="semester" wire:model.defer="semester" class="form-select  @error('semester') is-invalid @enderror" id="semester">
+                            <select name="semester" wire:model.defer="semester"
+                                class="form-select  @error('semester') is-invalid @enderror" id="semester">
                                 <option value="" selected>Choise :</option>
                                 @foreach ($semesterItems as $item)
                                     <option value="{{ $item }}">{{ $item }}</option>
@@ -34,25 +58,27 @@
                             </select>
 
                             @error('semester')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
 
                         <div class="mb-3">
                             <label for="title" class="col-form-label">المهمة:</label>
-                            {{-- <input type="text" wire:model.defer="title" class="form-control @error('title') is-invalid @enderror" id="title"> --}}
-                            <select name="title" wire:model.defer="title" class="form-select  @error('title') is-invalid @enderror" id="title">
+                            {{-- <input type="text" wire:model.defer="title"
+                                class="form-control @error('title') is-invalid @enderror" id="title"> --}}
+                            <select name="title" wire:model.defer="title"
+                                class="form-select  @error('title') is-invalid @enderror" id="title">
                                 <option value="" selected>Choise :</option>
                                 @foreach ($schools as $school)
                                     <option value="{{ $school->name }}">{{ $school->name }}</option>
                                 @endforeach
                             </select>
                             @error('title')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
 
@@ -77,43 +103,47 @@
     </div>
 
     {{-- Edit Event Modal --}}
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true" wire:ignore.self>
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true"
+        wire:ignore.self>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="editModalLabel">Edit Event</h1>
-                    {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
+                    {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    --}}
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="update">
                         <div class="mb-3">
                             <label for="semester1" class="col-form-label">Semester :</label>
 
-                            <select wire:model.defer="semester" class="form-select  @error('semester') is-invalid @enderror" id="semester1">
+                            <select wire:model.defer="semester"
+                                class="form-select  @error('semester') is-invalid @enderror" id="semester1">
                                 @foreach ($semesterItems as $item)
                                     <option value="{{ $item }}">{{ $item }}</option>
                                 @endforeach
                             </select>
 
                             @error('semester')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
 
                         <div class="mb-3">
                             <label for="title1" class="col-form-label">Title:</label>
-                            <select wire:model.defer="title" class="form-select  @error('title') is-invalid @enderror" id="title1">
+                            <select wire:model.defer="title" class="form-select  @error('title') is-invalid @enderror"
+                                id="title1">
                                 @foreach ($schools as $school)
                                     <option value="{{ $school->name }}">{{ $school->name }}</option>
                                 @endforeach
                             </select>
 
                             @error('title')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
 
@@ -141,8 +171,8 @@
     </div>
 
     @push('script')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
                 const createModalEl = document.getElementById('createModal');
                 createModalEl.addEventListener('hidden.bs.modal', event => {
                     @this.semester = '';
@@ -163,6 +193,7 @@
                 const calendarEl = document.getElementById('calendar');
                 const checkbox = document.getElementById('drop-remove');
                 const tooltip = null;
+                const userID = {{ auth()->user()->id }};
                 const calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'dayGridMonth',
                     headerToolbar: {
@@ -191,23 +222,35 @@
                     },
 
                     eventClick: function({event}) {
-                        if (event.extendedProps.status) {
+                        if (userID == event.extendedProps.user_id) {
+                            if (event.extendedProps.status) {
+                                Swal.fire({
+                                    title: 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد من المكتب',
+                                    timer: 4000,
+                                    icon: 'error',
+                                    toast: true,
+                                    showConfirmButton: false,
+                                    position: 'center'
+                                })
+                            } else {
+                                @this.event_id = event.id;
+                                @this.semester = event.extendedProps.semester;
+                                @this.title = event.title;
+                                @this.start = dayjs(event.startStr).format('YYYY-MM-DD');
+                                @this.end = dayjs(event.endStr).format('YYYY-MM-DD');
+                                $('#editModal').modal('toggle');
+                            }
+                        } else {
                             Swal.fire({
-                                title: 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد من المكتب',
+                                title: 'لا تملك الصلاحية للتعديل !!',
                                 timer: 4000,
                                 icon: 'error',
                                 toast: true,
                                 showConfirmButton: false,
                                 position: 'center'
                             })
-                        } else {
-                            @this.event_id = event.id;
-                            @this.semester = event.extendedProps.semester;
-                            @this.title = event.title;
-                            @this.start = dayjs(event.startStr).format('YYYY-MM-DD');
-                            @this.end = dayjs(event.endStr).format('YYYY-MM-DD');
-                            $('#editModal').modal('toggle');
                         }
+
                     },
 
                     // for show Tooltips //
@@ -225,7 +268,7 @@
 
                     eventMouseEnter: function (info) {
                         $(info.el).tooltip({
-                            title: info.event.title + '<br />' + info.event.extendedProps.semester + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
+                            title: info.event.extendedProps.semester  + '<br />' + info.event.title + '<br />'+ '<span class="text-info">' + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
                             html: true,
                             content:'ssss',
                             placement: 'top',
@@ -295,6 +338,6 @@
                     Swal.fire(e.detail);
                 });
             });
-        </script>
+    </script>
     @endpush
 </div>
