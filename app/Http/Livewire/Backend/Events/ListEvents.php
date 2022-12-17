@@ -26,8 +26,8 @@ class ListEvents extends Component
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
-    public $sortColumnName = 'created_at';
-    public $sortDirection = 'desc';
+    public $sortColumnName = 'start';
+    public $sortDirection = 'asc';
 
     public $showEditModal = false;
 
@@ -149,12 +149,21 @@ class ListEvents extends Component
 
     public function getEventsProperty()
 	{
-        $events = Event::query()
-        ->with('user')
-        ->where('title', 'like', '%'.$this->searchTerm.'%')
-        ->orderBy($this->sortColumnName, $this->sortDirection)
-        ->latest('created_at')
-        ->paginate(15);
+        // $events = Event::query()
+        // ->where('title', 'like', '%'.$this->searchTerm.'%')
+        // ->orderBy($this->sortColumnName, $this->sortDirection)
+        // ->latest('created_at')
+        // ->paginate(15);
+
+        $searchString = $this->searchTerm;
+
+        $events =  Event::with('user')
+        ->where('title', 'like', '%' . $searchString . '%')
+        ->orWhere(function ($query) use ($searchString) {
+            $query->whereHas('user', function ($q) use ($searchString) {
+                $q->where('name', 'like', '%' . $searchString . '%');
+            });
+        })->orderBy($this->sortColumnName, $this->sortDirection)->latest('created_at')->paginate(15);
 
         return $events;
 	}

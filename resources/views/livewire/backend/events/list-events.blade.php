@@ -111,9 +111,9 @@
                                     <th>#</th>
                                     <th>
                                         Name
-                                        <span wire:click="sortBy('name')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
-                                            <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                            <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                        <span wire:click="sortBy('user_id')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                            <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'user_id' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                            <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'user_id' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                         </span>
                                     </th>
                                     <th>
@@ -138,11 +138,7 @@
                                         </span>
                                     </th>
                                     <th>
-                                        End
-                                        <span wire:click="sortBy('title')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
-                                            <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'title' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                            <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'title' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                        </span>
+                                        days
                                     </th>
                                     <th>
                                         Semester
@@ -174,8 +170,11 @@
                                         <td class="dtr-control sorting_1" tabindex="0">{{ $event->user->name }}</td>
                                         <td>{{ $event->user->specialization->name }}</td>
                                         <td style="color: {{ $event->color }};">{{ $event->title }}</td>
-                                        <td>{{ Carbon\Carbon::parse($event->start)->toDateString() }}</td>
-                                        <td>{{ Carbon\Carbon::parse($event->end)->toDateString() }}</td>
+                                        <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start) }}<br>
+                                            {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->start) }}<br>
+                                            {{ Carbon\Carbon::parse($event->start)->toDateString() }}
+                                        </td>
+                                        <td>{{ (Carbon\Carbon::parse($event->end))->diffInDays(Carbon\Carbon::parse($event->start)) }}</td>
                                         <td>{{ $event->semester }}</td>
                                         <td>
                                             <span  class="font-weight-bold badge text-white {{ $event->status == 1 ? 'bg-success' : 'bg-secondary' }}">
