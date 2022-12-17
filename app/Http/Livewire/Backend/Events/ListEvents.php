@@ -159,11 +159,12 @@ class ListEvents extends Component
 
         $events =  Event::with('user')
         ->where('title', 'like', '%' . $searchString . '%')
+        ->orWhere('semester', 'like', '%' . $searchString . '%')
         ->orWhere(function ($query) use ($searchString) {
             $query->whereHas('user', function ($q) use ($searchString) {
                 $q->where('name', 'like', '%' . $searchString . '%');
             });
-        })->orderBy($this->sortColumnName, $this->sortDirection)->latest('created_at')->paginate(15);
+        })->orderBy($this->sortColumnName, $this->sortDirection)->latest('created_at')->paginate(100);
 
         return $events;
 	}

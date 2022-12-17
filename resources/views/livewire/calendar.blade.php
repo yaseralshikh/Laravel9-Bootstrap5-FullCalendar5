@@ -214,11 +214,12 @@
                     //firstDay:0,
                     //themeSystem: 'bootstrap5',
                     dayMaxEvents: 5, // allow "more" link when too many events
-                    selectable: true,
+                    //selectable: true,
+                    selectable: false,
                     droppable: true, // this allows things to be dropped onto the calendar
                     editable: true,
 
-                    select: function({startStr,endStr}){
+                    dateClick: function({startStr,endStr}){
                         const semester = $('#semester').val();
                         @this.semester = semester;
                         @this.start = startStr;
