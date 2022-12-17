@@ -16,6 +16,9 @@
         .fc-col-header-cell-cushion{
             color:rgb(255, 254, 254);
         }
+        .fc .fc-daygrid-day-frame {
+            background-color: rgb(251, 251, 238);
+        }
     </style>
     @endpush
 
@@ -194,6 +197,8 @@
                 const checkbox = document.getElementById('drop-remove');
                 const tooltip = null;
                 const userID = {{ auth()->user()->id }};
+                const userRole = {{ auth()->user()->roles[0]->id }};
+
                 const calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'dayGridMonth',
                     headerToolbar: {
@@ -208,7 +213,7 @@
                     //weekends: false,
                     //firstDay:0,
                     //themeSystem: 'bootstrap5',
-                    dayMaxEvents: 2, // allow "more" link when too many events
+                    dayMaxEvents: 5, // allow "more" link when too many events
                     selectable: true,
                     droppable: true, // this allows things to be dropped onto the calendar
                     editable: true,
@@ -222,7 +227,7 @@
                     },
 
                     eventClick: function({event}) {
-                        if (userID == event.extendedProps.user_id) {
+                        if (userID == event.extendedProps.user_id || userRole == 2||3) {
                             if (event.extendedProps.status) {
                                 Swal.fire({
                                     title: 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد من المكتب',

@@ -30,7 +30,7 @@
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url('home') }}">
                     {{-- {{ config('app.name', 'Laravel') }} --}}
@@ -91,45 +91,44 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main>
             @yield('content')
         </main>
 
-        <footer class="text-center text-white" style="background-color: #f1f1f1;">
+        <footer class="text-center bg-dark text-white">
             <!-- Grid container -->
             <div class="container p-4">
                 <!-- Section: Social media -->
                 <section>
                     <!-- Facebook -->
-                    <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button"
+                    <a class="btn btn-link btn-floating btn-lg text-white m-1" href="#!" role="button"
                         data-mdb-ripple-color="dark">
                         <i class="fa fa-facebook-f"></i>
                     </a>
 
                     <!-- Twitter -->
-                    <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button"
+                    <a class="btn btn-link btn-floating btn-lg text-white m-1" href="#!" role="button"
                         data-mdb-ripple-color="dark">
                         <i class="fa fa-twitter"></i>
                     </a>
 
                     <!-- Google -->
-                    <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button"
+                    <a class="btn btn-link btn-floating btn-lg text-white m-1" href="#!" role="button"
                         data-mdb-ripple-color="dark">
                         <i class="fa fa-google"></i>
                     </a>
 
                     <!-- Instagram -->
-                    <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button"
+                    <a class="btn btn-link btn-floating btn-lg text-white m-1" href="#!" role="button"
                         data-mdb-ripple-color="dark">
                         <i class="fa fa-instagram"></i>
                     </a>
                 </section>
                 <!-- Section: Social media -->
-
+                <hr>
                 <!-- Copyright -->
-                <div class="text-center text-dark">
-                    © 2022 Copyright:
-                    <a class="text-dark" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+                <div class="text-center text-white ">
+                    © 2022 Copyright: <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
                 </div>
                 <!-- Copyright -->
             </div>

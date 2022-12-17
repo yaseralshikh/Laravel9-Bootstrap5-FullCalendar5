@@ -49,8 +49,6 @@ class Calendar extends Component
             'color'     => $color,
         ]);
 
-        $this->events =
-
         $this->reset();
         $this->dispatchBrowserEvent('closeModalCreate', ['close' => true]);
         $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
@@ -124,7 +122,7 @@ class Calendar extends Component
     public function eventDrop($event)
     {
         $eventdata = Event::find($event['id']);
-        if ($eventdata->user_id == auth()->user()->id) {
+        if (($eventdata->user_id == auth()->user()->id) || (auth()->user()->roles[0]->id == 2||3)) {
             if ($eventdata->status) {
                 $this->dispatchBrowserEvent('swal', [
                     'title'                 => 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد من المكتب',

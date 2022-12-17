@@ -43,6 +43,7 @@
                     </a>
                 </li>
                 <li class="nav-header text-secondary"><h6>Multy Users</h6></li>
+
                 <li class="nav-item">
                     <a href="{{ route('admin.users') }}" class="nav-link {{ request()->is('admin/users') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-users"></i>
@@ -61,6 +62,16 @@
                     </a>
                 </li>
                 @endrole
+                <li class="nav-header text-secondary"><h6>Events</h6></li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.events') }}" class="nav-link {{ request()->is('admin/events') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Events
+                        </p>
+                    </a>
+                </li>
+
                 <li class="nav-header text-secondary"><h6>Search</h6></li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">
