@@ -13,15 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('events', function (Blueprint $table) {
+        Schema::create('semesters', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->datetime('start');
-            $table->datetime('end');
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('week_id')->constrained();
-            $table->string('color')->nullable();
-            $table->unsignedTinyInteger('status')->default(0);
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -33,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('semesters');
     }
 };

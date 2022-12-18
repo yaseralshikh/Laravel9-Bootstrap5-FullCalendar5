@@ -16,9 +16,9 @@
         .fc-col-header-cell-cushion{
             color:rgb(255, 254, 254);
         }
-        .fc .fc-daygrid-day-frame {
-            background-color: rgb(251, 251, 238);
-        }
+        /* .fc .fc-daygrid-day-frame {
+            background-color: rgb(236, 236, 236);
+        } */
     </style>
     @endpush
 
