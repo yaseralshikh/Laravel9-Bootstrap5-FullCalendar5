@@ -141,10 +141,10 @@
                                         days
                                     </th> --}}
                                     <th>
-                                        Semester
-                                        <span wire:click="sortBy('semester')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
-                                            <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'semester' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                            <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'semester' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                        School Week
+                                        <span wire:click="sortBy('week_id')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                            <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'week_id' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                            <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'week_id' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                         </span>
                                     </th>
                                     <th>
@@ -175,7 +175,7 @@
                                             {{ Carbon\Carbon::parse($event->start)->toDateString() }}
                                         </td>
                                         {{-- <td>{{ (Carbon\Carbon::parse($event->end))->diffInDays(Carbon\Carbon::parse($event->start)) }}</td> --}}
-                                        <td>{{ $event->semester }}</td>
+                                        <td>{{ $event->week->title }}</td>
                                         <td>
                                             <span  class="font-weight-bold badge text-white {{ $event->status == 1 ? 'bg-success' : 'bg-secondary' }}">
                                                 {{ $event->status() }}

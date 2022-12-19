@@ -152,13 +152,13 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="start1" class="col-form-label">Start:</label>
-                            <input type="date" wire:model.defer="start" class="form-control" id="start1">
+                            {{-- <label for="start1" class="col-form-label">Start:</label> --}}
+                            <input type="hidden" wire:model.defer="start" class="form-control" id="start1">
                         </div>
 
                         <div class="mb-3">
-                            <label for="end1" class="col-form-label">End:</label>
-                            <input type="date" wire:model.defer="end" class="form-control" id="end1">
+                            {{-- <label for="end1" class="col-form-label">End:</label> --}}
+                            <input type="hidden" wire:model.defer="end" class="form-control" id="end1">
                         </div>
 
                         <div class="d-flex justify-content-between mt-5">
@@ -215,17 +215,25 @@
                     //firstDay:0,
                     //themeSystem: 'bootstrap5',
                     dayMaxEvents: 5, // allow "more" link when too many events
-                    selectable: true,
-                    //selectable: false,
+                    //selectable: true,
+                    selectable: false,
                     droppable: true, // this allows things to be dropped onto the calendar
                     editable: true,
 
-                    select: function({startStr,endStr}){
-                        console.log(startStr);
-                        @this.start = startStr;
-                        @this.end = endStr;
+                    dateClick: function(info){
+                        var startDate = info.dateStr;
+                        var endDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() + 1));
+                        @this.start = startDate;
+                        @this.end = endDate.toISOString().substr(0, 10);
                         $('#createModal').modal('toggle');
                     },
+
+                    // for select multiple days
+                    // select: function(info){
+                    //     @this.start = startStr;
+                    //     @this.end = endStr;
+                    //     $('#createModal').modal('toggle');
+                    // },
 
                     eventClick: function({event}) {
                         if (userID == event.extendedProps.user_id || userRole == 2||3) {

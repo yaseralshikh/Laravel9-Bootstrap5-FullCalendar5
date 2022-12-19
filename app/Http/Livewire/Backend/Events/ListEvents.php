@@ -159,10 +159,14 @@ class ListEvents extends Component
 
         $events =  Event::with('user')
         ->where('title', 'like', '%' . $searchString . '%')
-        ->orWhere('semester', 'like', '%' . $searchString . '%')
         ->orWhere(function ($query) use ($searchString) {
             $query->whereHas('user', function ($q) use ($searchString) {
                 $q->where('name', 'like', '%' . $searchString . '%');
+            });
+        })
+        ->orWhere(function ($query) use ($searchString) {
+            $query->whereHas('week', function ($q) use ($searchString) {
+                $q->where('title', 'like', '%' . $searchString . '%');
             });
         })->orderBy($this->sortColumnName, $this->sortDirection)->latest('created_at')->paginate(100);
 
@@ -185,7 +189,7 @@ class ListEvents extends Component
     {
         $validatedData = Validator::make($this->data, [
 			'title'                  => 'required',
-			'semester'               => 'required',
+			'week_id'               => 'required',
 			'start'                  => 'required',
 			'end'                    => 'required',
             'status'                 => 'required',
@@ -228,7 +232,7 @@ class ListEvents extends Component
         try {
             $validatedData = Validator::make($this->data, [
                 'title'                  => 'required',
-                'semester'               => 'required',
+                'week_id'               => 'required',
                 'start'                  => 'required',
                 'end'                    => 'required',
                 'status'                 => 'required',
