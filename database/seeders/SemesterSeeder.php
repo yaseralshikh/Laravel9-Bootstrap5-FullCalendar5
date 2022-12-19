@@ -18,7 +18,9 @@ class SemesterSeeder extends Seeder
         $semester = ['الفصل الدراسي الأول' ,'الفصل الدراسي الثاني' ,'الفصل الدراسي الثالث'];
         for ($i=0; $i < 3; $i++) {
             Semester::create([
-                'name' => $semester[$i]
+                'title' => $semester[$i],
+                'school_year' => 1444,
+                'status' => 1
             ]);
         }
     }

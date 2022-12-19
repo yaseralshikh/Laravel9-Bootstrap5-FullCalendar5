@@ -56,7 +56,7 @@
                                 class="form-select  @error('week_id') is-invalid @enderror" id="week_id">
                                 <option value="" selected>Choise :</option>
                                 @foreach ($weeks as $week)
-                                    <option value="{{ $week->id }}">{{ $week->title }}</option>
+                                    <option value="{{ $week->id }}">{{ $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
                                 @endforeach
                             </select>
 
@@ -124,7 +124,7 @@
                             <select wire:model.defer="week_id"
                                 class="form-select  @error('week_id') is-invalid @enderror" id="week_d_1">
                                 @foreach ($weeks as $week)
-                                    <option value="{{ $week->id }}">{{ $week->title }}</option>
+                                    <option value="{{ $week->id }}">{{ $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
                                 @endforeach
                             </select>
 
@@ -282,7 +282,7 @@
 
                     eventMouseEnter: function (info) {
                         $(info.el).tooltip({
-                            title: info.event.extendedProps.week.title  + '<br />' + info.event.title + '<br />'+ '<span class="text-info">' + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
+                            title: info.event.extendedProps.week.title + ' ( ' + info.event.extendedProps.week.semester.school_year  + ' ) ' + '<br />' + info.event.title + '<br />'+ '<span class="text-info">' + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
                             html: true,
                             content:'ssss',
                             placement: 'top',

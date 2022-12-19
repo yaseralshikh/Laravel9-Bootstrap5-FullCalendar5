@@ -167,7 +167,7 @@ class Calendar extends Component
     public function render()
     {
         $schools = School::all();
-        $weeks = Week::all();
+        $weeks = Week::where('status', true)->get();
 
         return view('livewire.calendar', compact('schools', 'weeks'));
     }
