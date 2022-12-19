@@ -49,18 +49,18 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="save">
-                        <!-- Semester -->
+                        <!-- Week -->
                         <div class="mb-3">
-                            <label for="semester" class="form-label">{{ __('Semester') }} :</label>
-                            <select name="semester" wire:model.defer="semester"
-                                class="form-select  @error('semester') is-invalid @enderror" id="semester">
+                            <label for="week_id" class="form-label">{{ __('School Week') }} :</label>
+                            <select name="week_id" wire:model.defer="week_id"
+                                class="form-select  @error('week_id') is-invalid @enderror" id="week_id">
                                 <option value="" selected>Choise :</option>
-                                @foreach ($semesterItems as $item)
-                                    <option value="{{ $item }}">{{ $item }}</option>
+                                @foreach ($weeks as $week)
+                                    <option value="{{ $week->id }}">{{ $week->title }}</option>
                                 @endforeach
                             </select>
 
-                            @error('semester')
+                            @error('week_id')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -117,17 +117,18 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="update">
+                        <!-- Week -->
                         <div class="mb-3">
-                            <label for="semester1" class="col-form-label">Semester :</label>
+                            <label for="week_id_1" class="col-form-label">School Week :</label>
 
-                            <select wire:model.defer="semester"
-                                class="form-select  @error('semester') is-invalid @enderror" id="semester1">
-                                @foreach ($semesterItems as $item)
-                                    <option value="{{ $item }}">{{ $item }}</option>
+                            <select wire:model.defer="week_id"
+                                class="form-select  @error('week_id') is-invalid @enderror" id="week_d_1">
+                                @foreach ($weeks as $week)
+                                    <option value="{{ $week->id }}">{{ $week->title }}</option>
                                 @endforeach
                             </select>
 
-                            @error('semester')
+                            @error('week_id')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -178,7 +179,7 @@
         document.addEventListener('DOMContentLoaded', function() {
                 const createModalEl = document.getElementById('createModal');
                 createModalEl.addEventListener('hidden.bs.modal', event => {
-                    @this.semester = '';
+                    @this.week_id = '';
                     @this.title = '';
                     @this.start = '';
                     @this.end = '';
@@ -187,7 +188,7 @@
                 const editModalEl = document.getElementById('editModal');
                 editModalEl.addEventListener('hidden.bs.modal', event => {
                     @this.event_id = '';
-                    @this.semester = '';
+                    @this.week_id = '';
                     @this.title = '';
                     @this.start = '';
                     @this.end = '';
@@ -214,14 +215,13 @@
                     //firstDay:0,
                     //themeSystem: 'bootstrap5',
                     dayMaxEvents: 5, // allow "more" link when too many events
-                    //selectable: true,
-                    selectable: false,
+                    selectable: true,
+                    //selectable: false,
                     droppable: true, // this allows things to be dropped onto the calendar
                     editable: true,
 
-                    dateClick: function({startStr,endStr}){
-                        const semester = $('#semester').val();
-                        @this.semester = semester;
+                    select: function({startStr,endStr}){
+                        console.log(startStr);
                         @this.start = startStr;
                         @this.end = endStr;
                         $('#createModal').modal('toggle');
@@ -240,7 +240,7 @@
                                 })
                             } else {
                                 @this.event_id = event.id;
-                                @this.semester = event.extendedProps.semester;
+                                @this.week_id = event.extendedProps.week_id;
                                 @this.title = event.title;
                                 @this.start = dayjs(event.startStr).format('YYYY-MM-DD');
                                 @this.end = dayjs(event.endStr).format('YYYY-MM-DD');
@@ -273,8 +273,9 @@
                     // },
 
                     eventMouseEnter: function (info) {
+                        console.log({info});
                         $(info.el).tooltip({
-                            title: info.event.extendedProps.semester  + '<br />' + info.event.title + '<br />'+ '<span class="text-info">' + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
+                            title: info.event.extendedProps.week_id  + '<br />' + info.event.title + '<br />'+ '<span class="text-info">' + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
                             html: true,
                             content:'ssss',
                             placement: 'top',

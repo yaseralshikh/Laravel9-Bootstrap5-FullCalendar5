@@ -4,19 +4,20 @@ namespace App\Http\Livewire;
 
 use Carbon\Carbon;
 use App\Models\Event;
+use App\Models\Week;
 use App\Models\School;
 use Livewire\Component;
 
 class Calendar extends Component
 {
-    public $semester;
+    public $week_id;
     public $title;
     public $start;
     public $end;
     public $event_id;
 
     protected $rules = [
-        'semester' => 'required',
+        'week_id' => 'required',
         'title' => 'required',
     ];
 
@@ -42,7 +43,7 @@ class Calendar extends Component
 
         Event::create([
             'user_id' => auth()->user()->id,
-            'semester' => $this->semester,
+            'week_id'    => $this->week_id,
             'title'   => $this->title,
             'start'   => $this->start,
             'end'     => $this->end,
@@ -83,7 +84,7 @@ class Calendar extends Component
           }
 
         Event::findOrFail($this->event_id)->update([
-            'semester'  => $this->semester,
+            'week_id'      => $this->week_id,
             'title'     => $this->title,
             'start'     => $this->start,
             'end'       => $this->end,
@@ -166,8 +167,8 @@ class Calendar extends Component
     public function render()
     {
         $schools = School::all();
-        $semesterItems = ['ألفصل الدراسي الأول','الفصل الدراسي الثاني','الفصل الدراسي الثالث'];
+        $weeks = Week::all();
 
-        return view('livewire.calendar', compact('schools', 'semesterItems'));
+        return view('livewire.calendar', compact('schools', 'weeks'));
     }
 }
