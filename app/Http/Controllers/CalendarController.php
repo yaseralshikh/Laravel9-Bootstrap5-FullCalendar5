@@ -10,6 +10,6 @@ class CalendarController extends Controller
 {
     public function index()
     {
-        return Event::with('user')->with('week')->get();
+        return Event::with('user:id,name')->with('week:id,title')->get();
     }
 }

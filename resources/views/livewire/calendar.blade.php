@@ -273,9 +273,8 @@
                     // },
 
                     eventMouseEnter: function (info) {
-                        console.log({info});
                         $(info.el).tooltip({
-                            title: info.event.extendedProps.week_id  + '<br />' + info.event.title + '<br />'+ '<span class="text-info">' + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
+                            title: info.event.extendedProps.week.title  + '<br />' + info.event.title + '<br />'+ '<span class="text-info">' + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
                             html: true,
                             content:'ssss',
                             placement: 'top',
