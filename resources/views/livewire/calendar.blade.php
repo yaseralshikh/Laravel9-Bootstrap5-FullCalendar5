@@ -95,9 +95,20 @@
                             <input type="hidden" wire:model.defer="end" class="form-control" id="end">
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                            @role('admin|superadmin')
+                            <div class="form-check">
+                                <input class="form-check-input" wire:model.defer="all_user" type="checkbox" value="" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Event for All users
+                                </label>
+                            </div>
+                            @endrole
+
                         </div>
                     </form>
                 </div>
@@ -236,28 +247,28 @@
                     // },
 
                     eventClick: function({event}) {
-                        if (userID == event.extendedProps.user_id || userRole == 2||3) {
-                            if (event.extendedProps.status) {
+                        if (userID == event.extendedProps.user_id || userRole != 3) {
+                            if (event.extendedProps.status && userRole == 3) {
                                 Swal.fire({
                                     title: 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد من المكتب',
-                                    timer: 4000,
+                                    timer: 2000,
                                     icon: 'error',
                                     toast: true,
                                     showConfirmButton: false,
                                     position: 'center'
                                 })
                             } else {
-                                @this.event_id = event.id;
-                                @this.week_id = event.extendedProps.week_id;
-                                @this.title = event.title;
-                                @this.start = dayjs(event.startStr).format('YYYY-MM-DD');
-                                @this.end = dayjs(event.endStr).format('YYYY-MM-DD');
+                                @this.event_id  = event.id;
+                                @this.week_id   = event.extendedProps.week_id;
+                                @this.title     = event.title;
+                                @this.start     = dayjs(event.startStr).format('YYYY-MM-DD');
+                                @this.end       = dayjs(event.endStr).format('YYYY-MM-DD');
                                 $('#editModal').modal('toggle');
                             }
                         } else {
                             Swal.fire({
                                 title: 'لا تملك الصلاحية للتعديل !!',
-                                timer: 4000,
+                                timer: 2000,
                                 icon: 'error',
                                 toast: true,
                                 showConfirmButton: false,

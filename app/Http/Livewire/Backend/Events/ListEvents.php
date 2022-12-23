@@ -3,7 +3,11 @@
 namespace App\Http\Livewire\Backend\Events;
 
 use PDF;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Week;
 use App\Models\Event;
+use App\Models\School;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Exports\EventsExport;
@@ -188,15 +192,43 @@ class ListEvents extends Component
     public function createEvent()
     {
         $validatedData = Validator::make($this->data, [
-			'title'                  => 'required',
+			'title'                  => 'required|max:255',
+			'user_id'               => 'required',
 			'week_id'               => 'required',
 			'start'                  => 'required',
-			'end'                    => 'required',
+			//'end'                    => 'required',
             'status'                 => 'required',
 		])->validate();
 
+        switch ($validatedData['title']) {
+            case "يوم مكتبي":
+                $color = '#000000';
+              break;
+            case "برنامج تدريبي":
+                $color = '#eb6c0c';
+              break;
+            case "إجازة مطولة":
+                $color = '#cf87fa';
+              break;
+            default:
+                $color = '#298A08';
+        }
 
-		$event = Event::create($validatedData);
+        // $user = User::where('id', $validatedData['user_id'])->first();
+
+        // $username = $user->name;
+        // $username = explode(' ', $username);
+
+        // $firstName = $username[0];
+        // $lastName = (isset($username[count($username)-1])) ? $username[count($username)-1] : '';
+
+        // $validatedData['title'] = $validatedData['title'] . ' - ' . $firstName . ' '. $lastName;
+
+        $validatedData['color'] = $color;
+
+
+        $validatedData['end'] = date('Y-m-d', strtotime($validatedData['start']. ' + 1 days'));
+		Event::create($validatedData);
 
         $this->dispatchBrowserEvent('hide-form');
 
@@ -222,6 +254,8 @@ class ListEvents extends Component
 
 		$this->data = $event->toArray();
 
+		$this->data['start'] = Carbon::parse($this->data['start'])->toDateString();
+
 		$this->dispatchBrowserEvent('show-form');
     }
 
@@ -231,12 +265,32 @@ class ListEvents extends Component
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'title'                  => 'required',
+                'title'                  => 'required|max:255',
+                'user_id'               => 'required',
                 'week_id'               => 'required',
                 'start'                  => 'required',
-                'end'                    => 'required',
+                //'end'                    => 'required',
                 'status'                 => 'required',
             ])->validate();
+
+            switch ($validatedData['title']) {
+                case "يوم مكتبي":
+                    $color = '#000000';
+                  break;
+                case "برنامج تدريبي":
+                    $color = '#eb6c0c';
+                  break;
+                case "إجازة مطولة":
+                    $color = '#cf87fa';
+                  break;
+                default:
+                    $color = '#298A08';
+            }
+
+            $validatedData['color'] = $color;
+
+
+            $validatedData['end'] = date('Y-m-d', strtotime($validatedData['start']. ' + 1 days'));
 
             $this->event->update($validatedData);
 
@@ -346,8 +400,15 @@ class ListEvents extends Component
     public function render()
     {
         $events = $this->events;
+        $users = User::all();
+        $weeks = Week::all();
+        $schools = School::all();
+
         return view('livewire.backend.events.list-events',[
             'events' => $events,
+            'users' => $users,
+            'weeks' => $weeks,
+            'schools' => $schools,
         ])->layout('layouts.admin');
     }
 }

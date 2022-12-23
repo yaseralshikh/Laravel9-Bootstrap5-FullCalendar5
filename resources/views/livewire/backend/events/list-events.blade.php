@@ -85,7 +85,7 @@
                             </div>
                         </div>
 
-                        {{-- <label class="flex-wrap">Total Events : &nbsp{{ $event->total() }}</label> --}}
+                        <label class="flex-wrap">Total Events : &nbsp{{ $events->total() }}</label>
 
                     </div>
 
@@ -131,7 +131,7 @@
                                         </span> --}}
                                     </th>
                                     <th>
-                                        Start
+                                        Date
                                         <span wire:click="sortBy('title')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'title' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                             <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'title' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
@@ -175,7 +175,7 @@
                                             {{ Carbon\Carbon::parse($event->start)->toDateString() }}
                                         </td>
                                         {{-- <td>{{ (Carbon\Carbon::parse($event->end))->diffInDays(Carbon\Carbon::parse($event->start)) }}</td> --}}
-                                        <td>{{ $event->week->title }}</td>
+                                        <td>{{ $event->week->title . ' (' . $event->week->semester->school_year . ' )' }}</td>
                                         <td>
                                             <span  class="font-weight-bold badge text-white {{ $event->status == 1 ? 'bg-success' : 'bg-secondary' }}">
                                                 {{ $event->status() }}
@@ -234,16 +234,61 @@
                     <div class="modal-body">
                         <div class="row h-100 justify-content-center align-items-center">
                             <div class="col-12">
+                                <!-- Modal user_id -->
+                                <div class="form-group">
+                                    <label for="user_id" class="form-label">{{ __('User') }} :</label>
+
+                                    <select name="user_id" wire:model.defer="data.user_id"
+                                        class="form-control  @error('user_id') is-invalid @enderror" id="user_id">
+                                        <option value="" selected>Choise :</option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        @endforeach
+                                    </select>
+
+                                    @error('user_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+
+                                <!-- Modal School Week -->
+                                <div class="form-group">
+                                    <label for="week_id" class="form-label">{{ __('School Week') }} :</label>
+
+                                    <select name="week_id" wire:model.defer="data.week_id"
+                                        class="form-control  @error('week_id') is-invalid @enderror" id="week_id">
+                                        <option value="" selected>Choise :</option>
+                                        @foreach ($weeks as $week)
+                                            <option value="{{ $week->id }}">{{ $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
+                                        @endforeach
+                                    </select>
+
+                                    @error('week_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
 
                                 <!-- Modal Event Title -->
 
                                 <div class="form-group">
-                                    <label for="name">Title</label>
-                                    <input type="text" tabindex="1" wire:model.defer="data.title" class="form-control @error('title') is-invalid @enderror" id="title" aria-describedby="titleHelp" placeholder="Enter Title">
+                                    <label for="title" class="col-form-label">المهمة:</label>
+
+                                    <select name="title" wire:model.defer="data.title"
+                                        class="form-control  @error('title') is-invalid @enderror" id="title">
+                                        <option value="" selected>Choise :</option>
+                                        @foreach ($schools as $school)
+                                            <option value="{{ $school->name }}">{{ $school->name }}</option>
+                                        @endforeach
+                                    </select>
+
                                     @error('title')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
                                     @enderror
                                 </div>
 
@@ -260,28 +305,10 @@
                                 </div>
 
                                 <!-- Modal Event End -->
-
-                                <div class="form-group">
-                                    <label for="end">End</label>
-                                    <input type="date" tabindex="3" wire:model.defer="data.end" class="form-control @error('end') is-invalid @enderror" id="end" aria-describedby="endHelp" placeholder="Enter end">
-                                    @error('end')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-
-                                <!-- Modal Event Specialization -->
-
                                 {{-- <div class="form-group">
-                                    <label for="specialization_id">Specialization</label>
-                                    <select id="specialization_id" tabindex="2" class="form-control @error('specialization_id') is-invalid @enderror" wire:model.defer="data.specialization_id">
-                                        <option hidden>Select role ..</option>
-                                        @foreach ($specializations as $specialization)
-                                            <option class="bg-light" value="{{ $specialization->id }}">{{ $specialization->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('specialization_id')
+                                    <label for="end">End</label>
+                                    <input type="hidden" tabindex="3" wire:model.defer="data.end" class="form-control @error('end') is-invalid @enderror" id="end" aria-describedby="endHelp" placeholder="Enter end">
+                                    @error('end')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -290,7 +317,6 @@
 
                             </div>
                         </div>
-
 
                         <!-- Modal Event Status -->
                         <div class="form-group clearfix">

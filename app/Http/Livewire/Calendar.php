@@ -6,10 +6,12 @@ use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Week;
 use App\Models\School;
+use App\Models\User;
 use Livewire\Component;
 
 class Calendar extends Component
 {
+    public $all_user;
     public $week_id;
     public $title;
     public $start;
@@ -40,15 +42,31 @@ class Calendar extends Component
             default:
                 $color = '#298A08';
         }
+        if ($this->all_user) {
+            $users = User::all();
+            foreach ($users as $user) {
+                Event::create([
+                    'user_id'   => $user->id,
+                    'week_id'   => $this->week_id,
+                    'title'     => $this->title,
+                    'start'     => $this->start,
+                    'end'       => $this->end,
+                    'color'     => $color,
+                    'status'    => 1,
+                ]);
+            }
+        } else {
+            Event::create([
+                'user_id' => auth()->user()->id,
+                'week_id' => $this->week_id,
+                'title'   => $this->title,
+                'start'   => $this->start,
+                'end'     => $this->end,
+                'color'   => $color,
+            ]);
+        }
 
-        Event::create([
-            'user_id' => auth()->user()->id,
-            'week_id'    => $this->week_id,
-            'title'   => $this->title,
-            'start'   => $this->start,
-            'end'     => $this->end,
-            'color'   => $color,
-        ]);
+
 
         $this->reset();
         $this->dispatchBrowserEvent('closeModalCreate', ['close' => true]);
@@ -81,10 +99,10 @@ class Calendar extends Component
               break;
             default:
                 $color = '#298A08';
-          }
+        }
 
         Event::findOrFail($this->event_id)->update([
-            'week_id'      => $this->week_id,
+            'week_id'   => $this->week_id,
             'title'     => $this->title,
             'start'     => $this->start,
             'end'       => $this->end,
@@ -123,8 +141,8 @@ class Calendar extends Component
     public function eventDrop($event)
     {
         $eventdata = Event::find($event['id']);
-        if (($eventdata->user_id == auth()->user()->id) || (auth()->user()->roles[0]->id == 2||3)) {
-            if ($eventdata->status) {
+        if (($eventdata->user_id == auth()->user()->id) || (auth()->user()->roles[0]->id != 3)) {
+            if ($eventdata->status && auth()->user()->roles[0]->id == 3) {
                 $this->dispatchBrowserEvent('swal', [
                     'title'                 => 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد من المكتب',
                     'timer'                 =>4000,

@@ -285,7 +285,6 @@
                             </div>
                         </div>
 
-
                         <!-- Modal User Status -->
                         <div class="form-group clearfix">
                             <label for="statusRadio" class="d-inline">Status :</label>
