@@ -151,6 +151,8 @@ class ListEvents extends Component
         $this->resetPage();
     }
 
+    // Get Events Property
+    
     public function getEventsProperty()
 	{
         // $events = Event::query()
