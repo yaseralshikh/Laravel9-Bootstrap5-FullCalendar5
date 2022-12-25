@@ -48,7 +48,7 @@ class Events extends Component
 
     public function updatedSelectPageRows($value)
     {
-        if ($value) {
+         if ($value) {
             $this->selectedRows = $this->events->pluck('id')->map(function ($id) {
                 return (string) $id;
             });
@@ -56,20 +56,26 @@ class Events extends Component
             $this->reset(['selectedRows', 'selectPageRows']);
         }
     }
-    
+
     // Reset Selected Rows
 
     public function resetSelectedRows()
     {
         $this->reset(['selectedRows', 'selectPageRows']);
     }
-    
+
+    // Get Events Property
+    public function getEventsProperty()
+    {
+        return Event::with('user')->latest()->get();
+    }
+
     // show Sweetalert Confirmation for Delete
 
     public function deleteSelectedRows()
     {
         $this->dispatchBrowserEvent('show-delete-alert-confirmation');
-    }    
+    }
 
     // set All selected Event As Active
 
@@ -87,8 +93,8 @@ class Events extends Component
         ]);
 
 		$this->reset(['selectPageRows', 'selectedRows']);
-	}  
-    
+	}
+
     // set All selected Event As InActive
 
 	public function setAllAsInActive()
@@ -105,7 +111,7 @@ class Events extends Component
         ]);
 
 		$this->reset(['selectPageRows', 'selectedRows']);
-	}    
+	}
 
     // Delete Selected Event
 
@@ -124,11 +130,11 @@ class Events extends Component
         ]);
 
 		$this->reset();
-    }    
+    }
 
-    // Get Events Property
+    // Get Users Property
 
-    public function getEventsProperty()
+    public function getUsersProperty()
     {
         $searchString = $this->searchTerm;
 
@@ -154,7 +160,7 @@ class Events extends Component
     {
         $this->resetPage();
     }
-    
+
     // show add new Event form modal
 
     public function addNewEvent()
@@ -163,8 +169,8 @@ class Events extends Component
         $this->showEditModal = false;
         $this->data['status'] = 1;
         $this->dispatchBrowserEvent('show-form');
-    }   
-    
+    }
+
     // show Update new event form modal
 
     public function edit(Event $event)
@@ -181,7 +187,7 @@ class Events extends Component
 
 		$this->dispatchBrowserEvent('show-form');
     }
-    
+
     // Show Modal Form to Confirm Event Removal
 
     public function confirmEventRemoval($eventId)
@@ -189,8 +195,8 @@ class Events extends Component
         $this->eventIdBeingRemoved = $eventId;
 
         $this->dispatchBrowserEvent('show-delete-modal');
-    }   
-    
+    }
+
     // Delete Event
 
     public function deleteEvent()
@@ -221,10 +227,12 @@ class Events extends Component
             ]);
             return $message;
         }
-    }    
+    }
 
     public function render()
     {
+        $events = $this->events;
+
         $users = User::all();
         $weeks = Week::all();
         $schools = School::all();

@@ -101,7 +101,7 @@
                     <div class="table-responsive">
                         <table id="example2"  class="table text-center table-bordered table-hover dataTable dtr-inline" aria-describedby="example2_info">
                             <thead class="bg-light">
-                                <tr>
+                                <tr wire:ignore.self>
                                     <th><button type="button" class="btn btn-sm btn-secondary" data-toggle="collapse" data-target=".ShowHide">#</button></th>
                                     <th>Name</th>
                                     <th>Specialization</th>
@@ -125,7 +125,7 @@
                                         </td>
                                     </tr>
 
-                                    <tr id="collapseme{{$user->id}}" class="collapse out ShowHide">
+                                    <tr id="collapseme{{$user->id}}" class="collapse out ShowHide" wire:ignore.self>
                                         <td colspan="7">
                                             <div class="table-responsive">
                                                 <table id="example2"  class="table text-center table-bordered table-hover dataTable dtr-inline" aria-describedby="example2_info">
