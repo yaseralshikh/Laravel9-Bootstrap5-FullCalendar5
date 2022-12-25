@@ -57,6 +57,8 @@ class ListEvents extends Component
         }
     }
 
+    // Reset Selected Rows
+
     public function resetSelectedRows()
     {
         $this->reset(['selectedRows', 'selectPageRows']);

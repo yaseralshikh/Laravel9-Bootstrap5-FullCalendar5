@@ -35,14 +35,14 @@
             <div class="card">
                 <div class="card-header bg-light">
                     <h3 class="card-title">
-                        {{-- <button wire:click.prevent='addNewEvent' class="ml-1 btn btn-sm btn-primary">
+                        <button wire:click.prevent='addNewEvent' class="ml-1 btn btn-sm btn-primary">
                             <i class="mr-2 fa fa-plus-circle"
                                 aria-hidden="true">
                                 <span>Add New Event</span>
                             </i>
-                        </button> --}}
+                        </button>
 
-                        {{-- <div class="btn-group">
+                        <div class="btn-group">
                             <button type="button" class="btn btn-primary btn-sm">Action</button>
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
@@ -59,7 +59,7 @@
                                 <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">Delete Selected</a>
 
                             </div>
-                        </div> --}}
+                        </div>
                     </h3>
 
                     <div class="card-tools">
