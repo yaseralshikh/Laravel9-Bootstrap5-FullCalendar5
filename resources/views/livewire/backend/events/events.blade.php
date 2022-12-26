@@ -125,70 +125,68 @@
                                         </td>
                                     </tr>
 
-                                    <tr id="collapseme{{$user->id}}" class="collapse out ShowHide" wire:ignore.self>
-                                        <td colspan="7">
-                                            <div class="table-responsive">
-                                                <table id="example2"  class="table text-center table-bordered table-hover dataTable dtr-inline" aria-describedby="example2_info">
-                                                    <thead style="background-color: rgb(205, 239, 255)">
-                                                        <tr>
-                                                            <th scope="col">
-                                                                <div class="custom-control custom-checkbox small">
-                                                                    <input type="checkbox" wire:model="selectPageRows" value="" class="custom-control-input" id="customCheck">
-                                                                    <label class="custom-control-label" for="customCheck"></label>
-                                                                </div>
-                                                            </th>
-                                                            <th>#</th>
-                                                            <th>Title</th>
-                                                            <th>Date</th>
-                                                            <th>Week</th>
-                                                            <th>Status</th>
-                                                            <th colspan="2">actions</th>
-                                                        </tr>
-                                                    </thead>
-
-                                                    <tbody class="text-center">
-                                                        @forelse ($user->events as $event)
+                                    @if ($user->events->count())
+                                        <tr id="collapseme{{$user->id}}" class="collapse out ShowHide" wire:ignore.self>
+                                            <td colspan="7">
+                                                <div class="table-responsive">
+                                                    <table id="example2"  class="table text-center table-bordered table-hover dataTable dtr-inline" aria-describedby="example2_info">
+                                                        <thead style="background-color: rgb(205, 239, 255)">
                                                             <tr>
-                                                                <td scope="col">
+                                                                <th scope="col">
                                                                     <div class="custom-control custom-checkbox small">
-                                                                        <input type="checkbox" wire:model="selectedRows" value="{{ $event->id }}" class="custom-control-input" id="{{ $event->id }}">
-                                                                        <label class="custom-control-label" for="{{ $event->id }}"></label>
+                                                                        <input type="checkbox" wire:model="selectPageRows" value="" class="custom-control-input" id="customCheck">
+                                                                        <label class="custom-control-label" for="customCheck"></label>
                                                                     </div>
-                                                                </td>
-                                                                <td>{{ $loop->iteration }}</td>
-                                                                <td style="color: {{ $event->color }};">{{ $event->title }}</td>
-                                                                <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start) }}<br>
-                                                                    {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->start) }}<br>
-                                                                    {{ Carbon\Carbon::parse($event->start)->toDateString() }}
-                                                                </td>
-                                                                {{-- <td>{{ (Carbon\Carbon::parse($event->end))->diffInDays(Carbon\Carbon::parse($event->start)) }}</td> --}}
-                                                                <td>{{ $event->week->title . ' (' . $event->week->semester->school_year . ' )' }}</td>
-                                                                <td>
-                                                                    <span  class="font-weight-bold badge text-white {{ $event->status == 1 ? 'bg-success' : 'bg-secondary' }}">
-                                                                        {{ $event->status() }}
-                                                                    </span>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="btn-group btn-group-sm">
-                                                                        <button wire:click.prevent="edit({{ $event }})" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
-                                                                        @if (!auth()->user()->roles[0]->name == 'user')
-                                                                            <button wire:click.prevent="confirmEventRemoval({{ $event->id }})" class="btn btn-danger btn-sm"><i class="fa fa-trash bg-danger"></i></button>
-                                                                        @else
-                                                                            <button class="btn btn-danger btn-sm" disabled><i class="fa fa-trash bg-danger"></i></button>
-                                                                        @endif
-                                                                    </div>
-                                                                </td>
+                                                                </th>
+                                                                <th>#</th>
+                                                                <th>Title</th>
+                                                                <th>Date</th>
+                                                                <th>Week</th>
+                                                                <th>Status</th>
+                                                                <th colspan="2">actions</th>
                                                             </tr>
-                                                        @empty
-                                                            <tr>
-                                                                <td colspan="8" class="text-center">No Events found</td>
-                                                            </tr>
-                                                        @endforelse
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                                        </thead>
+
+                                                        <tbody class="text-center">
+                                                            @foreach ($user->events as $event)
+                                                                <tr>
+                                                                    <td scope="col">
+                                                                        <div class="custom-control custom-checkbox small">
+                                                                            <input type="checkbox" wire:model="selectedRows" value="{{ $event->id }}" class="custom-control-input" id="{{ $event->id }}">
+                                                                            <label class="custom-control-label" for="{{ $event->id }}"></label>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>{{ $loop->iteration }}</td>
+                                                                    <td style="color: {{ $event->color }};">{{ $event->title }}</td>
+                                                                    <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start) }}<br>
+                                                                        {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->start) }}<br>
+                                                                        {{ Carbon\Carbon::parse($event->start)->toDateString() }}
+                                                                    </td>
+                                                                    {{-- <td>{{ (Carbon\Carbon::parse($event->end))->diffInDays(Carbon\Carbon::parse($event->start)) }}</td> --}}
+                                                                    <td>{{ $event->week->title . ' (' . $event->week->semester->school_year . ' )' }}</td>
+                                                                    <td>
+                                                                        <span  class="font-weight-bold badge text-white {{ $event->status == 1 ? 'bg-success' : 'bg-secondary' }}">
+                                                                            {{ $event->status() }}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="btn-group btn-group-sm">
+                                                                            <button wire:click.prevent="edit({{ $event }})" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
+                                                                            @if (!auth()->user()->roles[0]->name == 'user')
+                                                                                <button wire:click.prevent="confirmEventRemoval({{ $event->id }})" class="btn btn-danger btn-sm"><i class="fa fa-trash bg-danger"></i></button>
+                                                                            @else
+                                                                                <button class="btn btn-danger btn-sm" disabled><i class="fa fa-trash bg-danger"></i></button>
+                                                                            @endif
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endif
                                 @empty
                                     <tr>
                                         <td colspan="8" class="text-center">No Users found</td>

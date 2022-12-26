@@ -67,7 +67,14 @@ class Events extends Component
     // Get Events Property
     public function getEventsProperty()
     {
-        return Event::with('user')->latest()->get();
+        $events =  Event::with('user')
+        ->orWhere(function ($query) {
+            $query->whereHas('user', function ($q) {
+                $q->where('id', 1);
+            });
+        })->latest('created_at')->get();
+
+        return $events;
     }
 
     // show Sweetalert Confirmation for Delete
