@@ -60,6 +60,7 @@
                                 {{-- @endif --}}
                             </div>
                         </div>
+
                     </h3>
 
                     <div class="card-tools">
@@ -72,21 +73,34 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="form-group ">
-                            {{-- search --}}
-                            <div class="input-group" style="width: 200px;">
-                                <input type="search" wire:model="searchTerm" class="form-control" placeholder="Search for..." value="Lorem ipsum">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-default">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
+                    <div class="form-group d-flex justify-content-between align-items-center">
+                        {{-- search --}}
+                        <div class="input-group" style="width: 200px;">
+                            <input type="search" wire:model.debounce.350ms="searchTerm" class="form-control form-control-sm" placeholder="Search for..." value="Lorem ipsum">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-default btn-sm">
+                                    <i class="fa fa-search"></i>
+                                </button>
                             </div>
                         </div>
-
-                        <label class="flex-wrap">Total Events : &nbsp{{ $events->total() }}</label>
-
+                        {{-- Week Filter --}}
+                        <div>
+                            <select name="week_id" wire:model="byWeek" class="form-control form-control-sm mr-5">
+                                <option value="" selected>All Weeks</option>
+                                @foreach ($weeks as $week)
+                                <option value="{{ $week->id }}">{{ $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        {{-- Status Filter --}}
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" wire:model="byStatus" class="custom-control-input" id="customSwitch1">
+                            <label class="custom-control-label" for="customSwitch1">Active Events</label>
+                        </div>
+                        {{-- Total Events --}}
+                        <div>
+                            <label class="flex-wrap">Total Events : &nbsp{{ $events->total() }}</label>
+                        </div>
                     </div>
 
                     @if ($selectedRows)
@@ -154,6 +168,13 @@
                                             <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                         </span> --}}
                                     </th>
+                                    <th>
+                                        Created At
+                                        <span wire:click="sortBy('created_at')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                            <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'created_at' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                            <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                        </span>
+                                    </th>
                                     <th colspan="2">actions</th>
                                 </tr>
                             </thead>
@@ -181,21 +202,21 @@
                                                 {{ $event->status() }}
                                             </span>
                                         </td>
+                                        <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->created_at) }}<br>
+                                            {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->created_at) }}<br>
+                                            {{ Carbon\Carbon::parse($event->created_at)->toDateString() }}
+                                        </td>
                                         <td>
                                             <div class="btn-group btn-group-sm">
                                                 <button wire:click.prevent="edit({{ $event }})" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
-                                                @if (!auth()->user()->roles[0]->name == 'user')
-                                                    <button wire:click.prevent="confirmEventRemoval({{ $event->id }})" class="btn btn-danger btn-sm"><i class="fa fa-trash bg-danger"></i></button>
-                                                @else
-                                                    <button class="btn btn-danger btn-sm" disabled><i class="fa fa-trash bg-danger"></i></button>
-                                                @endif
+                                                <button wire:click.prevent="confirmEventRemoval({{ $event->id }})" class="btn btn-danger btn-sm"><i class="fa fa-trash bg-danger"></i></button>
                                             </div>
                                         </td>
                                     </tr>
 
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center">No Events found</td>
+                                        <td colspan="10" class="text-center">No Events found</td>
                                     </tr>
                                 @endforelse
                             </tbody>

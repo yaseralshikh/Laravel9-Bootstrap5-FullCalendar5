@@ -25,12 +25,16 @@ class ListEvents extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $data = [];
+
     public $event;
+
+    public $byWeek = null; //filter by week_id
+    public $byStatus = 0; // filter bt status
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
-    public $sortColumnName = 'start';
+    public $sortColumnName = 'created_at';
     public $sortDirection = 'asc';
 
     public $showEditModal = false;
@@ -146,40 +150,18 @@ class ListEvents extends Component
     {
         return $this->sortDirection === 'asc' ? 'desc' : 'asc';
     }
+    // Swap filter by status
+
+    public function swapByStatus()
+    {
+        return $this->byStatus === 0 ? '1' : '0';
+    }
 
     // Updated Search Term
     public function updatedSearchTerm()
     {
         $this->resetPage();
     }
-
-    // Get Events Property
-    
-    public function getEventsProperty()
-	{
-        // $events = Event::query()
-        // ->where('title', 'like', '%'.$this->searchTerm.'%')
-        // ->orderBy($this->sortColumnName, $this->sortDirection)
-        // ->latest('created_at')
-        // ->paginate(15);
-
-        $searchString = $this->searchTerm;
-
-        $events =  Event::with('user')
-        ->where('title', 'like', '%' . $searchString . '%')
-        ->orWhere(function ($query) use ($searchString) {
-            $query->whereHas('user', function ($q) use ($searchString) {
-                $q->where('name', 'like', '%' . $searchString . '%');
-            });
-        })
-        ->orWhere(function ($query) use ($searchString) {
-            $query->whereHas('week', function ($q) use ($searchString) {
-                $q->where('title', 'like', '%' . $searchString . '%');
-            });
-        })->orderBy($this->sortColumnName, $this->sortDirection)->latest('created_at')->paginate(100);
-
-        return $events;
-	}
 
     // show add new Event form modal
 
@@ -400,6 +382,25 @@ class ListEvents extends Component
             return $pdf->stream('events');
         },'events.pdf');
     }
+
+    // Get Events Property
+
+    public function getEventsProperty()
+	{
+        $searchString = $this->searchTerm;
+        $byWeek = $this->byWeek;
+        $byStatus = $this->byStatus;
+
+        $events = Event::where('status', $byStatus)->when($byWeek, function($query) use ($byWeek){
+            $query->where('week_id', $byWeek);
+        })
+        ->search(trim(($searchString)))
+        ->orderBy($this->sortColumnName, $this->sortDirection)
+        ->latest('created_at')
+        ->paginate(100);
+
+        return $events;
+	}
 
     public function render()
     {

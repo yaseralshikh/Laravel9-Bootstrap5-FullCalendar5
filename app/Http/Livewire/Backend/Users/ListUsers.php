@@ -31,9 +31,6 @@ class ListUsers extends Component
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
-    public $roleFilter = null;
-    public $roleUserCount = Null;
-
     public $sortColumnName = 'name';
     public $sortDirection = 'asc';
 
@@ -165,23 +162,6 @@ class ListUsers extends Component
     {
         $this->roleFilter = $roleFilter;
     }
-
-    public function getUsersProperty()
-	{
-        if ($this->roleFilter) {
-            $users = User::whereRelation('roles', 'name',$this->roleFilter )
-            ->where('name', 'like', '%'.$this->searchTerm.'%')
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(15);
-        } else {
-            $users = User::query()
-            ->where('name', 'like', '%'.$this->searchTerm.'%')
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(15);
-        }
-
-        return $users;
-	}
 
     // show add new user form modal
 
@@ -445,21 +425,23 @@ class ListUsers extends Component
         },'users.pdf');
     }
 
+    public function getUsersProperty()
+	{
+        $users = User::query()
+        ->where('name', 'like', '%'.$this->searchTerm.'%')
+        ->orderBy($this->sortColumnName, $this->sortDirection)
+        ->paginate(15);
+
+        return $users;
+	}
+
     public function render()
     {
-        $userCount= User::count();
-
-        $roleAdminCount= User::whereRelation('roles', 'name', 'admin')->count();
-        $roleSuperadminCount= User::whereRelation('roles', 'name', 'superadmin')->count();
         $users = $this->users;
 
         $specializations = Specialization::all();
         return view('livewire.backend.users.list-users',[
             'users' => $users,
-            'userCount' => $userCount,
-            'roleUserCount' => $this->roleUserCount,
-            'roleAdminCount' => $roleAdminCount,
-            'roleSuperadminCount' => $roleSuperadminCount,
             'specializations' => $specializations ,
         ])->layout('layouts.admin');
     }

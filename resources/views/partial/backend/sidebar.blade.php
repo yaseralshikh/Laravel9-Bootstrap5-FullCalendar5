@@ -71,6 +71,14 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.events2') }}" class="nav-link {{ request()->is('admin/events2') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Events2
+                        </p>
+                    </a>
+                </li>
 
                 <li class="nav-header text-secondary"><h6>Search</h6></li>
                 <li class="nav-item">

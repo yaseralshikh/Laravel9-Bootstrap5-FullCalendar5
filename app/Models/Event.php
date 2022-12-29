@@ -36,4 +36,18 @@ class Event extends Model
         return $this->belongsTo(Week::class);
     }
 
+    public function scopeSearch($query, $term)
+    {
+        $term = "%$term%";
+
+        $query->where(function($query) use ($term){
+            $query->where('title', 'like' , $term)
+                ->orWhere(function ($qu) use ($term) {
+                    $qu->whereHas('user', function ($q) use ($term) {
+                        $q->where('name', 'like', $term);
+                });
+            });
+        });
+    }
+
 }
