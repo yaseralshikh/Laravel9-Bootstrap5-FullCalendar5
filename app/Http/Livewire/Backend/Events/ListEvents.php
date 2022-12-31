@@ -348,7 +348,7 @@ class ListEvents extends Component
     // Export Excel File
     public function exportExcel()
     {
-        return Excel::download(new EventsExport($this->searchTerm,$this->selectedRows), 'events.xlsx');
+        return Excel::download(new EventsExport($this->searchTerm,$this->selectedRows,$this->byWeek,$this->byStatus), 'events.xlsx');
     }
 
     // Show Import Excel Form
