@@ -373,12 +373,17 @@ class ListEvents extends Component
     {
         return response()->streamDownload(function(){
             if ($this->selectedRows) {
-                $events = Event::whereIn('id', $this->selectedRows)->orderBy('title', 'asc')->get();
+                $users = User::whereIn('id', $this->selectedRows)->where('status', 1)->orderBy('created_at', 'asc')->get();
             } else {
-                //$users = $this->users;
-                $events = Event::orderBy('name', 'asc')->get();
+                $users = User::where('status', 1)
+                    ->where(function ($query) {
+                        $query->whereHas('events', function ($q) {
+                            $q->where('status', 1);
+                        });
+                    })
+                    ->orderBy('created_at', 'asc')->get();
             }
-            $pdf = PDF::loadView('livewire.backend.events.events_pdf',['users' => $events]);
+            $pdf = PDF::loadView('livewire.backend.events.events_pdf',['users' => $users]);
             return $pdf->stream('events');
         },'events.pdf');
     }
