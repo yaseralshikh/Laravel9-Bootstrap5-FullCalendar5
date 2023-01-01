@@ -13,6 +13,7 @@ use Livewire\WithPagination;
 use App\Exports\EventsExport;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -371,18 +372,16 @@ class ListEvents extends Component
 
     public function exportPDF()
     {
-        return response()->streamDownload(function(){
-            if ($this->selectedRows) {
-                $users = User::whereIn('id', $this->selectedRows)->where('status', 1)->orderBy('created_at', 'asc')->get();
-            } else {
-                $users = User::where('status', 1)
-                    ->where(function ($query) {
-                        $query->whereHas('events', function ($q) {
-                            $q->where('status', 1);
-                        });
-                    })
-                    ->orderBy('created_at', 'asc')->get();
-            }
+        $byWeek = $this->byWeek;
+
+        $users = User::with('events')->where('status',true)
+            ->whereHas('events', function(Builder $query) use ($byWeek) {
+                $query->where('status', true)->where('week_id', $byWeek);
+            })->orderBy('created_at', 'asc')->latest('created_at')->get();
+
+        dd($byWeek ,$users);
+
+        return response()->streamDownload(function()use($users){
             $pdf = PDF::loadView('livewire.backend.events.events_pdf',['users' => $users]);
             return $pdf->stream('events');
         },'events.pdf');

@@ -237,7 +237,6 @@ class ListUsers extends Component
 
 
             $this->user->update($validatedData);
-            $this->user->roles()->sync(3);
 
             $this->dispatchBrowserEvent('hide-form');
 
