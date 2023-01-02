@@ -71,7 +71,7 @@
                 <hr>
 
                 <h1>تكليف مشرف تربوي</h1>
-                <h3>المكرم المشرف التربوي : {{ $user->name }} وفقه الله</h3>
+                <h3>المكرم المشرف التربوي : {{ $user->name }} <span style="padding-right:20px;">&nbsp;&nbsp;&nbsp;&nbsp;وفقه الله</span></h3>
                 <h3>السلام عليكم ورحمة الله وبركاته</h3>
                 <h3>اعتمدوا القيام بالزيارات والمهام المحددة أدناه، سائلين الله لكم التوفيق</h3>
                 <h2>تفاصيل الزيارة</h2>
@@ -80,7 +80,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>الاسبوع</th>
+                            {{-- <th>الاسبوع</th> --}}
                             <th>أليوم</th>
                             <th>التاريخ</th>
                             <th>المهمة / المدرسة</th>
@@ -90,7 +90,7 @@
                         @foreach ($user->events as $index => $event)
                             <tr>
                                 <td>{{ $index +1 }}</td>
-                                <td>{{ $event->week->title }}</td>
+                                {{-- <td>{{ $event->week->title }}</td> --}}
                                 <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start) }}</td>
                                 <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->start) }}</td>
                                 <td>{{ $event->title }}</td>

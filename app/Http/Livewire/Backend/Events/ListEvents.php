@@ -374,17 +374,27 @@ class ListEvents extends Component
     {
         $byWeek = $this->byWeek;
 
-        $users = User::with('events')->where('status',true)
-            ->whereHas('events', function(Builder $query) use ($byWeek) {
-                $query->where('status', true)->where('week_id', $byWeek);
-            })->orderBy('created_at', 'asc')->latest('created_at')->get();
-
-        dd($byWeek ,$users);
-
-        return response()->streamDownload(function()use($users){
-            $pdf = PDF::loadView('livewire.backend.events.events_pdf',['users' => $users]);
-            return $pdf->stream('events');
-        },'events.pdf');
+        if ($byWeek) {
+            $users = User::where('status',true)->whereHas('events', function ($query) use ($byWeek) {
+                $query->where('week_id', $byWeek)->where('status', true);
+            })->with(['events' => function ($query) use ($byWeek) {
+                $query->where('week_id', $byWeek)->where('status', true);
+            }])->orderBy('created_at', 'asc')->latest('created_at')->get();
+    
+            return response()->streamDownload(function()use($users){
+                $pdf = PDF::loadView('livewire.backend.events.events_pdf',['users' => $users]);
+                return $pdf->stream('events');
+            },'events.pdf');
+        } else {
+            $this->alert('error', 'Select Week befor that !', [
+                'position'  =>  'center',
+                'timer'  =>  3000,
+                'toast'  =>  true,
+                'text'  =>  null,
+                'showCancelButton'  =>  false,
+                'showConfirmButton'  =>  false
+            ]);
+        }
     }
 
     // Get Events Property
