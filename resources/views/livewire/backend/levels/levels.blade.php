@@ -3,7 +3,7 @@
         <style>
             .disabled-link{
                 cursor: default;
-                pointer-levels: none;
+                pointer-events: none;
                 text-decoration: none;
                 color: rgb(174, 172, 172);
             }
@@ -261,16 +261,16 @@
 
         <script>
             $(document).ready( function() {
-                window.addEventListener('hide-form', function (level) {
+                window.addEventListener('hide-form', function (event) {
                     $('#form').modal('hide');
                 });
-                window.addEventListener('show-form', function (level) {
+                window.addEventListener('show-form', function (event) {
                     $('#form').modal('show');
                 });
-                window.addEventListener('show-delete-modal', function (level) {
+                window.addEventListener('show-delete-modal', function (event) {
                     $('#confirmationModal').modal('show');
                 });
-                window.addEventListener('hide-delete-modal', function (level) {
+                window.addEventListener('hide-delete-modal', function (event) {
                     $('#confirmationModal').modal('hide');
                 });
             });
@@ -279,7 +279,7 @@
         {{-- show-delete-alert-confirmation --}}
 
         <script>
-            window.addEventListener('show-delete-alert-confirmation', level =>{
+            window.addEventListener('show-delete-alert-confirmation', event =>{
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",

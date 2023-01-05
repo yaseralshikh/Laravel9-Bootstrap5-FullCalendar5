@@ -18,4 +18,9 @@ class Semester extends Model
     {
         return $this->hasMany(Week ::class);
     }
+
+    public function status(): string
+    {
+        return $this->status ? 'Active' : 'Inactive';
+    }
 }

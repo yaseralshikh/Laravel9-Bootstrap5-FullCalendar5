@@ -28,4 +28,9 @@ class Week extends Model
     {
         return $this->hasMany(Event ::class);
     }
+
+    public function status(): string
+    {
+        return $this->status ? 'Active' : 'Inactive';
+    }
 }

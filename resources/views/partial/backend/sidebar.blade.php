@@ -52,6 +52,14 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.specializations') }}" class="nav-link {{ request()->is('admin/specializations') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Specializations
+                        </p>
+                    </a>
+                </li>
                 @role('superadmin')
                 <li class="nav-item">
                     <a href="{{ url('/laratrust') }}" class="nav-link {{ request()->is('/laratrust') ? 'active' : '' }}">

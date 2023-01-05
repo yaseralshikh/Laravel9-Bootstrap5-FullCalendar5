@@ -7,6 +7,7 @@ use App\Http\Livewire\Backend\Events\Events;
 use App\Http\Livewire\Backend\Users\ListUsers;
 use App\Http\Livewire\Backend\Events\ListEvents;
 use App\Http\Livewire\Backend\Levels\Levels;
+use App\Http\Livewire\Backend\Specializations\Specializations;
 use App\Http\Livewire\Backend\Tasks\Tasks;
 
 /*
@@ -32,6 +33,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'role:admin|superadmin']], function () {
     Route::get('/', Dashboard::class)->name('dashboard');
     Route::get('users', ListUsers::class)->name('users');
+    Route::get('specializations', Specializations::class)->name('specializations');
     Route::get('events', ListEvents::class )->name('events');
     Route::get('tasks', Tasks::class )->name('tasks');
     Route::get('levels', Levels::class )->name('levels');

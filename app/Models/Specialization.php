@@ -19,4 +19,9 @@ class Specialization extends Model
     {
         return $this->hasMany(User ::class);
     }
+
+    public function status(): string
+    {
+        return $this->status ? 'Active' : 'Inactive';
+    }
 }
