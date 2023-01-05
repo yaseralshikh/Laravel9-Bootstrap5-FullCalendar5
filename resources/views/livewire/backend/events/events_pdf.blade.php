@@ -41,10 +41,15 @@
         }
 
         .content {
-            height: 190mm;
+            height: 195mm;
             /*background-color: #fdfadb;*/
             /*border:solid red;*/
             padding: 0 15px;
+        }
+
+        h3{
+            padding: 2;
+            margin: 0;
         }
 
         table {
@@ -61,14 +66,14 @@
         }
 
         th {
-            background-color: #d4d4d4;
+            background-color: #ebebeb;
             padding: 5px;
         }
 
         /* Footer */
         footer {
             padding: 15px;
-            height: 30mm;
+            height: 25mm;
             /*border:solid red;*/
             /* background-color: rgb(130, 128, 246); */
         }
@@ -93,14 +98,14 @@
 
             <div class="content">
                 <div class="">
-                    <h3 style="font-size: 30px;">تكليف مشرف تربوي</h3>
-                    <h3>المكرم المشرف التربوي : {{ $user->name }} &nbsp;&nbsp;&nbsp;&nbsp;وفقه الله</h3>
+                    <h3 style="font-size: 35px;">تكليف مشرف تربوي</h3>
+                    <h3>المكرم المشرف التربوي : <span style="font-size: 22px;background-color:#f4f4f4;">&nbsp;{{ $user->name }}&nbsp;</span> &nbsp;&nbsp;&nbsp;وفقه الله</h3>
                     <h3>السلام عليكم ورحمة الله وبركاته</h3>
                     <h3>اعتمدوا القيام بالزيارات والمهام المحددة أدناه، سائلين الله لكم التوفيق</h3>
                 </div>
 
                 <table>
-                    <thead style="background-color: #eaeaea">
+                    <thead>
                         <tr>
                             <th colspan="4">تفاصيل الزيارة</th>
                         </tr>
@@ -151,8 +156,8 @@
                                     <li>صورة متابعة الدوام</li>
                                 </ul>
                             </td>
-                            <td class="logo_header">
-                                <h3 style="width: 65%;">مدير مكتب التعليم بوسط جازان</h3>
+                            <td class="logo_header" style="width: 50%;">
+                                <h3>مدير مكتب التعليم بوسط جازان</h3>
                                 <br>
                                 <h3>عبدالرحمن بن عسيري عكور</p>
                             </td>

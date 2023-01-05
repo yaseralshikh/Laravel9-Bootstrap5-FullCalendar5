@@ -17,9 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('level_id')->constrained();
-            $table->string('director');
-            $table->string('mobile');
-            $table->string('idcard');
+            $table->string('director')->nullable();
+            $table->string('mobile')->nullable();
+            $table->string('idcard')->nullable();
+            $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
         });
     }

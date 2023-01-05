@@ -13,7 +13,6 @@ use Livewire\WithPagination;
 use App\Exports\EventsExport;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -380,7 +379,7 @@ class ListEvents extends Component
             })->with(['events' => function ($query) use ($byWeek) {
                 $query->where('week_id', $byWeek)->where('status', true);
             }])->orderBy('created_at', 'asc')->latest('created_at')->get();
-    
+
             return response()->streamDownload(function()use($users){
                 $pdf = PDF::loadView('livewire.backend.events.events_pdf',['users' => $users]);
                 return $pdf->stream('events');
