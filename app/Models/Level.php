@@ -18,4 +18,9 @@ class Level extends Model
     {
         return $this->hasMany(School ::class);
     }
+
+    public function status(): string
+    {
+        return $this->status ? 'Active' : 'Inactive';
+    }
 }

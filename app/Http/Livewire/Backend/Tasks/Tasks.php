@@ -22,7 +22,7 @@ class Tasks extends Component
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
-    public $sortColumnName = 'created_at';
+    public $sortColumnName = 'name';
     public $sortDirection = 'asc';
 
     public $showEditModal = false;
