@@ -42,6 +42,7 @@
                         </p>
                     </a>
                 </li>
+
                 <li class="nav-header text-secondary"><h6>Multy Users</h6></li>
 
                 <li class="nav-item">
@@ -54,7 +55,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.specializations') }}" class="nav-link {{ request()->is('admin/specializations') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-users"></i>
+                        <i class="nav-icon fas fa-briefcase"></i>
                         <p>
                             Specializations
                         </p>
@@ -73,7 +74,7 @@
                 <li class="nav-header text-secondary"><h6>Events</h6></li>
                 <li class="nav-item">
                     <a href="{{ route('admin.events') }}" class="nav-link {{ request()->is('admin/events') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-users"></i>
+                        <i class="nav-icon fas fa-calendar"></i>
                         <p>
                             Events
                         </p>
@@ -81,7 +82,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.events2') }}" class="nav-link {{ request()->is('admin/events2') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-users"></i>
+                        <i class="nav-icon fas fa-calendar"></i>
                         <p>
                             Events2
                         </p>
@@ -91,7 +92,7 @@
                 <li class="nav-header text-secondary"><h6>Tasks</h6></li>
                 <li class="nav-item">
                     <a href="{{ route('admin.tasks') }}" class="nav-link {{ request()->is('admin/tasks') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-users"></i>
+                        <i class="nav-icon fas fa-tasks"></i>
                         <p>
                             Tasks
                         </p>
@@ -99,12 +100,32 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.levels') }}" class="nav-link {{ request()->is('admin/levels') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-users"></i>
+                        <i class="nav-icon fas fa-tasks"></i>
                         <p>
                             Levels
                         </p>
                     </a>
                 </li>
+
+                <li class="nav-header text-secondary"><h6>Semesters & Weeks</h6></li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.semesters') }}" class="nav-link {{ request()->is('admin/semesters') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-graduation-cap"></i>
+                        <p>
+                            Semesters
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.weeks') }}" class="nav-link {{ request()->is('admin/weeks') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-graduation-cap"></i>
+                        <p>
+                            Weeks
+                        </p>
+                    </a>
+                </li>
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

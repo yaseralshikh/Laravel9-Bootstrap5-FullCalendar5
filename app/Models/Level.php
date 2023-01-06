@@ -12,6 +12,7 @@ class Level extends Model
 
     protected $fillable = [
         'name',
+        'status',
     ];
 
     public function schools(): HasMany

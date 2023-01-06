@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Livewire\Backend\Tasks;
+namespace App\Http\Livewire\Backend\Semesters;
 
-use App\Models\Level;
 use Livewire\Component;
-use App\Models\School;
+use App\Models\Semester;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class Tasks extends Component
+class Semesters extends Component
 {
     use WithPagination;
     use LivewireAlert;
@@ -17,28 +16,28 @@ class Tasks extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $data = [];
-    public $task;
+    public $semester;
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
-    public $sortColumnName = 'name';
-    public $sortDirection = 'asc';
+    public $sortColumnName = 'school_year';
+    public $sortDirection = 'desc';
 
     public $showEditModal = false;
 
-    public $taskIdBeingRemoved = null;
+    public $semesterIdBeingRemoved = null;
 
     public $selectedRows = [];
 	public $selectPageRows = false;
-    protected $listeners = ['deleteConfirmed' => 'deleteTasks'];
+    protected $listeners = ['deleteConfirmed' => 'deleteSemesters'];
 
     // Updated Select Page Rows
 
     public function updatedSelectPageRows($value)
     {
         if ($value) {
-            $this->selectedRows = $this->tasks->pluck('id')->map(function ($id) {
+            $this->selectedRows = $this->semesters->pluck('id')->map(function ($id) {
                 return (string) $id;
             });
         } else {
@@ -64,9 +63,9 @@ class Tasks extends Component
 
     public function setAllAsActive()
 	{
-		School::whereIn('id', $this->selectedRows)->update(['status' => 1]);
+		Semester::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
-        $this->alert('success', 'Tasks set As Active successfully.', [
+        $this->alert('success', 'Semesters set As Active successfully.', [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -82,9 +81,9 @@ class Tasks extends Component
 
 	public function setAllAsInActive()
 	{
-		School::whereIn('id', $this->selectedRows)->update(['status' => 0]);
+		Semester::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
-        $this->alert('success', 'Tasks set As Inactive successfully.', [
+        $this->alert('success', 'Semesters set As Inactive successfully.', [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -96,14 +95,14 @@ class Tasks extends Component
 		$this->reset(['selectPageRows', 'selectedRows']);
 	}
 
-    // Delete Selected User with relationship roles And permission
+    // Delete Selected Semesters
 
-    public function deleteTasks()
+    public function deleteSemesters()
     {
-        // delete selected users from database
-		School::whereIn('id', $this->selectedRows)->delete();
+        // delete selected Semesters from database
+        Semester::whereIn('id', $this->selectedRows)->delete();
 
-        $this->alert('success', 'All selected tasks got deleted.', [
+        $this->alert('success', 'All selected Semesters got deleted.', [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -112,7 +111,7 @@ class Tasks extends Component
             'showConfirmButton'  =>  false
         ]);
 
-		$this->reset();
+        $this->reset();
     }
 
     // Sort By Column Name
@@ -142,30 +141,29 @@ class Tasks extends Component
         $this->resetPage();
     }
 
-    // show add new user form modal
+    // show add new Semester form modal
 
-    public function addNewTask()
+    public function addNewSemester()
     {
         $this->reset();
         $this->showEditModal = false;
         $this->dispatchBrowserEvent('show-form');
     }
 
-    // Create new user
+    // Create new Semester
 
-    public function createTask()
+    public function createSemester()
     {
         $validatedData = Validator::make($this->data, [
-			'name'                  => 'required',
-			'level_id'              => 'required',
+			'title'           => 'required',
+			'school_year'     => 'required|numeric',
 		])->validate();
 
-
-		School::create($validatedData);
+		Semester::create($validatedData);
 
         $this->dispatchBrowserEvent('hide-form');
 
-        $this->alert('success', 'Task Added Successfully.', [
+        $this->alert('success', 'Semester Added Successfully.', [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -175,36 +173,36 @@ class Tasks extends Component
         ]);
     }
 
-    // show Update new user form modal
+    // show Update new Semester form modal
 
-    public function edit(School $task)
+    public function edit(Semester $semester)
     {
         $this->reset();
 
         $this->showEditModal = true;
 
-        $this->task = $task;
+        $this->semester = $semester;
 
-        $this->data = $task->toArray();
+        $this->data = $semester->toArray();
 
         $this->dispatchBrowserEvent('show-form');
     }
 
     // Update Task
 
-    public function updateTask()
+    public function updateSemester()
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'name'                      => 'required',
-                'level_id'                  => 'required',
+                'title'          => 'required',
+                'school_year'    => 'required|numeric',
             ])->validate();
 
-            $this->task->update($validatedData);
+            $this->semester->update($validatedData);
 
             $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', 'Task updated Successfully.', [
+            $this->alert('success', 'Semester updated Successfully.', [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -226,27 +224,27 @@ class Tasks extends Component
         }
     }
 
-    // Show Modal Form to Confirm Task Removal
+    // Show Modal Form to Confirm Semester Removal
 
-    public function confirmTaskRemoval($taskId)
+    public function confirmSemesterRemoval($semesterId)
     {
-        $this->taskIdBeingRemoved = $taskId;
+        $this->semesterIdBeingRemoved = $semesterId;
 
         $this->dispatchBrowserEvent('show-delete-modal');
     }
 
-    // Delete Task
+    // Delete Semester
 
-    public function deleteTask()
+    public function deleteSemester()
     {
         try {
-            $task = School::findOrFail($this->taskIdBeingRemoved);
+            $semester = Semester::findOrFail($this->semesterIdBeingRemoved);
 
-            $task->delete();
+            $semester->delete();
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
-            $this->alert('success', 'Task Deleted Successfully.', [
+            $this->alert('success', 'Semester Deleted Successfully.', [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -267,25 +265,24 @@ class Tasks extends Component
         }
     }
 
-    public function getTasksProperty()
+    public function getSemestersProperty()
 	{
-        $tasks = School::query()
-            ->where('name', 'like', '%'.$this->searchTerm.'%')
-            ->orderBy('level_id','ASC')
+        $semesters = Semester::query()
+            ->where('title', 'like', '%'.$this->searchTerm.'%')
+            ->orWhere('school_year', 'like', '%'.$this->searchTerm.'%')
             ->orderBy($this->sortColumnName, $this->sortDirection)
+            ->orderBy('id','asc')
             ->paginate(30);
 
-        return $tasks;
+        return $semesters;
 	}
 
     public function render()
     {
-        $tasks = $this->tasks;
-        $levels = Level::all();
+        $semesters = $this->semesters;
 
-        return view('livewire.backend.tasks.tasks',[
-            'tasks'     => $tasks,
-            'levels'    => $levels,
+        return view('livewire.backend.semesters.semesters',[
+            'semesters' => $semesters,
         ])->layout('layouts.admin');
     }
 }

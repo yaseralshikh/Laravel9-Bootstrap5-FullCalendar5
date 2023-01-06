@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Livewire\Backend\Tasks;
+namespace App\Http\Livewire\Backend\Weeks;
 
-use App\Models\Level;
+use App\Models\Week;
+use App\Models\Semester;
 use Livewire\Component;
-use App\Models\School;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class Tasks extends Component
+class Weeks extends Component
 {
     use WithPagination;
     use LivewireAlert;
@@ -17,28 +17,28 @@ class Tasks extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $data = [];
-    public $task;
+    public $week;
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
-    public $sortColumnName = 'name';
+    public $sortColumnName = 'start';
     public $sortDirection = 'asc';
 
     public $showEditModal = false;
 
-    public $taskIdBeingRemoved = null;
+    public $weekIdBeingRemoved = null;
 
     public $selectedRows = [];
 	public $selectPageRows = false;
-    protected $listeners = ['deleteConfirmed' => 'deleteTasks'];
+    protected $listeners = ['deleteConfirmed' => 'deleteWeeks'];
 
     // Updated Select Page Rows
 
     public function updatedSelectPageRows($value)
     {
         if ($value) {
-            $this->selectedRows = $this->tasks->pluck('id')->map(function ($id) {
+            $this->selectedRows = $this->weeks->pluck('id')->map(function ($id) {
                 return (string) $id;
             });
         } else {
@@ -64,9 +64,9 @@ class Tasks extends Component
 
     public function setAllAsActive()
 	{
-		School::whereIn('id', $this->selectedRows)->update(['status' => 1]);
+		Week::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
-        $this->alert('success', 'Tasks set As Active successfully.', [
+        $this->alert('success', 'Weeks set As Active successfully.', [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -82,9 +82,9 @@ class Tasks extends Component
 
 	public function setAllAsInActive()
 	{
-		School::whereIn('id', $this->selectedRows)->update(['status' => 0]);
+		Week::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
-        $this->alert('success', 'Tasks set As Inactive successfully.', [
+        $this->alert('success', 'Weeks set As Inactive successfully.', [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -98,12 +98,12 @@ class Tasks extends Component
 
     // Delete Selected User with relationship roles And permission
 
-    public function deleteTasks()
+    public function deleteWeeks()
     {
         // delete selected users from database
-		School::whereIn('id', $this->selectedRows)->delete();
+		Week::whereIn('id', $this->selectedRows)->delete();
 
-        $this->alert('success', 'All selected tasks got deleted.', [
+        $this->alert('success', 'All selected weeks got deleted.', [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -144,7 +144,7 @@ class Tasks extends Component
 
     // show add new user form modal
 
-    public function addNewTask()
+    public function addNewWeek()
     {
         $this->reset();
         $this->showEditModal = false;
@@ -153,19 +153,21 @@ class Tasks extends Component
 
     // Create new user
 
-    public function createTask()
+    public function createWeek()
     {
         $validatedData = Validator::make($this->data, [
-			'name'                  => 'required',
-			'level_id'              => 'required',
+            'title'                    => 'required',
+            'start'                    => 'required|date',
+            'end'                      => 'required|date',
+            'semester_id'              => 'required',
 		])->validate();
 
 
-		School::create($validatedData);
+		Week::create($validatedData);
 
         $this->dispatchBrowserEvent('hide-form');
 
-        $this->alert('success', 'Task Added Successfully.', [
+        $this->alert('success', 'Week Added Successfully.', [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -177,34 +179,36 @@ class Tasks extends Component
 
     // show Update new user form modal
 
-    public function edit(School $task)
+    public function edit(Week $week)
     {
         $this->reset();
 
         $this->showEditModal = true;
 
-        $this->task = $task;
+        $this->week = $week;
 
-        $this->data = $task->toArray();
+        $this->data = $week->toArray();
 
         $this->dispatchBrowserEvent('show-form');
     }
 
-    // Update Task
+    // Update Week
 
-    public function updateTask()
+    public function updateWeek()
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'name'                      => 'required',
-                'level_id'                  => 'required',
+                'title'                    => 'required',
+                'start'                    => 'required|date',
+                'end'                      => 'required|date',
+                'semester_id'              => 'required',
             ])->validate();
 
-            $this->task->update($validatedData);
+            $this->week->update($validatedData);
 
             $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', 'Task updated Successfully.', [
+            $this->alert('success', 'Week updated Successfully.', [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -226,27 +230,27 @@ class Tasks extends Component
         }
     }
 
-    // Show Modal Form to Confirm Task Removal
+    // Show Modal Form to Confirm Week Removal
 
-    public function confirmTaskRemoval($taskId)
+    public function confirmWeekRemoval($weekId)
     {
-        $this->taskIdBeingRemoved = $taskId;
+        $this->weekIdBeingRemoved = $weekId;
 
         $this->dispatchBrowserEvent('show-delete-modal');
     }
 
-    // Delete Task
+    // Delete Week
 
-    public function deleteTask()
+    public function deleteWeek()
     {
         try {
-            $task = School::findOrFail($this->taskIdBeingRemoved);
+            $week = Week::findOrFail($this->weekIdBeingRemoved);
 
-            $task->delete();
+            $week->delete();
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
-            $this->alert('success', 'Task Deleted Successfully.', [
+            $this->alert('success', 'Week Deleted Successfully.', [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -267,25 +271,25 @@ class Tasks extends Component
         }
     }
 
-    public function getTasksProperty()
+    public function getWeeksProperty()
 	{
-        $tasks = School::query()
-            ->where('name', 'like', '%'.$this->searchTerm.'%')
-            ->orderBy('level_id','ASC')
+        $weeks = Week::query()
+            ->where('title', 'like', '%'.$this->searchTerm.'%')
+            ->orWhere('start', 'like', '%'.$this->searchTerm.'%')
+            ->orWhere('end', 'like', '%'.$this->searchTerm.'%')
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate(30);
 
-        return $tasks;
+        return $weeks;
 	}
-
     public function render()
     {
-        $tasks = $this->tasks;
-        $levels = Level::all();
+        $weeks = $this->weeks;
+        $semesters = Semester::all();
 
-        return view('livewire.backend.tasks.tasks',[
-            'tasks'     => $tasks,
-            'levels'    => $levels,
+        return view('livewire.backend.weeks.weeks',[
+            'weeks' => $weeks,
+            'semesters' => $semesters,
         ])->layout('layouts.admin');
     }
 }

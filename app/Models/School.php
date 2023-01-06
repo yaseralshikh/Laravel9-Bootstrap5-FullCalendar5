@@ -16,6 +16,7 @@ class School extends Model
         'director',
         'mobile',
         'idcard',
+        'status',
     ];
 
     public function level(): BelongsTo
