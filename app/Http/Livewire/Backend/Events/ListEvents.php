@@ -380,10 +380,22 @@ class ListEvents extends Component
                 $query->where('week_id', $byWeek)->where('status', true);
             }])->orderBy('created_at', 'asc')->latest('created_at')->get();
 
-            return response()->streamDownload(function()use($users){
-                $pdf = PDF::loadView('livewire.backend.events.events_pdf',['users' => $users]);
-                return $pdf->stream('events');
-            },'events.pdf');
+            if ($users->count() != Null) {
+                return response()->streamDownload(function()use($users){
+                    $pdf = PDF::loadView('livewire.backend.events.events_pdf',['users' => $users]);
+                    return $pdf->stream('events');
+                },'events.pdf');
+            } else {
+                $this->alert('error', 'Thay are no events to do that !', [
+                    'position'  =>  'center',
+                    'timer'  =>  3000,
+                    'toast'  =>  true,
+                    'text'  =>  null,
+                    'showCancelButton'  =>  false,
+                    'showConfirmButton'  =>  false
+                ]);
+            }
+
         } else {
             $this->alert('error', 'Select Week befor that !', [
                 'position'  =>  'center',
@@ -418,9 +430,9 @@ class ListEvents extends Component
     public function render()
     {
         $events = $this->events;
-        $users = User::all();
-        $weeks = Week::all();
-        $schools = School::all();
+        $users = User::where('status',1)->get();
+        $weeks = Week::where('status',1)->get();
+        $schools = School::where('status',1)->get();
 
         return view('livewire.backend.events.list-events',[
             'events' => $events,

@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Livewire\Backend\Tasks;
+namespace App\Http\Livewire\Backend\Subtask;
 
-use App\Models\Level;
+use App\Models\Subtask as ModelsSubtask;
 use Livewire\Component;
-use App\Models\School;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class Tasks extends Component
+class Subtask extends Component
 {
     use WithPagination;
     use LivewireAlert;
@@ -17,28 +16,28 @@ class Tasks extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $data = [];
-    public $task;
+    public $subtask;
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
-    public $sortColumnName = 'name';
+    public $sortColumnName = 'position';
     public $sortDirection = 'asc';
 
     public $showEditModal = false;
 
-    public $taskIdBeingRemoved = null;
+    public $subtaskIdBeingRemoved = null;
 
     public $selectedRows = [];
 	public $selectPageRows = false;
-    protected $listeners = ['deleteConfirmed' => 'deleteTasks'];
+    protected $listeners = ['deleteConfirmed' => 'deleteSubtasks'];
 
     // Updated Select Page Rows
 
     public function updatedSelectPageRows($value)
     {
         if ($value) {
-            $this->selectedRows = $this->tasks->pluck('id')->map(function ($id) {
+            $this->selectedRows = $this->subtasks->pluck('id')->map(function ($id) {
                 return (string) $id;
             });
         } else {
@@ -60,13 +59,13 @@ class Tasks extends Component
         $this->dispatchBrowserEvent('show-delete-alert-confirmation');
     }
 
-    // set All selected User As Active
+    // set All selected Subtasks As Active
 
     public function setAllAsActive()
 	{
-		School::whereIn('id', $this->selectedRows)->update(['status' => 1]);
+		ModelsSubtask::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
-        $this->alert('success', 'Tasks set As Active successfully.', [
+        $this->alert('success', 'Subtasks set As Active successfully.', [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -78,13 +77,13 @@ class Tasks extends Component
 		$this->reset(['selectPageRows', 'selectedRows']);
 	}
 
-    // set All selected User As InActive
+    // set All selected Subtasks As InActive
 
 	public function setAllAsInActive()
 	{
-		School::whereIn('id', $this->selectedRows)->update(['status' => 0]);
+		ModelsSubtask::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
-        $this->alert('success', 'Tasks set As Inactive successfully.', [
+        $this->alert('success', 'Subtasks set As Inactive successfully.', [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -96,14 +95,14 @@ class Tasks extends Component
 		$this->reset(['selectPageRows', 'selectedRows']);
 	}
 
-    // Delete Selected User with relationship roles And permission
+    // Delete Selected Subtasks
 
-    public function deleteTasks()
+    public function deleteSubtasks()
     {
-        // delete selected users from database
-		School::whereIn('id', $this->selectedRows)->delete();
+        // delete selected Subtasks from database
+        ModelsSubtask::whereIn('id', $this->selectedRows)->delete();
 
-        $this->alert('success', 'All selected tasks got deleted.', [
+        $this->alert('success', 'All selected Subtasks got deleted.', [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -112,7 +111,7 @@ class Tasks extends Component
             'showConfirmButton'  =>  false
         ]);
 
-		$this->reset();
+        $this->reset();
     }
 
     // Sort By Column Name
@@ -142,30 +141,30 @@ class Tasks extends Component
         $this->resetPage();
     }
 
-    // show add new user form modal
+    // show add new Subtask form modal
 
-    public function addNewTask()
+    public function addNewSubtask()
     {
         $this->reset();
         $this->showEditModal = false;
         $this->dispatchBrowserEvent('show-form');
     }
 
-    // Create new user
+    // Create new Subtask
 
-    public function createTask()
+    public function createSubtask()
     {
         $validatedData = Validator::make($this->data, [
-			'name'                  => 'required',
-			'level_id'              => 'required',
+			'title'                  => 'required',
 		])->validate();
 
+        $validatedData['position'] = 0;
 
-		School::create($validatedData);
+		ModelsSubtask::create($validatedData);
 
         $this->dispatchBrowserEvent('hide-form');
 
-        $this->alert('success', 'Task Added Successfully.', [
+        $this->alert('success', 'Subtask Added Successfully.', [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -175,36 +174,35 @@ class Tasks extends Component
         ]);
     }
 
-    // show Update new user form modal
+    // show Update Subtask form modal
 
-    public function edit(School $task)
+    public function edit(ModelsSubtask $subtask)
     {
         $this->reset();
 
         $this->showEditModal = true;
 
-        $this->task = $task;
+        $this->subtask = $subtask;
 
-        $this->data = $task->toArray();
+        $this->data = $subtask->toArray();
 
         $this->dispatchBrowserEvent('show-form');
     }
 
-    // Update Task
+    // Update Subtask
 
-    public function updateTask()
+    public function updateSubtask()
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'name'                      => 'required',
-                'level_id'                  => 'required',
+                'title'    => 'required',
             ])->validate();
 
-            $this->task->update($validatedData);
+            $this->subtask->update($validatedData);
 
             $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', 'Task updated Successfully.', [
+            $this->alert('success', 'Subtask updated Successfully.', [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -226,27 +224,27 @@ class Tasks extends Component
         }
     }
 
-    // Show Modal Form to Confirm Task Removal
+    // Show Modal Form to Confirm Subtask Removal
 
-    public function confirmTaskRemoval($taskId)
+    public function confirmSubtaskRemoval($subtaskId)
     {
-        $this->taskIdBeingRemoved = $taskId;
+        $this->subtaskIdBeingRemoved = $subtaskId;
 
         $this->dispatchBrowserEvent('show-delete-modal');
     }
 
-    // Delete Task
+    // Delete Subtask
 
-    public function deleteTask()
+    public function deleteSubtask()
     {
         try {
-            $task = School::findOrFail($this->taskIdBeingRemoved);
+            $subtask = ModelsSubtask::findOrFail($this->subtaskIdBeingRemoved);
 
-            $task->delete();
+            $subtask->delete();
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
-            $this->alert('success', 'Task Deleted Successfully.', [
+            $this->alert('success', 'Subtask Deleted Successfully.', [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -267,25 +265,27 @@ class Tasks extends Component
         }
     }
 
-    public function getTasksProperty()
-	{
-        $tasks = School::query()
-            ->where('name', 'like', '%'.$this->searchTerm.'%')
-            ->orderBy('level_id','ASC')
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(50);
+    // get Subtasks Property
 
-        return $tasks;
+    public function getSubtasksProperty()
+	{
+        $subtasks = ModelsSubtask::query()
+            ->where('title', 'like', '%'.$this->searchTerm.'%')
+            ->orderBy($this->sortColumnName, $this->sortDirection)
+            ->paginate(30);
+
+        return $subtasks;
 	}
+
+
+    // Render Subtasks
 
     public function render()
     {
-        $tasks = $this->tasks;
-        $levels = Level::all();
+        $subtasks = $this->subtasks;
 
-        return view('livewire.backend.tasks.tasks',[
-            'tasks'     => $tasks,
-            'levels'    => $levels,
+        return view('livewire.backend.subtask.subtask',[
+            'subtasks' => $subtasks,
         ])->layout('layouts.admin');
     }
 }

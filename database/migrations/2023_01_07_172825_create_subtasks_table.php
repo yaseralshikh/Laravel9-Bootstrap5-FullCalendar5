@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('schools', function (Blueprint $table) {
+        Schema::create('subtasks', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('level_id')->constrained();
-            $table->unsignedTinyInteger('status')->default(1);
+            $table->string('title');
+            $table->integer('position')->default(Null);
+            $table->unsignedTinyInteger('status')->default(0);
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('schools');
+        Schema::dropIfExists('subtasks');
     }
 };

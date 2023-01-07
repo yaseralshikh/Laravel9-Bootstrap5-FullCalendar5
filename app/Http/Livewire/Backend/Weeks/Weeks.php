@@ -285,7 +285,7 @@ class Weeks extends Component
     public function render()
     {
         $weeks = $this->weeks;
-        $semesters = Semester::all();
+        $semesters = Semester::where('status',1)->get();
 
         return view('livewire.backend.weeks.weeks',[
             'weeks' => $weeks,

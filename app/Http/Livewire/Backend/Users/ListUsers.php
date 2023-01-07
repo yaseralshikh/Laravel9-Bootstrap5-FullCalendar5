@@ -438,7 +438,7 @@ class ListUsers extends Component
     {
         $users = $this->users;
 
-        $specializations = Specialization::all();
+        $specializations = Specialization::where('status',1)->get();
         return view('livewire.backend.users.list-users',[
             'users' => $users,
             'specializations' => $specializations ,
