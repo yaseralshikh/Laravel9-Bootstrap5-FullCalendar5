@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Week;
 use App\Models\Event;
 use App\Models\School;
+use App\Models\Subtask;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Exports\EventsExport;
@@ -381,8 +382,12 @@ class ListEvents extends Component
             }])->orderBy('created_at', 'asc')->latest('created_at')->get();
 
             if ($users->count() != Null) {
-                return response()->streamDownload(function()use($users){
-                    $pdf = PDF::loadView('livewire.backend.events.events_pdf',['users' => $users]);
+                $subtasks = Subtask::where('status',1)->get();
+                return response()->streamDownload(function() use($users, $subtasks){
+                    $pdf = PDF::loadView('livewire.backend.events.events_pdf',[
+                        'users' => $users,
+                        'subtasks' => $subtasks,
+                    ]);
                     return $pdf->stream('events');
                 },'events.pdf');
             } else {

@@ -18,7 +18,7 @@
             margin: 15px;
             padding: 15px;
             width: 210mm;
-            height: 290mm;
+            height: 297mm;
             /*border: solid green;*/
             text-align: center;
         }
@@ -41,10 +41,10 @@
         }
 
         .content {
-            height: 195mm;
-            /*background-color: #fdfadb;*/
-            /*border:solid red;*/
             padding: 0 15px;
+            height: 180mm;
+            /*border:solid red;*/
+            /* background-color: #fdfadb; */
         }
 
         h3{
@@ -70,12 +70,23 @@
             padding: 5px;
         }
 
-        /* Footer */
-        footer {
+        .notes{
             padding: 15px;
             height: 25mm;
             /*border:solid red;*/
             /* background-color: rgb(130, 128, 246); */
+        }
+
+        /* Footer */
+        footer {
+            padding: 15px;
+            height: 2mm;
+            /*border:solid red;*/
+            /* background-color: rgb(71, 156, 89); */
+        }
+        @page {
+            header: page-header;
+            footer: page-footer;
         }
     </style>
 </head>
@@ -98,7 +109,7 @@
 
             <div class="content">
                 <div class="">
-                    <h3 style="font-size: 35px;">تكليف مشرف تربوي</h3>
+                    <h3 style="font-size: 30px;">تكليف مشرف تربوي</h3>
                     <h3>المكرم المشرف التربوي : <span style="font-size: 22px;background-color:#f4f4f4;">&nbsp;{{ $user->name }}&nbsp;</span> &nbsp;&nbsp;&nbsp;وفقه الله</h3>
                     <h3>السلام عليكم ورحمة الله وبركاته</h3>
                     <h3>اعتمدوا القيام بالزيارات والمهام المحددة أدناه، سائلين الله لكم التوفيق</h3>
@@ -130,33 +141,33 @@
                     </tbody>
                 </table>
                 <div>
-                    <p style="text-align: justify;font-size: 14px;">
-                        هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك
-                        أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق.
-                        إذا كنت تحتاج إلى عدد أكبر من الفقرات يتيح لك مولد النص العربى زيادة عدد الفقرات كما تريد، النص لن يبدو
-                        مقسما ولا يحوي أخطاء لغوية، مولد النص العربى مفيد لمصممي المواقع على وجه الخصوص، حيث يحتاج العميل فى
-                        كثير من الأحيان أن يطلع على صورة حقيقية لتصميم الموقع.
-                        ومن هنا وجب على المصمم أن يضع نصوصا مؤقتة على التصميم ليظهر للعميل الشكل كاملاً،دور مولد النص العربى أن
-                        يوفر على المصمم عناء البحث عن نص بديل لا علاقة له بالموضوع الذى يتحدث عنه التصميم فيظهر بشكل لا يليق.
-                        هذا النص يمكن أن يتم تركيبه على أي تصميم دون مشكلة فلن يبدو وكأنه نص منسوخ، غير منظم، غير منسق، أو حتى
-                        غير مفهوم. لأنه مازال نصاً بديلاً ومؤقتاً.
-                    </p>
+                    <ol style="text-align: justify;font-size: 14px;">
+                        <span style="text-align: justify;font-size: 14px;font-weight: bold;">المهام :</span>
+                        @foreach ($subtasks as $subtask)
+                            <li>{{ $subtask->title }}</li>
+                        @endforeach
+                    </ol>
                 </div>
             </div>
 
-
-            <footer>
+            <div class="notes">
                 <table class="logo_header" cellpadding="5" border="0" cellspacing="5">
                     <tbody>
                         <tr>
-                            <td class="logo_header" style="text-align: rtl;font-size: 12px;">
+                            <td dir="rtl" class="logo_header" style="text-align:justify;font-size: 12px;">
+                                <ul style="list-style-type:none;">
+                                    <li>ص : متابعة الدوام</li>
+                                    <li>ص : الشؤون التعليمية / إدارة الاشراف.</li>
+                                    <li>ص : مكتب سعادة مدير التعليم.</li>
+                                </ul>
+                                <br>
                                 <ul>
-                                    <li>صورة للمساعد للشؤون التعليمية</li>
-                                    <li>صورة للمساعد للشؤون المدرسية</li>
-                                    <li>صورة متابعة الدوام</li>
+                                    <li>سيتم اعتماد الخطط في نظام نور في تمام الساعة 7:45 من صباح كل يوم أحد من كل أسبوع.</li>
+                                    <li>قد تكون هناك تعديلات على خطتك نظراً لتعارض زيارة أكثر من مشرف/يْن لمدرسة ، أو حسب توجيهات إدارة المكتب.</li>
+                                    <li>عند رصد غياب معلم مسند أكثر من خمسة أيام دون عذر خلال العام، أو غياب وتأخر نسبة كبيرة أثناء الزيارة يجب إبلاغ إدارة المكتب وتدوينه بتقرير الزيارة المدرسية.</li>
                                 </ul>
                             </td>
-                            <td class="logo_header" style="width: 50%;">
+                            <td class="logo_header" style="width: 40%;">
                                 <h3>مدير مكتب التعليم بوسط جازان</h3>
                                 <br>
                                 <h3>عبدالرحمن بن عسيري عكور</p>
@@ -164,7 +175,20 @@
                         </tr>
                     </tbody>
                 </table>
-            </footer>
+            </div>
+
+            <htmlpagefooter name="page-footer">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center;font-size: 12px;">ت : 0173215614</td>
+                            <td style="text-align:center;font-size: 12px;">jazanoffice2015@gmail.com</td>
+                            <td style="text-align:center;font-size: 12px;">رؤيتنا : تعليم ريادي</td>
+                            <td style="text-align:center;font-size: 12px;">مكتب تعليم وسط جازان - بنين</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </htmlpagefooter>
         @endforeach
     </div>
 </body>
