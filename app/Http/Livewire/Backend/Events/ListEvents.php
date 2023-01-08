@@ -379,10 +379,10 @@ class ListEvents extends Component
                 $query->where('week_id', $byWeek)->where('status', true);
             })->with(['events' => function ($query) use ($byWeek) {
                 $query->where('week_id', $byWeek)->where('status', true);
-            }])->orderBy('created_at', 'asc')->latest('created_at')->get();
+            }])->orderBy('name', 'asc')->get();
 
             if ($users->count() != Null) {
-                $subtasks = Subtask::where('status',1)->get();
+                $subtasks = Subtask::where('status',1)->orderBy('position', 'asc')->get();
                 return response()->streamDownload(function() use($users, $subtasks){
                     $pdf = PDF::loadView('livewire.backend.events.events_pdf',[
                         'users' => $users,

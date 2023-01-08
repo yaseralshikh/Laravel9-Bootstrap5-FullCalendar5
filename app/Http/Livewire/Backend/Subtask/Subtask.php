@@ -265,6 +265,22 @@ class Subtask extends Component
         }
     }
 
+    public function updateSubtaskPosition($items)
+    {
+        foreach ($items as $item) {
+            ModelsSubtask::find($item['value'])->update(['position' => $item['order']]);
+        }
+
+        $this->alert('success', 'Subtask position updated Successfully.', [
+            'position'  =>  'top-end',
+            'timer'  =>  3000,
+            'toast'  =>  true,
+            'text'  =>  null,
+            'showCancelButton'  =>  false,
+            'showConfirmButton'  =>  false
+        ]);
+    }
+
     // get Subtasks Property
 
     public function getSubtasksProperty()

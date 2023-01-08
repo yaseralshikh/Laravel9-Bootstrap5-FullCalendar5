@@ -7,6 +7,13 @@
                 text-decoration: none;
                 color: rgb(174, 172, 172);
             }
+            .draggable-mirror{
+                background-color: white;
+                width: 950px;
+                display: flex;
+                justify-content: space-between;
+                box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+            }
         </style>
     @endsection
 
@@ -98,9 +105,10 @@
                     @endif
 
                     <div class="table-responsive">
-                        <table id="example2"  class="table text-center table-bordered table-hover dataTable dtr-inline" aria-describedby="example2_info">
+                        <table id="example2"  class="table text-center table-hover dataTable dtr-inline" aria-describedby="example2_info">
                             <thead class="bg-light">
                                 <tr>
+                                    <th></th>
                                     <th scope="col">
                                         <div class="custom-control custom-checkbox small">
                                             <input type="checkbox" wire:model="selectPageRows" value="" class="custom-control-input" id="customCheck">
@@ -108,13 +116,7 @@
                                         </div>
                                     </th>
                                     <th>#</th>
-                                    <th>
-                                        Subtask
-                                        <span wire:click="sortBy('title')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
-                                            <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'title' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                            <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'title' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                        </span>
-                                    </th>
+                                    <th>Subtask</th>
                                     <th>
                                         Status
                                         <span wire:click="sortBy('status')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
@@ -125,9 +127,10 @@
                                     <th colspan="2">actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody wire:sortable="updateSubtaskPosition">
                                 @forelse ($subtasks as $subtask)
-                                    <tr>
+                                    <tr wire:sortable.item="{{ $subtask->id }}" wire:key="subtask-{{ $subtask->id }}">
+                                        <td wire:sortable.handle style="width:10px; cursor: move;" width="10px"><i class="fa fa-arrows-alt text-muted"></i></td>
                                         <td scope="col">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" wire:model="selectedRows" value="{{ $subtask->id }}" class="custom-control-input" id="{{ $subtask->id }}">

@@ -41,7 +41,7 @@
         }
 
         .content {
-            padding: 0 15px;
+            padding: 35mm 15px 0 15px;
             height: 180mm;
             /*border:solid red;*/
             /* background-color: #fdfadb; */
@@ -85,6 +85,8 @@
             /* background-color: rgb(71, 156, 89); */
         }
         @page {
+            margin-header: 5mm;
+	        margin-footer: 5mm;
             header: page-header;
             footer: page-footer;
         }
@@ -94,7 +96,7 @@
 <body>
     <div class="container">
         @foreach ($users as $user)
-            <div class="header">
+            <htmlpageheader name="page-header">
                 <table class="logo_header" cellpadding="5" border="0" cellspacing="5">
                     <tbody class="logo_header">
                         <tr class="logo_header">
@@ -105,7 +107,7 @@
                     </tbody>
                 </table>
                 <hr>
-            </div>
+            </htmlpageheader>
 
             <div class="content">
                 <div class="">
