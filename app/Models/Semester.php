@@ -15,6 +15,7 @@ class Semester extends Model
         'start',
         'end',
         'school_year',
+        'active',
         'status',
     ];
 

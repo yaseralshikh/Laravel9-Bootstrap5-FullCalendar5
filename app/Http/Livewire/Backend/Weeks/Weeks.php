@@ -22,7 +22,7 @@ class Weeks extends Component
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
-    public $sortColumnName = 'start';
+    public $sortColumnName = 'created_at';
     public $sortDirection = 'asc';
 
     public $showEditModal = false;

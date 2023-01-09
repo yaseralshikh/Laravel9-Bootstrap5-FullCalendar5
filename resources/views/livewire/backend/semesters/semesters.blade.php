@@ -129,6 +129,9 @@
                                         </span>
                                     </th>
                                     <th>
+                                        Active
+                                    </th>
+                                    <th>
                                         Status
                                         <span wire:click="sortBy('status')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
@@ -158,6 +161,11 @@
                                             {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $semester->end) }}
                                         </td>
                                         <td class="dtr-control sorting_1" tabindex="4">{{ $semester->school_year }}</td>
+                                        <td>
+                                            <div class="form-check">
+                                                <input wire:change="changeActive({{ $semester->id }})" class="form-check-input" type="checkbox" {{ $semester->active ? 'checked' : '' }}>
+                                            </div>
+                                        </td>
                                         <td>
                                             <span  class="font-weight-bold badge text-white {{ $semester->status == 1 ? 'bg-success' : 'bg-secondary' }}">
                                                 {{ $semester->status() }}

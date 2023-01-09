@@ -32,6 +32,26 @@ class Semesters extends Component
 	public $selectPageRows = false;
     protected $listeners = ['deleteConfirmed' => 'deleteSemesters'];
 
+    public function changeActive($semesterId)
+    {
+        $semester =Semester::where('id' ,$semesterId)->get();
+        if ($semester[0]->active) {
+            Semester::where('id' ,$semesterId)->update(['active' => 0]);
+        } else {
+            Semester::where('id' ,$semesterId)->update(['active' => 1]);
+            Semester::whereNotIn('id' ,[$semesterId])->update(['active' => 0]);
+        }
+
+        $this->alert('success', 'Semester active updated successfully.', [
+            'position'  =>  'top-end',
+            'timer'  =>  3000,
+            'toast'  =>  true,
+            'text'  =>  null,
+            'showCancelButton'  =>  false,
+            'showConfirmButton'  =>  false
+        ]);
+    }
+
     // Updated Select Page Rows
 
     public function updatedSelectPageRows($value)
@@ -155,10 +175,10 @@ class Semesters extends Component
     public function createSemester()
     {
         $validatedData = Validator::make($this->data, [
-			'title'           => 'required',
-			'start'           => 'required|date',
-			'end'           => 'required|date',
-			'school_year'     => 'required|numeric',
+			'title'             => 'required',
+			'start'             => 'required|date',
+			'end'               => 'required|date',
+			'school_year'       => 'required|numeric',
 		])->validate();
 
 		Semester::create($validatedData);
@@ -203,6 +223,8 @@ class Semesters extends Component
             ])->validate();
 
             $this->semester->update($validatedData);
+
+            // Semester::whereNotIn('id' ,[$semesterId])->update(['active' => 0]);
 
             $this->dispatchBrowserEvent('hide-form');
 

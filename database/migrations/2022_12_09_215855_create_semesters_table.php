@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('start');
             $table->date('end');
             $table->string('school_year');
+            $table->unsignedTinyInteger('active')->default(0);
             $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
         });
