@@ -116,6 +116,12 @@
                                         </span>
                                     </th>
                                     <th>
+                                        Semester Start
+                                    </th>
+                                    <th>
+                                        Semester End
+                                    </th>
+                                    <th>
                                         School Year
                                         <span wire:click="sortBy('school_year')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'school_year' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
@@ -142,8 +148,16 @@
                                             </div>
                                         </td>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td class="dtr-control sorting_1" tabindex="0">{{ $semester->title }}</td>
-                                        <td class="dtr-control sorting_1" tabindex="1">{{ $semester->school_year }}</td>
+                                        <td class="dtr-control sorting_1" tabindex="1">{{ $semester->title }}</td>
+                                        <td class="dtr-control sorting_1" tabindex="2">
+                                            {{ $semester->start }}<br>
+                                            {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $semester->start) }}
+                                        </td>
+                                        <td class="dtr-control sorting_1" tabindex="3">
+                                            {{ $semester->end }}<br>
+                                            {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $semester->end) }}
+                                        </td>
+                                        <td class="dtr-control sorting_1" tabindex="4">{{ $semester->school_year }}</td>
                                         <td>
                                             <span  class="font-weight-bold badge text-white {{ $semester->status == 1 ? 'bg-success' : 'bg-secondary' }}">
                                                 {{ $semester->status() }}
@@ -218,19 +232,39 @@
                                     <label for="title">Semester title</label>
                                     <input type="text" tabindex="1" wire:model.defer="data.title" class="form-control @error('title') is-invalid @enderror" id="title" aria-describedby="titleHelp" placeholder="Enter title">
                                     @error('title')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <!-- Modal Semester Start -->
+                                <div class="form-group">
+                                    <label for="start">Semester Start</label>
+                                    <input type="date" tabindex="2" wire:model.defer="data.start" class="form-control @error('start') is-invalid @enderror" id="start" aria-describedby="startHelp" placeholder="Enter start date">
+                                    @error('start')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <!-- Modal Semester End -->
+                                <div class="form-group">
+                                    <label for="end">Semester End</label>
+                                    <input type="date" tabindex="3" wire:model.defer="data.end" class="form-control @error('end') is-invalid @enderror" id="end" aria-describedby="endHelp" placeholder="Enter end date">
+                                    @error('end')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
                                     @enderror
                                 </div>
                                 <!-- Modal school_year -->
                                 <div class="form-group">
                                     <label for="school_year">School Year</label>
-                                    <input type="number" tabindex="2" wire:model.defer="data.school_year" class="form-control @error('school_year') is-invalid @enderror" id="school_year" aria-describedby="school_yearHelp" placeholder="Enter school year">
+                                    <input type="number" tabindex="4" wire:model.defer="data.school_year" class="form-control @error('school_year') is-invalid @enderror" id="school_year" aria-describedby="school_yearHelp" placeholder="Enter school year">
                                     @error('school_year')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
                                     @enderror
                                 </div>
                             </div>

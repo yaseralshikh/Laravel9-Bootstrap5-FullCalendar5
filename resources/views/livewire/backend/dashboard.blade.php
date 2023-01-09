@@ -42,18 +42,16 @@
                     <div class="small-box bg-success">
                         <div class="inner">
                             {{-- <h3>{{ $eventsCount }}<sup style="font-size: 20px">%</sup></h3> --}}
-                            <h3>
-                                {{ $eventsCount }}
-                                <div class="form-group d-flex flex-sm-row-reverse">
-                                    <select class="form-control">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
+                            <div class="d-sm-inline-flex">
+                                <h3>{{ $eventsCount }}</h3>
+                                <div class="form-group pt-1 pl-4">
+                                    <select wire:change="getEventsCount($event.target.value)" class="form-control form-control-sm">
+                                        @foreach ($semesters as $semester)
+                                            <option value="{{ $semester->id }}">{{ $semester->title . ' ' . $semester->school_year }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
-                            </h3>
+                            </div>
                             <p>Events Plan</p>
                         </div>
                         <div class="icon">

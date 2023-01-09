@@ -156,6 +156,8 @@ class Semesters extends Component
     {
         $validatedData = Validator::make($this->data, [
 			'title'           => 'required',
+			'start'           => 'required|date',
+			'end'           => 'required|date',
 			'school_year'     => 'required|numeric',
 		])->validate();
 
@@ -195,6 +197,8 @@ class Semesters extends Component
         try {
             $validatedData = Validator::make($this->data, [
                 'title'          => 'required',
+                'start'          => 'required|date',
+                'end'            => 'required|date',
                 'school_year'    => 'required|numeric',
             ])->validate();
 
