@@ -71,17 +71,22 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="form-group ">
-                            {{-- search --}}
-                            <div class="input-group" style="width: 200px;">
-                                <input type="search" wire:model="searchTerm" class="form-control" placeholder="Search for..." value="Lorem ipsum">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-default">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
+                    <div class="form-group d-flex justify-content-between align-items-center">
+
+                        {{-- search --}}
+                        <div class="input-group" style="width: 200px;">
+                            <input type="search" wire:model="searchTerm" class="form-control" placeholder="Search for..." value="Lorem ipsum">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fa fa-search"></i>
+                                </button>
                             </div>
+                        </div>
+
+                        {{-- Status Filter --}}
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" wire:model="byStatus" class="custom-control-input" id="customSwitch1">
+                            <label class="custom-control-label" for="customSwitch1">InActive Weeks</label>
                         </div>
 
                         <label class="flex-wrap">Total Weeks : &nbsp{{ $weeks->total() }}</label>

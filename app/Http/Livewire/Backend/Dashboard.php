@@ -25,12 +25,6 @@ class Dashboard extends Component
             ->whereBetween('start', $this->getDateRange($option))->count();
     }
 
-    public function getUsersCount($option = 1)
-    {
-        $this->usersPlanCount = Event::query()
-            ->where('user_id', $option)->count();
-    }
-
     public function getDateRange($option)
     {
         if ($option == Null) {
@@ -47,17 +41,36 @@ class Dashboard extends Component
         }
     }
 
+    public function getUsersCount($option = 1)
+    {
+        $this->usersPlanCount = Event::query()
+            ->where('user_id', $option)
+            ->where(function ($query) {
+                $query->whereHas('week', function ($q) {
+                    $q->where('semester_id', $this->semesterActive());
+                });
+            })->count();
+    }
+
+    public function semesterActive()
+    {
+        $semester_active = Semester::where('active' ,1)->get();
+        return $semester_active[0]->id;
+    }
+
     public function render()
     {
         $usersCount = User::where('status', 1)->count();
         $semesters = Semester::where('status', 1)->orderBy('id')->latest()->take(3)->get();
         $users = User::where('status', 1)->orderBy('id')->get();
+        $schools = School::where('status', 1)->whereNotIn('level_id',[4,5])->orderBy('name')->get();
         $schoolsCount = School::where('status', 1)->whereNotIn('level_id',[4,5])->count();
         return view('livewire.backend.dashboard',[
             'usersCount' => $usersCount,
             'schoolsCount' => $schoolsCount,
             'users' => $users,
             'semesters' => $semesters,
+            'schools' => $schools,
         ])->layout('layouts.admin');
     }
 }

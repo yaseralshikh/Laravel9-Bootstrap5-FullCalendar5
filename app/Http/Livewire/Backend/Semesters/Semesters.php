@@ -21,6 +21,8 @@ class Semesters extends Component
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
+    public $byStatus = 1;
+
     public $sortColumnName = 'school_year';
     public $sortDirection = 'desc';
 
@@ -293,9 +295,11 @@ class Semesters extends Component
 
     public function getSemestersProperty()
 	{
-        $semesters = Semester::query()
-            ->where('title', 'like', '%'.$this->searchTerm.'%')
-            ->orWhere('school_year', 'like', '%'.$this->searchTerm.'%')
+        $searchString = $this->searchTerm;
+        $byStatus = $this->byStatus;
+
+        $semesters = Semester::where('status', $byStatus)
+            ->search(trim(($searchString)))
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->orderBy('id','asc')
             ->paginate(30);

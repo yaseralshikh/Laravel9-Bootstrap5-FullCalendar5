@@ -120,57 +120,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div id="bar-chart" style="height: 300px; padding: 0px; position: relative;">
-                                <canvas class="flot-base"
-                                    style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 763.5px; height: 300px;"
-                                    width="763" height="300">
-                                </canvas>
-                                <canvas class="flot-overlay"
-                                    style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 763.5px; height: 300px;"
-                                    width="763" height="300">
-                                </canvas>
-                                <div class="flot-svg" style="position: absolute; top: 0px; left: 0px; height: 100%; width: 100%; pointer-events: none;">
-                                    <svg style="width: 100%; height: 100%;">
-                                        <g class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; inset: 0px;">
-                                            <text x="160.83638139204544" y="294" class="flot-tick-label tickLabel" style="position: absolute; text-align: center;">
-                                                February
-                                            </text>
-                                            <text x="298.0213068181818" y="294" class="flot-tick-label tickLabel" style="position: absolute; text-align: center;">
-                                                March
-                                            </text>
-                                            <text x="429.8536931818182" y="294" class="flot-tick-label tickLabel" style="position: absolute; text-align: center;">
-                                                April
-                                            </text>
-                                            <text x="559.4473100142045" y="294" class="flot-tick-label tickLabel" style="position: absolute; text-align: center;">
-                                                May
-                                            </text>
-                                            <text x="36.23299893465909" y="294" class="flot-tick-label tickLabel" style="position: absolute; text-align: center;">
-                                                January
-                                            </text>
-                                            <text x="684.0912198153409" y="294" class="flot-tick-label tickLabel" style="position: absolute; text-align: center;">
-                                                June
-                                            </text>
-                                        </g>
-                                        <g class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; inset: 0px;">
-                                            <text x="8.9521484375" y="269" class="flot-tick-label tickLabel" style="position: absolute; text-align: right;">
-                                                0
-                                            </text>
-                                            <text x="8.9521484375" y="205.5" class="flot-tick-label tickLabel" style="position: absolute; text-align: right;">
-                                                5
-                                            </text>
-                                            <text x="1" y="15" class="flot-tick-label tickLabel" style="position: absolute; text-align: right;">
-                                                20
-                                            </text>
-                                            <text x="1" y="142" class="flot-tick-label tickLabel" style="position: absolute; text-align: right;">
-                                                10
-                                            </text>
-                                            <text x="1" y="78.5" class="flot-tick-label tickLabel" style="position: absolute; text-align: right;">
-                                                15
-                                            </text>
-                                        </g>
-                                    </svg>
-                                </div>
-                            </div>
+                            <canvas id="myChart1" width="400" height="400"></canvas>
                         </div>
                     </div>
                     <!-- /.card -->
@@ -193,59 +143,10 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div id="bar-chart" style="height: 300px; padding: 0px; position: relative;">
-                                <canvas class="flot-base"
-                                    style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 763.5px; height: 300px;"
-                                    width="763" height="300">
-                                </canvas>
-                                <canvas class="flot-overlay"
-                                    style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 763.5px; height: 300px;"
-                                    width="763" height="300">
-                                </canvas>
-                                <div class="flot-svg" style="position: absolute; top: 0px; left: 0px; height: 100%; width: 100%; pointer-events: none;">
-                                    <svg style="width: 100%; height: 100%;">
-                                        <g class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; inset: 0px;">
-                                            <text x="160.83638139204544" y="294" class="flot-tick-label tickLabel" style="position: absolute; text-align: center;">
-                                                February
-                                            </text>
-                                            <text x="298.0213068181818" y="294" class="flot-tick-label tickLabel" style="position: absolute; text-align: center;">
-                                                March
-                                            </text>
-                                            <text x="429.8536931818182" y="294" class="flot-tick-label tickLabel" style="position: absolute; text-align: center;">
-                                                April
-                                            </text>
-                                            <text x="559.4473100142045" y="294" class="flot-tick-label tickLabel" style="position: absolute; text-align: center;">
-                                                May
-                                            </text>
-                                            <text x="36.23299893465909" y="294" class="flot-tick-label tickLabel" style="position: absolute; text-align: center;">
-                                                January
-                                            </text>
-                                            <text x="684.0912198153409" y="294" class="flot-tick-label tickLabel" style="position: absolute; text-align: center;">
-                                                June
-                                            </text>
-                                        </g>
-                                        <g class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; inset: 0px;">
-                                            <text x="8.9521484375" y="269" class="flot-tick-label tickLabel" style="position: absolute; text-align: right;">
-                                                0
-                                            </text>
-                                            <text x="8.9521484375" y="205.5" class="flot-tick-label tickLabel" style="position: absolute; text-align: right;">
-                                                5
-                                            </text>
-                                            <text x="1" y="15" class="flot-tick-label tickLabel" style="position: absolute; text-align: right;">
-                                                20
-                                            </text>
-                                            <text x="1" y="142" class="flot-tick-label tickLabel" style="position: absolute; text-align: right;">
-                                                10
-                                            </text>
-                                            <text x="1" y="78.5" class="flot-tick-label tickLabel" style="position: absolute; text-align: right;">
-                                                15
-                                            </text>
-                                        </g>
-                                    </svg>
-                                </div>
-                            </div>
+                            <canvas id="myChart2" width="400" height="400"></canvas>
                         </div>
                     </div>
+                    <canvas id="myChart" width="400" height="400"></canvas>
                     <!-- /.card -->
                 </section>
             </div>
@@ -280,6 +181,92 @@
         <!-- overlayScrollbars -->
         <script src="{{ asset('backend/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
         <script src="{{ asset('backend/js/pages/dashboard.js') }}"></script>
+
+        <script>
+            $(function () {
+                var ctx = document.getElementById("myChart1").getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                        datasets: [{
+                            label: '# of Votes',
+                            data: [12, 19, 3, 5, 2, 3],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero:true
+                                }
+                            }]
+                        }
+                    }
+                });
+            });
+
+            $(function () {
+                var ctx = document.getElementById("myChart2").getContext('2d');
+                var page_data = {!! $schools->toJson() !!};
+                var schoolName = page_data[0];
+                console.log({schoolName});
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                        datasets: [{
+                            label: '# of Votes',
+                            data: [12, 19, 3, 5, 2, 3],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero:true
+                                }
+                            }]
+                        }
+                    }
+                });
+            });
+        </script>
+
     @endsection
 </div>
 

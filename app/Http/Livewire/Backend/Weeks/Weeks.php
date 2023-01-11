@@ -22,6 +22,8 @@ class Weeks extends Component
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
+    public $byStatus = 1;
+
     public $sortColumnName = 'created_at';
     public $sortDirection = 'asc';
 
@@ -273,10 +275,11 @@ class Weeks extends Component
 
     public function getWeeksProperty()
 	{
-        $weeks = Week::query()
-            ->where('title', 'like', '%'.$this->searchTerm.'%')
-            ->orWhere('start', 'like', '%'.$this->searchTerm.'%')
-            ->orWhere('end', 'like', '%'.$this->searchTerm.'%')
+        $searchString = $this->searchTerm;
+        $byStatus = $this->byStatus;
+
+        $weeks = Week::where('status', $byStatus)
+            ->search(trim(($searchString)))
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate(30);
 
