@@ -378,8 +378,8 @@ class ListEvents extends Component
             $users = User::where('status',true)->whereHas('events', function ($query) use ($byWeek) {
                 $query->where('week_id', $byWeek)->where('status', true);
             })->with(['events' => function ($query) use ($byWeek) {
-                $query->where('week_id', $byWeek)->where('status', true);
-            }])->orderBy('name', 'asc')->get();
+                $query->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
+            }])->get();
 
             if ($users->count() != Null) {
                 $subtasks = Subtask::where('status',1)->orderBy('position', 'asc')->get();
