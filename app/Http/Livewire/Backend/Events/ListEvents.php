@@ -27,6 +27,8 @@ class ListEvents extends Component
 
     public $data = [];
 
+    public $items = [];
+
     public $event;
 
     public $byWeek = null; //filter by week_id
@@ -333,6 +335,7 @@ class ListEvents extends Component
                 'showCancelButton'  =>  false,
                 'showConfirmButton'  =>  false
             ]);
+
         } catch (\Throwable $th) {
             $message = $this->alert('error', $th->getMessage(), [
                 'position'  =>  'top-end',
@@ -368,6 +371,57 @@ class ListEvents extends Component
     public function importExcel()
     {
         //
+    }
+
+    public function userNullPlan()
+    {
+        $byWeek = $this->byWeek;
+
+        if ($byWeek) {
+
+            $users = User::where('status',true)->with(['events' => function ($query) use ($byWeek) {
+                $query->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
+            }])->get();
+
+            foreach ($users as $user) {
+                if ($user->events->count() == Null) {
+                    $this->items[] = $user->name . "<br><br>";
+                }
+            }
+
+            if ($this->items != Null) {
+                $this->alert('error', implode(" ", $this->items) , [
+                    'position'  =>  'center',
+                    'timer'  =>  null,
+                    'toast'  =>  true,
+                    'text'  =>  null,
+                    'showCancelButton'  =>  false,
+                    'showConfirmButton'  =>  true
+                ]);
+                
+                $this->items = [];
+
+            } else {
+                $this->alert('success', 'All User has Events', [
+                    'position'  =>  'top-end',
+                    'timer'  =>  3000,
+                    'toast'  =>  true,
+                    'text'  =>  null,
+                    'showCancelButton'  =>  false,
+                    'showConfirmButton'  =>  false
+                ]);
+            }
+
+        } else {
+            $this->alert('error', 'Select Week befor that !', [
+                'position'  =>  'center',
+                'timer'  =>  3000,
+                'toast'  =>  true,
+                'text'  =>  null,
+                'showCancelButton'  =>  false,
+                'showConfirmButton'  =>  false
+            ]);
+        }
     }
 
     public function exportPDF()
@@ -436,6 +490,14 @@ class ListEvents extends Component
     {
         $events = $this->events;
         $users = User::where('status',1)->get();
+
+        // $userPlans = User::where('status', true)
+        // ->where(function ($query) {
+        //     $query->whereHas('events', function ($q) {
+        //         $q->where('week_id', $this->semesterActive());
+        //     });
+        // })->get();
+
         $weeks = Week::where('status',1)->get();
         $schools = School::where('status',1)->get();
 

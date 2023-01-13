@@ -49,8 +49,9 @@
                             </button>
                             <div class="dropdown-menu" role="menu" style="">
                                 <a class="dropdown-item" wire:click.prevent="exportExcel" href="#" aria-disabled="true">Export to Excel</a>
-                                <a class="dropdown-item" wire:click.prevent="importExcelForm" href="#">Import from Excel</a>
+                                {{-- <a class="dropdown-item" wire:click.prevent="importExcelForm" href="#">Import from Excel</a> --}}
                                 <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a>
+                                <a class="dropdown-item" wire:click.prevent="userNullPlan" href="#">User Without Plan</a>
                                 <div class="dropdown-divider"></div>
                                 {{-- @if ($selectedRows) --}}
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}" wire:click.prevent="setAllAsActive" href="#">Set as Acive</a>
