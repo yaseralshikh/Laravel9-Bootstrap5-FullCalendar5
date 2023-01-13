@@ -102,7 +102,7 @@
             <!-- /.row -->
             <!-- Main row -->
             <div class="row">
-                <section class="col-lg-6 connectedSortable">
+                <section class="col-lg-12 connectedSortable">
                     <!-- Custom tabs (Charts with tabs)-->
                     <div class="card card-primary card-outline">
                         <div class="card-header">
@@ -114,39 +114,20 @@
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
                                 </button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                {{-- <button type="button" class="btn btn-tool" data-card-widget="remove">
                                     <i class="fas fa-times"></i>
-                                </button>
+                                </button> --}}
                             </div>
                         </div>
                         <div class="card-body">
-                            <canvas id="myChart1" width="400" height="400"></canvas>
+                            <div style="height: 32rem;">
+                                <livewire:livewire-column-chart
+                                    key="{{ $columnChartModel->reactiveKey() }}"
+                                    :column-chart-model="$columnChartModel"
+                                />
+                             </div>
                         </div>
                     </div>
-                    <!-- /.card -->
-                </section>
-                <section class="col-lg-6 connectedSortable">
-                    <!-- Custom tabs (Charts with tabs)-->
-                    <div class="card card-primary card-outline">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="far fa-chart-bar"></i>
-                                Bar Chart
-                            </h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="myChart2" width="400" height="400"></canvas>
-                        </div>
-                    </div>
-                    <canvas id="myChart" width="400" height="400"></canvas>
                     <!-- /.card -->
                 </section>
             </div>
@@ -181,91 +162,6 @@
         <!-- overlayScrollbars -->
         <script src="{{ asset('backend/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
         <script src="{{ asset('backend/js/pages/dashboard.js') }}"></script>
-
-        <script>
-            $(function () {
-                var ctx = document.getElementById("myChart1").getContext('2d');
-                var myChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-                        datasets: [{
-                            label: '# of Votes',
-                            data: [12, 19, 3, 5, 2, 3],
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(153, 102, 255, 0.2)',
-                                'rgba(255, 159, 64, 0.2)'
-                            ],
-                            borderColor: [
-                                'rgba(255,99,132,1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero:true
-                                }
-                            }]
-                        }
-                    }
-                });
-            });
-
-            $(function () {
-                var ctx = document.getElementById("myChart2").getContext('2d');
-                var page_data = {!! $schools->toJson() !!};
-                var schoolName = page_data[0];
-                console.log({schoolName});
-                var myChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-                        datasets: [{
-                            label: '# of Votes',
-                            data: [12, 19, 3, 5, 2, 3],
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(153, 102, 255, 0.2)',
-                                'rgba(255, 159, 64, 0.2)'
-                            ],
-                            borderColor: [
-                                'rgba(255,99,132,1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero:true
-                                }
-                            }]
-                        }
-                    }
-                });
-            });
-        </script>
 
     @endsection
 </div>
