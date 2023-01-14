@@ -279,6 +279,18 @@
                                         </div>
                                     @enderror
                                 </div>
+                                {{-- <!-- Modal Active -->
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        <input wire:model.defer="data.active" class="custom-control-input @error('active') is-invalid @enderror" type="checkbox" id="customCheckbox1">
+                                        <label for="customCheckbox1" class="custom-control-label">Active</label>
+                                        @error('school_year')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>

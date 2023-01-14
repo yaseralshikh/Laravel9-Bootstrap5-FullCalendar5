@@ -35,6 +35,26 @@ class Weeks extends Component
 	public $selectPageRows = false;
     protected $listeners = ['deleteConfirmed' => 'deleteWeeks'];
 
+    public function changeActive($weekId)
+    {
+        $week =Week::where('id' ,$weekId)->get();
+        if ($week[0]->active) {
+            Week::where('id' ,$weekId)->update(['active' => 0]);
+        } else {
+            Week::where('id' ,$weekId)->update(['active' => 1]);
+            Week::whereNotIn('id' ,[$weekId])->update(['active' => 0]);
+        }
+
+        $this->alert('success', 'Week active updated successfully.', [
+            'position'  =>  'top-end',
+            'timer'  =>  3000,
+            'toast'  =>  true,
+            'text'  =>  null,
+            'showCancelButton'  =>  false,
+            'showConfirmButton'  =>  false
+        ]);
+    }
+
     // Updated Select Page Rows
 
     public function updatedSelectPageRows($value)

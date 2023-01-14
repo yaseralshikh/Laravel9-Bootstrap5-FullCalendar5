@@ -1,4 +1,4 @@
-<div>
+div<div>
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
@@ -120,12 +120,14 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div style="height: 32rem;">
-                                <livewire:livewire-column-chart
-                                    key="{{ $columnChartModel->reactiveKey() }}"
-                                    :column-chart-model="$columnChartModel"
-                                />
-                             </div>
+                            <div class="table-responsive">
+                                <div style="height: 32rem;">
+                                    <livewire:livewire-column-chart
+                                        key="{{ $columnChartModel->reactiveKey() }}"
+                                        :column-chart-model="$columnChartModel"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- /.card -->

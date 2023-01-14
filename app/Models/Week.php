@@ -16,6 +16,7 @@ class Week extends Model
         'start',
         'end',
         'semester_id',
+        'active',
         'status',
     ];
 

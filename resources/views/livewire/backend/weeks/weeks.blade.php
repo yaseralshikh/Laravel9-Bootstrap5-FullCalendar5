@@ -144,6 +144,9 @@
                                     <th>
                                         School Year
                                     </th>
+                                    <td>
+                                        Active
+                                    </td>
                                     <th>
                                         Status
                                         <span wire:click="sortBy('status')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
@@ -175,6 +178,11 @@
                                         </td>
                                         <td>{{ $week->semester->title }}</td>
                                         <td>{{ $week->semester->school_year }}</td>
+                                        <td>
+                                            <div class="form-check">
+                                                <input wire:change="changeActive({{ $week->id }})" class="form-check-input" type="checkbox" {{ $week->active ? 'checked' : '' }}>
+                                            </div>
+                                        </td>
                                         <td>
                                             <span  class="font-weight-bold badge text-white {{ $week->status == 1 ? 'bg-success' : 'bg-secondary' }}">
                                                 {{ $week->status() }}
