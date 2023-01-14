@@ -37,7 +37,7 @@
                             </ul>
                         </div>
                     @endif
-                    <p class="login-box-msg">Sign in to start your session</p>
+                    <p class="login-box-msg">@lang('site.login_system')</p>
 
                     <form  method="POST" action="{{ route('login') }}">
                         @csrf
@@ -72,13 +72,13 @@
                                 <div class="icheck-primary">
                                     <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                                     <label for="remember">
-                                        Remember Me
+                                        @lang('site.rememberMe')
                                     </label>
                                 </div>
                             </div>
                             <!-- /.col -->
                             <div class="col-4">
-                                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                                <button type="submit" class="btn btn-primary btn-sm btn-block">@lang('site.login')</button>
                             </div>
                             <!-- /.col -->
                         </div>
@@ -96,11 +96,11 @@
 
                     @if (Route::has('password.request'))
                         <p class="mb-1">
-                            <a href="{{ route('password.request') }}">I forgot my password</a>
+                            <a href="{{ route('password.request') }}">@lang('site.forgotPassword')</a>
                         </p>
                     @endif
                     <p class="mb-0">
-                        <a href="{{ route('register') }}" class="text-center">Register a new membership</a>
+                        <a href="{{ route('register') }}" class="text-center">@lang('site.register')</a>
                     </p>
                 </div>
                 <!-- /.card-body -->

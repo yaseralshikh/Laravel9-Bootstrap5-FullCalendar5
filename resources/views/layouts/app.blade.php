@@ -72,11 +72,11 @@
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <li>
                                         @role(['admin|superadmin'])
-                                            <a class="dropdown-item" href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
+                                            <a class="dropdown-item" href="{{ route('admin.dashboard') }}">@lang('site.adminDashboard')</a>
                                         @endrole
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            {{ __('Logout') }}
+                                            {{ __('site.logout') }}
                                         </a>
                                     </li>
 
@@ -128,7 +128,7 @@
                 <hr>
                 <!-- Copyright -->
                 <div class="text-center text-white ">
-                    © 2022 Copyright: <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+                    © 2023 @lang('site.copyRight') : <a class="text-white" href="https://sweeklyplan.com/">sweeklyplan.com</a>
                 </div>
                 <!-- Copyright -->
             </div>
