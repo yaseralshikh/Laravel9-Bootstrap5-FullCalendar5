@@ -188,181 +188,181 @@
     @push('script')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-                const createModalEl = document.getElementById('createModal');
-                createModalEl.addEventListener('hidden.bs.modal', event => {
-                    @this.week_id = '';
-                    @this.title = '';
-                    @this.start = '';
-                    @this.end = '';
-                });
+            const createModalEl = document.getElementById('createModal');
+            createModalEl.addEventListener('hidden.bs.modal', event => {
+                @this.week_id = '';
+                @this.title = '';
+                @this.start = '';
+                @this.end = '';
+            });
 
-                const editModalEl = document.getElementById('editModal');
-                editModalEl.addEventListener('hidden.bs.modal', event => {
-                    @this.event_id = '';
-                    @this.week_id = '';
-                    @this.title = '';
-                    @this.start = '';
-                    @this.end = '';
-                });
+            const editModalEl = document.getElementById('editModal');
+            editModalEl.addEventListener('hidden.bs.modal', event => {
+                @this.event_id = '';
+                @this.week_id = '';
+                @this.title = '';
+                @this.start = '';
+                @this.end = '';
+            });
 
-                const calendarEl = document.getElementById('calendar');
-                const checkbox = document.getElementById('drop-remove');
-                const tooltip = null;
-                const userID = {{ auth()->user()->id }};
-                const userRole = {{ auth()->user()->roles[0]->id }};
+            const calendarEl = document.getElementById('calendar');
+            const checkbox = document.getElementById('drop-remove');
+            const tooltip = null;
+            const userID = {{ auth()->user()->id }};
+            const userRole = {{ auth()->user()->roles[0]->id }};
 
-                const calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'dayGridMonth',
-                    headerToolbar: {
-                        right: 'title',
-                        left: 'dayGridMonth,listWeek,prev,next today'
-                    },
-                    timeZone: 'local',
-                    locale: 'ar-sa',
-                    displayEventTime : false,
-                    weekNumbers: true,
-                    hiddenDays: [ 5,6 ],
-                    //weekends: false,
-                    //firstDay:0,
-                    //themeSystem: 'bootstrap5',
-                    dayMaxEvents: 5, // allow "more" link when too many events
-                    //selectable: true,
-                    selectable: false,
-                    droppable: true, // this allows things to be dropped onto the calendar
-                    editable: true,
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    right: 'title',
+                    left: 'dayGridMonth,listWeek,prev,next today'
+                },
+                timeZone: 'local',
+                locale: 'ar-sa',
+                displayEventTime : false,
+                weekNumbers: true,
+                hiddenDays: [ 5,6 ],
+                //weekends: false,
+                //firstDay:0,
+                //themeSystem: 'bootstrap5',
+                dayMaxEvents: 5, // allow "more" link when too many events
+                //selectable: true,
+                selectable: false,
+                droppable: true, // this allows things to be dropped onto the calendar
+                editable: true,
 
-                    dateClick: function(info){
-                        var startDate = info.dateStr;
-                        var endDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() + 1));
-                        @this.start = startDate;
-                        @this.end = endDate.toISOString().substr(0, 10);
-                        $('#createModal').modal('toggle');
-                    },
+                dateClick: function(info){
+                    var startDate = info.dateStr;
+                    var endDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() + 1));
+                    @this.start = startDate;
+                    @this.end = endDate.toISOString().substr(0, 10);
+                    $('#createModal').modal('toggle');
+                },
 
-                    // for select multiple days
-                    // select: function(info){
-                    //     @this.start = startStr;
-                    //     @this.end = endStr;
-                    //     $('#createModal').modal('toggle');
-                    // },
+                // for select multiple days
+                // select: function(info){
+                //     @this.start = startStr;
+                //     @this.end = endStr;
+                //     $('#createModal').modal('toggle');
+                // },
 
-                    eventClick: function({event}) {
-                        if (userID == event.extendedProps.user_id || userRole != 3) {
-                            if (event.extendedProps.status && userRole == 3) {
-                                Swal.fire({
-                                    title: 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد من المكتب',
-                                    timer: 2000,
-                                    icon: 'error',
-                                    toast: true,
-                                    showConfirmButton: false,
-                                    position: 'center'
-                                })
-                            } else {
-                                @this.event_id  = event.id;
-                                @this.week_id   = event.extendedProps.week_id;
-                                @this.title     = event.title;
-                                @this.start     = dayjs(event.startStr).format('YYYY-MM-DD');
-                                @this.end       = dayjs(event.endStr).format('YYYY-MM-DD');
-                                $('#editModal').modal('toggle');
-                            }
-                        } else {
+                eventClick: function({event}) {
+                    if (userID == event.extendedProps.user_id || userRole != 3) {
+                        if (event.extendedProps.status && userRole == 3) {
                             Swal.fire({
-                                title: 'لا تملك الصلاحية للتعديل !!',
+                                title: 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد من المكتب',
                                 timer: 2000,
                                 icon: 'error',
                                 toast: true,
                                 showConfirmButton: false,
                                 position: 'center'
                             })
+                        } else {
+                            @this.event_id  = event.id;
+                            @this.week_id   = event.extendedProps.week_id;
+                            @this.title     = event.title;
+                            @this.start     = dayjs(event.startStr).format('YYYY-MM-DD');
+                            @this.end       = dayjs(event.endStr).format('YYYY-MM-DD');
+                            $('#editModal').modal('toggle');
                         }
+                    } else {
+                        Swal.fire({
+                            title: 'لا تملك الصلاحية للتعديل !!',
+                            timer: 2000,
+                            icon: 'error',
+                            toast: true,
+                            showConfirmButton: false,
+                            position: 'center'
+                        })
+                    }
 
-                    },
+                },
 
-                    // for show Tooltips //
-                    // eventDidMount: function (info) {
-                    //     $(info.el).popover({
-                    //         title: info.event.title,
-                    //         placement: 'top',
-                    //         trigger: 'hover',
-                    //         //content: dayjs(info.event.startStr).format('YYYY-MM-DD'),
-                    //         //content: info.event.extendedProps.user_id,
-                    //         container: 'body',
-                    //     });
-                    //     info.el.style.backgroundColor = '#EFFBF8'
-                    // },
+                // for show Tooltips //
+                // eventDidMount: function (info) {
+                //     $(info.el).popover({
+                //         title: info.event.title,
+                //         placement: 'top',
+                //         trigger: 'hover',
+                //         //content: dayjs(info.event.startStr).format('YYYY-MM-DD'),
+                //         //content: info.event.extendedProps.user_id,
+                //         container: 'body',
+                //     });
+                //     info.el.style.backgroundColor = '#EFFBF8'
+                // },
 
-                    eventMouseEnter: function (info) {
-                        $(info.el).tooltip({
-                            title: info.event.extendedProps.week.title + ' ( ' + info.event.extendedProps.week.semester.school_year  + ' ) ' + '<br />' + info.event.title + '<br />'+ '<span class="text-info">' + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
-                            html: true,
-                            content:'ssss',
-                            placement: 'top',
-                            trigger: 'hover',
-                            container: 'body'
+                eventMouseEnter: function (info) {
+                    $(info.el).tooltip({
+                        title: info.event.extendedProps.week.title + ' ( ' + info.event.extendedProps.week.semester.school_year  + ' ) ' + '<br />' + info.event.title + '<br />'+ '<span class="text-info">' + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
+                        html: true,
+                        content:'ssss',
+                        placement: 'top',
+                        trigger: 'hover',
+                        container: 'body'
+                    });
+                },
+
+                eventMouseLeave:  function(info) {
+                    if (tooltip) {
+                        tooltip.dispose();
+                    }
+                },
+
+                drop: function(event) {
+                    // is the "remove after drop" checkbox checked?
+                    if (checkbox.checked) {
+                        // if so, remove the element from the "Draggable Events" list
+                        event.draggedEl.parentNode.removeChild(event.draggedEl);
+                    }
+                },
+                eventDrop: info => @this.eventDrop(info.event, info.oldEvent),
+                loading: function(isLoading) {
+                    if (!isLoading) {
+                        // Reset custom events
+                        this.getEvents().forEach(function(e){
+                            if (e.source === null) { e.remove(); }
                         });
-                    },
-
-                    eventMouseLeave:  function(info) {
-                        if (tooltip) {
-                            tooltip.dispose();
-                        }
-                    },
-
-                    drop: function(event) {
-                        // is the "remove after drop" checkbox checked?
-                        if (checkbox.checked) {
-                            // if so, remove the element from the "Draggable Events" list
-                            event.draggedEl.parentNode.removeChild(event.draggedEl);
-                        }
-                    },
-                    eventDrop: info => @this.eventDrop(info.event, info.oldEvent),
-                    loading: function(isLoading) {
-                        if (!isLoading) {
-                            // Reset custom events
-                            this.getEvents().forEach(function(e){
-                                if (e.source === null) { e.remove(); }
-                            });
-                        }
                     }
+                }
 
-                });
-
-                calendar.addEventSource({
-                    url: '/api/calendar/events'
-                });
-
-                calendar.render();
-
-                document.addEventListener('closeModalCreate', function({detail}) {
-                    if (detail.close) {
-                        $('#createModal').modal('toggle');
-                    }
-                });
-
-                document.addEventListener('closeModalEdit', function({detail}) {
-                    if (detail.close) {
-                        $('#editModal').modal('toggle');
-                    }
-                });
-
-                document.addEventListener('refreshEventCalendar', function({detail}) {
-                    if (detail.refresh) {
-                        calendar.refetchEvents();
-                    }
-                });
-
-                // when the selected option changes, dynamically change the calendar option
-                var localeSelectorEl = document.getElementById('locale-selector');
-                localeSelectorEl.addEventListener('change', function() {
-                    if (this.value) {
-                        calendar.setOption('locale', this.value);
-                    }
-                });
-
-                window.addEventListener('swal',function(e){
-                    Swal.fire(e.detail);
-                });
             });
+
+            calendar.addEventSource({
+                url: '/api/calendar/events'
+            });
+
+            calendar.render();
+
+            document.addEventListener('closeModalCreate', function({detail}) {
+                if (detail.close) {
+                    $('#createModal').modal('toggle');
+                }
+            });
+
+            document.addEventListener('closeModalEdit', function({detail}) {
+                if (detail.close) {
+                    $('#editModal').modal('toggle');
+                }
+            });
+
+            document.addEventListener('refreshEventCalendar', function({detail}) {
+                if (detail.refresh) {
+                    calendar.refetchEvents();
+                }
+            });
+
+            // when the selected option changes, dynamically change the calendar option
+            var localeSelectorEl = document.getElementById('locale-selector');
+            localeSelectorEl.addEventListener('change', function() {
+                if (this.value) {
+                    calendar.setOption('locale', this.value);
+                }
+            });
+
+            window.addEventListener('swal',function(e){
+                Swal.fire(e.detail);
+            });
+        });
     </script>
     @endpush
 </div>

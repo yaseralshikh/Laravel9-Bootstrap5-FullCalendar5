@@ -3,11 +3,12 @@
 namespace App\Http\Livewire;
 
 use Carbon\Carbon;
-use App\Models\Event;
-use App\Models\Week;
-use App\Models\School;
 use App\Models\User;
+use App\Models\Week;
+use App\Models\Event;
+use App\Models\School;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class Calendar extends Component
 {

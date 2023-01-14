@@ -1,4 +1,4 @@
-div<div>
+<div>
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
@@ -121,7 +121,7 @@ div<div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <div style="height: 32rem;">
+                                <div class="shadow rounded p-4 border" style="height: 32rem;">
                                     <livewire:livewire-column-chart
                                         key="{{ $columnChartModel->reactiveKey() }}"
                                         :column-chart-model="$columnChartModel"

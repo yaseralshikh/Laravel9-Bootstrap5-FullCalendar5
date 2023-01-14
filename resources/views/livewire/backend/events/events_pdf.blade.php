@@ -79,7 +79,7 @@
 
         /* Footer */
         footer {
-            padding: 15px;
+            padding: 5px;
             height: 2mm;
             /*border:solid red;*/
             /* background-color: rgb(71, 156, 89); */
@@ -156,7 +156,7 @@
                 <table class="logo_header" cellpadding="5" border="0" cellspacing="5">
                     <tbody>
                         <tr>
-                            <td dir="rtl" class="logo_header" style="text-align:justify;font-size: 12px;">
+                            <td dir="rtl" class="logo_header" style="text-align:justify;font-size: 12px;line-height: 1.5;">
                                 <ul style="list-style-type:none;">
                                     <li>ص : متابعة الدوام</li>
                                     <li>ص : الشؤون التعليمية / إدارة الاشراف.</li>

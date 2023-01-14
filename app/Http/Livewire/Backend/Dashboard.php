@@ -116,9 +116,9 @@ class Dashboard extends Component
             ->withOnColumnClickEventName('onColumnClick')
             ->setLegendVisibility(false)
             ->setDataLabelsEnabled($this->showDataLabels)
-            ->setOpacity(0.50)
+            ->setOpacity(0.60)
             //->setColors(['#b01a1b', '#d41b2c', '#ec3c3b', '#f66665'])
-            ->setColumnWidth(60)
+            ->setColumnWidth(70)
             ->withGrid()
         );
 

@@ -86,8 +86,7 @@
                         <div class="media-body">
                             <h3 class="dropdown-item-title">
                                 Nora Silvester
-                                <span class="float-right text-sm text-warning"><i
-                                        class="fas fa-star"></i></span>
+                                <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
                             </h3>
                             <p class="text-sm">The subject goes here</p>
                             <p class="text-sm text-muted"><i class="mr-1 far fa-clock"></i> 4 Hours Ago</p>
@@ -133,8 +132,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#"
-                role="button">
+            <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
                 <i class="fas fa-th-large"></i>
             </a>
         </li>
@@ -142,14 +140,16 @@
         <!-- User profile Dropdown Menu -->
         <li class="nav-item dropdown user user-menu">
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                <img src="{{ asset('backend/img/user2-160x160.jpg') }}" class="user-image img-circle elevation-2" alt="User Image">
+                <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}" class="user-image img-circle elevation-2"
+                    alt="User Image">
             </a>
             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <!-- User image -->
                 <li class="user-header bg-secondary ">
-                    <img src="{{ asset('backend/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
+                    <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}" class="img-circle elevation-2"
+                        alt="User Image">
                     <p>
-                        {{  Str::title(Auth::user()->name) }} - {{  Str::title(Auth::user()->description) }}
+                        {{ Str::title(Auth::user()->name) }} - {{ Str::title(Auth::user()->description) }}
                         <small>Member since : {{ date('d-m-Y', strtotime(Auth::user()->create_at)) }}</small>
                     </p>
                 </li>
@@ -162,7 +162,7 @@
                             <p class="text-sm text-muted"><i class="mr-1 fas fa-phone"></i> Phone:</p>
                         </div>
                         <div class="col-6">
-                            <p class="mb-2 text-sm text-muted">{{  Str::title(Auth::user()->specialization->name) }}</p>
+                            <p class="mb-2 text-sm text-muted">{{ Str::title(Auth::user()->specialization->name) }}</p>
                             <p class="mb-2 text-sm text-muted">{{ Auth::user()->address }}</p>
                             <p class="text-sm text-muted">{{ Auth::user()->phone }}</p>
                         </div>
@@ -170,8 +170,10 @@
                 </li>
                 <!-- Menu Footer-->
                 <li class="flex-wrap mt-2 d-flex">
-                    {{-- <button type="button" class="m-2 btn btn-block btn-secondary btn-sm"><i class="mr-2 fa fa-user" aria-hidden="true"></i>Profile</button> --}}
-                    <a class="m-2 btn btn-block btn-secondary btn-sm" href="#" data-toggle="modal" data-target="#logoutModal">
+                    {{-- <button type="button" class="m-2 btn btn-block btn-secondary btn-sm"><i class="mr-2 fa fa-user"
+                            aria-hidden="true"></i>Profile</button> --}}
+                    <a class="m-2 btn btn-block btn-secondary btn-sm" href="#" data-toggle="modal"
+                        data-target="#logoutModal">
                         <i class="mr-2 fas fa-sign-out-alt"></i>
                         Logout
                     </a>
