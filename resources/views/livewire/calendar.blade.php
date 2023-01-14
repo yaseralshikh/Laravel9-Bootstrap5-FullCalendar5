@@ -56,7 +56,7 @@
                                 class="form-select  @error('week_id') is-invalid @enderror" id="week_id">
                                 <option value="" selected>Choise :</option>
                                 @foreach ($weeks as $week)
-                                    <option value="{{ $week->id }}">{{ $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
+                                    <option value="{{ $week->id }}" style="{{ $week->active ? 'color: blue;' : '' }}" >{{ $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
                                 @endforeach
                             </select>
 

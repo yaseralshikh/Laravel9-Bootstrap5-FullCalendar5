@@ -89,7 +89,7 @@
                             <select name="week_id" wire:model="byWeek" class="form-control form-control-sm mr-5">
                                 <option value="" selected>All Weeks</option>
                                 @foreach ($weeks as $week)
-                                <option value="{{ $week->id }}">{{ $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
+                                    <option value="{{ $week->id }}" {{ $week->active ? 'selected' : '' }} style="{{ $week->active ? 'color: blue;' : '' }}">{{ $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -281,9 +281,9 @@
 
                                     <select name="week_id" wire:model.defer="data.week_id"
                                         class="form-control  @error('week_id') is-invalid @enderror" id="week_id">
-                                        <option value="" selected>Choise :</option>
+                                        <option value="">Choise :</option>
                                         @foreach ($weeks as $week)
-                                            <option value="{{ $week->id }}">{{ $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
+                                            <option value="{{ $week->id }}" style="{{ $week->active ? 'color: blue;' : '' }}">{{ $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
                                         @endforeach
                                     </select>
 
