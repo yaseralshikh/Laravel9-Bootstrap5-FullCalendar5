@@ -9,13 +9,15 @@
             font-size: 14px;
             background-color: rgb(243, 243, 243);
         }
+
         .fc .fc-col-header {
             background-color: rgb(51, 81, 133);
         }
 
-        .fc-col-header-cell-cushion{
-            color:rgb(255, 254, 254);
+        .fc-col-header-cell-cushion {
+            color: rgb(255, 254, 254);
         }
+
         /* .fc .fc-daygrid-day-frame {
             background-color: rgb(236, 236, 236);
         } */
@@ -54,9 +56,10 @@
                             <label for="week_id" class="form-label">{{ __('School Week') }} :</label>
                             <select name="week_id" wire:model.defer="week_id"
                                 class="form-select  @error('week_id') is-invalid @enderror" id="week_id">
-                                <option value="" selected>Choise :</option>
+                                <option value="" selected>@lang('site.choise') :</option>
                                 @foreach ($weeks as $week)
-                                    <option value="{{ $week->id }}" style="{{ $week->active ? 'color: blue;' : '' }}" >{{ $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
+                                <option value="{{ $week->id }}" style="{{ $week->active ? 'color: blue;' : '' }}">{{
+                                    $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
                                 @endforeach
                             </select>
 
@@ -73,9 +76,9 @@
                                 class="form-control @error('title') is-invalid @enderror" id="title"> --}}
                             <select name="title" wire:model.defer="title"
                                 class="form-select  @error('title') is-invalid @enderror" id="title">
-                                <option value="" selected>Choise :</option>
+                                <option value="" selected>@lang('site.choise') :</option>
                                 @foreach ($schools as $school)
-                                    <option value="{{ $school->name }}">{{ $school->name }}</option>
+                                <option value="{{ $school->name }}">{{ $school->name }}</option>
                                 @endforeach
                             </select>
                             @error('title')
@@ -102,7 +105,8 @@
                             </div>
                             @role('admin|superadmin')
                             <div class="form-check">
-                                <input class="form-check-input" wire:model.defer="all_user" type="checkbox" value="" id="flexCheckDefault">
+                                <input class="form-check-input" wire:model.defer="all_user" type="checkbox" value=""
+                                    id="flexCheckDefault">
                                 <label class="form-check-label" for="flexCheckDefault">
                                     Event for All users
                                 </label>
@@ -135,7 +139,8 @@
                             <select wire:model.defer="week_id"
                                 class="form-select  @error('week_id') is-invalid @enderror" id="week_d_1">
                                 @foreach ($weeks as $week)
-                                    <option value="{{ $week->id }}">{{ $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
+                                <option value="{{ $week->id }}">{{ $week->title . ' ( ' . $week->semester->school_year .
+                                    ' )' }}</option>
                                 @endforeach
                             </select>
 
@@ -151,7 +156,7 @@
                             <select wire:model.defer="title" class="form-select  @error('title') is-invalid @enderror"
                                 id="title1">
                                 @foreach ($schools as $school)
-                                    <option value="{{ $school->name }}">{{ $school->name }}</option>
+                                <option value="{{ $school->name }}">{{ $school->name }}</option>
                                 @endforeach
                             </select>
 

@@ -138,7 +138,7 @@
         </li>
 
         <!-- User profile Dropdown Menu -->
-        <li class="nav-item dropdown user user-menu">
+        <li dir="rtl" class="nav-item dropdown user user-menu">
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                 <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}" class="user-image img-circle elevation-2"
                     alt="User Image">
@@ -149,22 +149,20 @@
                     <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}" class="img-circle elevation-2"
                         alt="User Image">
                     <p>
-                        {{ Str::title(Auth::user()->name) }} - {{ Str::title(Auth::user()->description) }}
-                        <small>Member since : {{ date('d-m-Y', strtotime(Auth::user()->create_at)) }}</small>
+                        {{ Str::title(Auth::user()->name) }} - {{ Str::title(Auth::user()->status()) }}
+                        <small>@lang('site.memberSince') : {{ \Carbon\Carbon::parse(Auth::user()->created_at)->diff(\Carbon\Carbon::now())->format('%y سنه, %m شهر و %d يوم') }}</small>
                     </p>
                 </li>
                 <!-- Menu Body -->
                 <li class="user-body">
                     <div class="row">
-                        <div class="col-6">
-                            <p class="mb-2 text-sm text-muted"><i class="mr-1 fas fa-user"></i>Specialization:</p>
-                            <p class="mb-2 text-sm text-muted"><i class="mr-1 fas fa-building"></i> Address:</p>
-                            <p class="text-sm text-muted"><i class="mr-1 fas fa-phone"></i> Phone:</p>
+                        <div class="col-6 text-right">
+                            <p class="mb-2 text-sm text-muted"><i class="ml-2 fas fa-user"></i>@lang('site.specialization') :</p>
+                            <p class="mb-2 text-sm text-muted"><i class="ml-1 fas fa-user-lock"></i> @lang('site.role') :</p>
                         </div>
                         <div class="col-6">
                             <p class="mb-2 text-sm text-muted">{{ Str::title(Auth::user()->specialization->name) }}</p>
-                            <p class="mb-2 text-sm text-muted">{{ Auth::user()->address }}</p>
-                            <p class="text-sm text-muted">{{ Auth::user()->phone }}</p>
+                            <p class="mb-2 text-sm text-muted">{{ Auth::user()->roles[0]->name }}</p>
                         </div>
                     </div>
                 </li>

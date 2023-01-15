@@ -21,18 +21,19 @@
         <div class="register-box">
             <div class="card card-outline card-primary">
                 <div class="card-header text-center">
+                    <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}" class="img-circle elevation-2">
                     <a href="{{ route('home') }}" class="h1"><b>Admin</b>LTE</a>
                     <h4 class="text-primary">خطة المشرف الأسبوعية</h4>
                     <h6>مكتب التعليم بوسط جازان - بنين</h6>
                 </div>
                 <div class="card-body">
-                    <p class="login-box-msg">Register a new membership</p>
+                    <p class="login-box-msg">@lang('site.registerNewMembership')</p>
 
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
                         <!-- Name -->
                         <div class="input-group mb-3">
-                            <input type="text" id="name"  class="form-control @error('name') is-invalid @enderror" placeholder="Full name" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                            <input type="text" id="name"  class="form-control @error('name') is-invalid @enderror" placeholder="@lang('site.fullName')" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-user"></span>
@@ -46,7 +47,7 @@
                         </div>
                         <!-- E-Mail Address -->
                         <div class="input-group mb-3">
-                            <input type="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                            <input type="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="@lang('site.email')" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-envelope"></span>
@@ -61,7 +62,7 @@
                         <!-- Specialization -->
                         <div class="input-group mb-3">
                             <select name="specialization_id" class="custom-select @error('specialization_id') is-invalid @enderror" id="inputGroupSelect02">
-                                <option disabled selected>Choose Specialization...</option>
+                                <option disabled selected>@lang('site.specialization')</option>
                                 @foreach ($specializations as $specialization)
                                     <option value="{{ $specialization->id }}">{{ $specialization->name }}</option>
                                 @endforeach
@@ -77,7 +78,7 @@
                         </div>
                         <!-- Password -->
                         <div class="input-group mb-3">
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password" required autocomplete="new-password">
+                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="@lang('site.password')" required autocomplete="new-password">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-lock"></span>
@@ -91,7 +92,7 @@
                         </div>
                         <!-- Confirm Password -->
                         <div class="input-group mb-3">
-                            <input id="password-confirm" type="password" class="form-control @error('password') is-invalid @enderror" name="password_confirmation" placeholder="Password Confirmation" required autocomplete="new-password">
+                            <input id="password-confirm" type="password" class="form-control @error('password') is-invalid @enderror" name="password_confirmation" placeholder="@lang('site.passwordConfirmation')" required autocomplete="new-password">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-lock"></span>
@@ -105,11 +106,11 @@
                         </div>
                         <div class="row">
                             <div class="col-8">
-                                <a href="{{ route('login') }}" class="text-center">I already have a membership</a>
+                                <a href="{{ route('login') }}" class="text-center">@lang('site.alreadyMembership')</a>
                             </div>
                             <!-- /.col -->
                             <div class="col-4">
-                                <button type="submit" class="btn btn-primary btn-block">{{ __('Register') }}</button>
+                                <button type="submit" class="btn btn-primary btn-block">{{ __('site.registerBtn') }}</button>
                             </div>
                             <!-- /.col -->
                         </div>

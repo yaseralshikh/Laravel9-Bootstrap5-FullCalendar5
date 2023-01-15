@@ -383,8 +383,8 @@ class ListEvents extends Component
                 $query->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
             }])->get();
 
-            array_push($this->items ,'مشروفن بدون خطط او خططهم غير مكتملة !' . "<br><br>");
-            array_push($this->items, '<ol>');
+            array_push($this->items , '<b dir="rtl">' .'مشروفن بدون خطط او خططهم غير مكتملة !' . "</b><br><br>");
+            array_push($this->items, '<ol dir="rtl">');
 
             foreach ($users as $user) {
                 if ($user->events->count() == Null || $user->events->count() < 5) {

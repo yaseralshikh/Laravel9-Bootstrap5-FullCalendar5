@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>خطة المشرفين الأسبوعية</title>
 
     <style>
         /* Style the body */
@@ -156,7 +156,7 @@
                 <table class="logo_header" cellpadding="5" border="0" cellspacing="5">
                     <tbody>
                         <tr>
-                            <td dir="rtl" class="logo_header" style="text-align:justify;font-size: 12px;line-height: 1.5;">
+                            <td dir="rtl" class="logo_header" style="text-align:justify;font-size: 11px;line-height: 1.5;">
                                 <ul style="list-style-type:none;">
                                     <li>ص : متابعة الدوام</li>
                                     <li>ص : الشؤون التعليمية / إدارة الاشراف.</li>
@@ -169,8 +169,8 @@
                                     <li>عند رصد غياب معلم مسند أكثر من خمسة أيام دون عذر خلال العام، أو غياب وتأخر نسبة كبيرة أثناء الزيارة يجب إبلاغ إدارة المكتب وتدوينه بتقرير الزيارة المدرسية.</li>
                                 </ul>
                             </td>
-                            <td class="logo_header" style="width: 40%;">
-                                <h3>مدير مكتب التعليم بوسط جازان</h3>
+                            <td class="logo_header" style="width: 45%;">
+                                <h3>مدير مكتب التعليم بوسط جازان - بنين</h3>
                                 <br>
                                 <h3>عبدالرحمن بن عسيري عكور</p>
                             </td>
