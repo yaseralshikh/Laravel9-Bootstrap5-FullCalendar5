@@ -383,11 +383,16 @@ class ListEvents extends Component
                 $query->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
             }])->get();
 
+            array_push($this->items ,'مشروفن بدون خطط او خططهم غير مكتملة !' . "<br><br>");
+            array_push($this->items, '<ol>');
+
             foreach ($users as $user) {
-                if ($user->events->count() == Null) {
-                    $this->items[] = $user->name . "<br><br>";
+                if ($user->events->count() == Null || $user->events->count() < 5) {
+                    $this->items[] = '<li>' . $user->name . "</li><br>";
                 }
             }
+
+            array_push($this->items, '</ol>');
 
             if ($this->items != Null) {
                 $this->alert('error', implode(" ", $this->items) , [
@@ -398,7 +403,7 @@ class ListEvents extends Component
                     'showCancelButton'  =>  false,
                     'showConfirmButton'  =>  true
                 ]);
-                
+
                 $this->items = [];
 
             } else {
@@ -429,10 +434,10 @@ class ListEvents extends Component
         $byWeek = $this->byWeek;
 
         if ($byWeek) {
-            $users = User::where('status',true)->whereHas('events', function ($query) use ($byWeek) {
+            $users = User::where('status',true)->orderBy('name', 'asc')->whereHas('events', function ($query) use ($byWeek) {
                 $query->where('week_id', $byWeek)->where('status', true);
             })->with(['events' => function ($query) use ($byWeek) {
-                $query->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
+                $query->where('week_id', $byWeek)->where('status', true)->whereNotIn('title', ['إجازة'])->orderBy('start', 'asc');
             }])->get();
 
             if ($users->count() != Null) {
