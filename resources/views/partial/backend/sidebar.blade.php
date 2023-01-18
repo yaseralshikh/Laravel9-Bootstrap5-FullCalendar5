@@ -1,10 +1,10 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    {{-- <a href="index3.html" class="brand-link">
         <img src="{{ asset('backend/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">AdminLTE 3</span>
-    </a>
+    </a> --}}
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -39,13 +39,13 @@
                         class="nav-link {{ request()->is('admin') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
-                            Dashboard
+                            @lang('site.dashboard')
                         </p>
                     </a>
                 </li>
 
                 <li class="nav-header text-secondary">
-                    <h6>Multy Users</h6>
+                    <h6>@lang('site.usersSection')</h6>
                 </li>
 
                 <li class="nav-item">
@@ -53,7 +53,7 @@
                         class="nav-link {{ request()->is('admin/users') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-users"></i>
                         <p>
-                            Users
+                            @lang('site.users')
                         </p>
                     </a>
                 </li>
@@ -62,7 +62,7 @@
                         class="nav-link {{ request()->is('admin/specializations') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-briefcase"></i>
                         <p>
-                            Specializations
+                            @lang('site.specializations')
                         </p>
                     </a>
                 </li>
@@ -72,20 +72,20 @@
                         class="nav-link {{ request()->is('/laratrust') ? 'active' : '' }}">
                         <i class="fas fa-cog"></i>
                         <p>
-                            Roles & Permissions
+                            @lang('site.rolesPermissions')
                         </p>
                     </a>
                 </li>
                 @endrole
                 <li class="nav-header text-secondary">
-                    <h6>Events</h6>
+                    <h6>@lang('site.eventsSection')</h6>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.events') }}"
                         class="nav-link {{ request()->is('admin/events') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-calendar"></i>
                         <p>
-                            Events
+                            @lang('site.events')
                         </p>
                     </a>
                 </li>
@@ -100,14 +100,14 @@
                 </li> --}}
 
                 <li class="nav-header text-secondary">
-                    <h6>Tasks</h6>
+                    <h6>@lang('site.tasksSection')</h6>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.tasks') }}"
                         class="nav-link {{ request()->is('admin/tasks') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tasks"></i>
                         <p>
-                            Tasks
+                            @lang('site.tasks')
                         </p>
                     </a>
                 </li>
@@ -116,7 +116,7 @@
                         class="nav-link {{ request()->is('admin/subtasks') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tasks"></i>
                         <p>
-                            Subtasks
+                            @lang('site.subTasks')
                         </p>
                     </a>
                 </li>
@@ -125,13 +125,13 @@
                         class="nav-link {{ request()->is('admin/levels') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tasks"></i>
                         <p>
-                            Levels
+                            @lang('site.levels')
                         </p>
                     </a>
                 </li>
 
                 <li class="nav-header text-secondary">
-                    <h6>Semesters & Weeks</h6>
+                    <h6>@lang('site.semestersSection')</h6>
                 </li>
 
                 <li class="nav-item">
@@ -139,7 +139,7 @@
                         class="nav-link {{ request()->is('admin/semesters') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-graduation-cap"></i>
                         <p>
-                            Semesters
+                            @lang('site.semesters')
                         </p>
                     </a>
                 </li>
@@ -148,7 +148,7 @@
                         class="nav-link {{ request()->is('admin/weeks') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-graduation-cap"></i>
                         <p>
-                            Weeks
+                            @lang('site.weeks')
                         </p>
                     </a>
                 </li>

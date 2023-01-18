@@ -5,17 +5,17 @@
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="{{ route('home') }}" class="nav-link">Home</a>
+            <a href="{{ route('home') }}" class="nav-link">@lang('site.home')</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Contact</a>
+            <a href="#" class="nav-link">@lang('site.contact')</a>
         </li>
     </ul>
 
     <!-- Right navbar links -->
     <ul class="ml-auto navbar-nav">
         <!-- Navbar Search -->
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                 <i class="fas fa-search"></i>
             </a>
@@ -35,10 +35,10 @@
                     </div>
                 </form>
             </div>
-        </li>
+        </li> --}}
 
         <!-- Messages Dropdown Menu -->
-        <li class="nav-item dropdown">
+        {{-- <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
                 <i class="far fa-comments"></i>
                 <span class="badge badge-danger navbar-badge">3</span>
@@ -97,10 +97,10 @@
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
             </div>
-        </li>
+        </li> --}}
 
         <!-- Notifications Dropdown Menu -->
-        <li class="nav-item dropdown">
+        {{-- <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
                 <i class="far fa-bell"></i>
                 <span class="badge badge-warning navbar-badge">15</span>
@@ -125,17 +125,17 @@
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
             </div>
-        </li>
+        </li> --}}
         <li class="nav-item">
             <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                 <i class="fas fa-expand-arrows-alt"></i>
             </a>
         </li>
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
                 <i class="fas fa-th-large"></i>
             </a>
-        </li>
+        </li> --}}
 
         <!-- User profile Dropdown Menu -->
         <li dir="rtl" class="nav-item dropdown user user-menu">
@@ -173,7 +173,7 @@
                     <a class="m-2 btn btn-block btn-secondary btn-sm" href="#" data-toggle="modal"
                         data-target="#logoutModal">
                         <i class="mr-2 fas fa-sign-out-alt"></i>
-                        Logout
+                        @lang('site.logout')
                     </a>
                 </li>
             </ul>

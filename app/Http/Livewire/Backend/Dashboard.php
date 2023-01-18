@@ -14,7 +14,6 @@ use Asantibanez\LivewireCharts\Facades\LivewireCharts;
 class Dashboard extends Component
 {
     public $eventsCount;
-    public $usersPlanCount;
 
     // for chart
     public $items = [];
@@ -40,7 +39,6 @@ class Dashboard extends Component
     public function mount()
     {
         $this->getEventsCount();
-        $this->getUsersCount();
     }
 
     public function getEventsCount($option = Null)
@@ -80,19 +78,19 @@ class Dashboard extends Component
         }
     }
 
-    public function getUsersCount($option = 2)
-    {
-        $this->usersPlanCount = Event::query()
-            ->where('office_id', auth()->user()->office_id)
-            ->where('user_id', $option)
-            ->where('semester_id', $this->semesterActive())
-            ->count();
-    }
-
     public function semesterActive()
     {
         $semester_active = Semester::where('active' ,1)->get();
         return $semester_active[0]->id;
+    }
+
+    public function getUsersProperty()
+    {
+        return User::query()
+        ->where('office_id', auth()->user()->office_id)
+        ->with(['events' => function ($query) {
+            $query->where('semester_id', $this->semesterActive())->where('status', true);
+        }])->orderBy('name', 'asc')->get();
     }
 
     public function render()
@@ -138,7 +136,7 @@ class Dashboard extends Component
         // chart
         $usersCount = User::where('office_id', auth()->user()->office_id)->where('status', 1)->count();
         $semesters = Semester::where('status', 1)->orderBy('id')->latest()->take(3)->get();
-        $users = User::where('office_id', auth()->user()->office_id)->where('status', 1)->orderBy('id')->get();
+        $users = $users = $this->users;
         $schools = School::where('office_id', auth()->user()->office_id)->where('status', 1)->whereNotIn('level_id',[4,5])->orderBy('name')->get();
         $schoolsCount = School::where('office_id', auth()->user()->office_id)->where('status', 1)->whereNotIn('level_id',[4,5])->count();
         return view('livewire.backend.dashboard',[

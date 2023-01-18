@@ -8,7 +8,7 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">@lang('site.home')</a></li>
+                        {{-- <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">@lang('site.home')</a></li> --}}
                         <li class="breadcrumb-item active">@lang('site.dashboard')</li>
                     </ol>
                 </div><!-- /.col -->
@@ -22,7 +22,7 @@
         <div class="container-fluid">
             <!-- Small boxes (Stat box) -->
             <div class="row">
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-4 col-4">
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-4 col-4">
                     <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">
@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-4 col-4">
                     <!-- small box -->
                     <div class="small-box bg-warning">
                         <div class="inner">
@@ -72,29 +72,6 @@
                             <i class="ion ion-person-add"></i>
                         </div>
                         <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <!-- ./col -->
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-danger">
-                        <div class="inner">
-                            <div class="d-sm-inline-flex">
-                                <h3>{{ $usersPlanCount }}</h3>
-                                <div class="form-group pt-1 pl-4">
-                                    <select wire:change.loading.delay.longest="getUsersCount($event.target.value)" class="form-control form-control-sm">
-                                        @foreach ($users as $user)
-                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <p>@lang('site.userPlan')</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-pie-graph"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
@@ -153,7 +130,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
+                            <div class="table-responsive" dir="rtl">
                                 <div class="shadow rounded p-4 border" style="height: 32rem;">
                                     <div class="table-responsive">
                                         <table id="example2"  class="table text-center table-bordered table-hover dataTable dtr-inline" aria-describedby="example2_info">

@@ -130,8 +130,14 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'semester_id' => [
+            'required' => 'الفصل الدراسي مطلوب',
+        ],
+        'week_id' => [
+            'required' => 'الأسبوع الدراسي مطلوب',
+        ],
+        'title' => [
+            'required' => 'المهمة مطلوبة',
         ],
     ],
 

@@ -15,12 +15,12 @@
         <div class="container-fluid">
             <div class="mb-2 row">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Specializations</h1>
+                    <h1 class="m-0">@lang('site.specializations')</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Specializations</li>
+                        <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">@lang('site.dashboard')</a></li>
+                        <li class="breadcrumb-item active">@lang('site.specializations')</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -43,7 +43,7 @@
                         </button>
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm">Action</button>
+                            <button type="button" class="btn btn-primary btn-sm">@lang('site.action')</button>
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
@@ -52,10 +52,10 @@
                                 {{-- <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a> --}}
                                 <div class="dropdown-divider"></div>
                                 {{-- @if ($selectedRows) --}}
-                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}" wire:click.prevent="setAllAsActive" href="#">Set as Acive</a>
-                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}" wire:click.prevent="setAllAsInActive" href="#">Set as InActive</a>
+                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}" wire:click.prevent="setAllAsActive" href="#">@lang('site.acive')</a>
+                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}" wire:click.prevent="setAllAsInActive" href="#">@lang('site.inAive')</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">Delete Selected</a>
+                                <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">@lang('site.deleteSelected')</a>
                                 {{-- @endif --}}
                             </div>
                         </div>
