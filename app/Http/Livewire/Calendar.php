@@ -7,22 +7,34 @@ use App\Models\User;
 use App\Models\Week;
 use App\Models\Event;
 use App\Models\School;
+use App\Models\Semester;
+use App\Rules\EventOverLap;
 use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
 
 class Calendar extends Component
 {
     public $all_user;
+    public $semester_id;
     public $week_id;
+    public $office_id;
     public $title;
     public $start;
     public $end;
     public $event_id;
 
-    protected $rules = [
-        'week_id' => 'required',
-        'title' => 'required',
-    ];
+    protected function rules() : array
+    {
+        return ([
+            'semester_id'   => 'required',
+            'week_id'       => 'required',
+            'title' => ['required', new EventOverLap($this->start)],
+        ]);
+    }
+
+    public function resetErrorMsg()
+    {
+        $this->resetErrorBag();
+    }
 
     public function save()
     {
@@ -37,33 +49,37 @@ class Calendar extends Component
             case "برنامج تدريبي":
                 $color = '#eb6c0c';
               break;
-            case "إجازة مطولة":
+            case "إجازة":
                 $color = '#cf87fa';
               break;
             default:
                 $color = '#298A08';
         }
         if ($this->all_user) {
-            $users = User::all();
+            $users = User::where('office_id', auth()->user()->office_id)->where('status', true)->get();
             foreach ($users as $user) {
                 Event::create([
-                    'user_id'   => $user->id,
-                    'week_id'   => $this->week_id,
-                    'title'     => $this->title,
-                    'start'     => $this->start,
-                    'end'       => $this->end,
-                    'color'     => $color,
-                    'status'    => 1,
+                    'user_id'       => $user->id,
+                    'office_id'     => $user->office_id,
+                    'semester_id'   => $this->semester_id,
+                    'week_id'       => $this->week_id,
+                    'title'         => $this->title,
+                    'start'         => $this->start,
+                    'end'           => $this->end,
+                    'color'         => $color,
+                    'status'        => 1,
                 ]);
             }
         } else {
             Event::create([
-                'user_id' => auth()->user()->id,
-                'week_id' => $this->week_id,
-                'title'   => $this->title,
-                'start'   => $this->start,
-                'end'     => $this->end,
-                'color'   => $color,
+                'user_id'       => auth()->user()->id,
+                'office_id'     => auth()->user()->office_id,
+                'semester_id'   => $this->semester_id,
+                'week_id'       => $this->week_id,
+                'title'         => $this->title,
+                'start'         => $this->start,
+                'end'           => $this->end,
+                'color'         => $color,
             ]);
         }
 
@@ -95,7 +111,7 @@ class Calendar extends Component
             case "برنامج تدريبي":
                 $color = '#eb6c0c';
               break;
-            case "إجازة مطولة":
+            case "إجازة":
                 $color = '#cf87fa';
               break;
             default:
@@ -103,11 +119,13 @@ class Calendar extends Component
         }
 
         Event::findOrFail($this->event_id)->update([
-            'week_id'   => $this->week_id,
-            'title'     => $this->title,
-            'start'     => $this->start,
-            'end'       => $this->end,
-            'color'     => $color,
+            'office_id'     => auth()->user()->office_id,
+            'semester_id'   => $this->semester_id,
+            'week_id'       => $this->week_id,
+            'title'         => $this->title,
+            'start'         => $this->start,
+            'end'           => $this->end,
+            'color'         => $color,
         ]);
 
 
@@ -185,9 +203,10 @@ class Calendar extends Component
 
     public function render()
     {
-        $schools = School::all();
+        $schools = School::where('office_id', auth()->user()->office_id)->where('status', true)->get();
         $weeks = Week::where('status', true)->get();
+        $semesters = Semester::where('status', true)->get();
 
-        return view('livewire.calendar', compact('schools', 'weeks'));
+        return view('livewire.calendar', compact('schools', 'weeks', 'semesters'));
     }
 }

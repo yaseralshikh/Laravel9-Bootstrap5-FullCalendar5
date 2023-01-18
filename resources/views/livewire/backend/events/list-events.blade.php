@@ -105,7 +105,7 @@
                                 <option value="" selected>@lang('site.allWeeks')</option>
                                 @foreach ($weeks as $week)
                                 <option value="{{ $week->id }}" {{ $week->active ? 'selected' : '' }} style="{{
-                                    $week->active ? 'color: blue;' : '' }}">{{ $week->title . ' ( ' .
+                                    $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $week->title . ' ( ' .
                                     $week->semester->school_year . ' )' }}</option>
                                 @endforeach
                             </select>
@@ -336,7 +336,7 @@
                                         <option value="">@lang('site.choise') :</option>
                                         @foreach ($weeks as $week)
                                         <option value="{{ $week->id }}"
-                                            style="{{ $week->active ? 'color: blue;' : '' }}">{{ $week->title . ' ( ' .
+                                            style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $week->title . ' ( ' .
                                             $week->semester->school_year . ' )' }}</option>
                                         @endforeach
                                     </select>

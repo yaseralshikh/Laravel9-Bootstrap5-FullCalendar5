@@ -6,27 +6,33 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Semester extends Model
+class Office extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'start',
-        'end',
-        'school_year',
-        'active',
+        'name',
         'status',
     ];
 
-    public function weeks(): HasMany
+    public function users(): HasMany
     {
-        return $this->hasMany(Week ::class);
+        return $this->hasMany(User ::class);
+    }
+
+    public function schools(): HasMany
+    {
+        return $this->hasMany(School ::class);
     }
 
     public function events(): HasMany
     {
         return $this->hasMany(Event ::class);
+    }
+
+    public function subtasks(): HasMany
+    {
+        return $this->hasMany(Subtask ::class);
     }
 
     public function status(): string
@@ -39,8 +45,7 @@ class Semester extends Model
         $term = "%$term%";
 
         $query->where(function($query) use ($term){
-            $query->where('title', 'like' , $term)
-                ->orWhere('school_year', 'like' , $term);
+            $query->where('name', 'like' , $term);
         });
     }
 }

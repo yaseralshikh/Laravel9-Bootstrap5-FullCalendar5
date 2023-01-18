@@ -13,10 +13,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(OfficeSeeder::class);
         $this->call(LevelSeeder::class);
         $this->call(SpecializationSeeder::class);
         $this->call(LaratrustSeeder::class);
         $this->call(UserSeeder::class);
-        //$this->call(SemesterSeeder::class);
+        $this->call(SemesterSeeder::class);
+        $this->call(WeekSeeder::class);
     }
 }

@@ -76,6 +76,40 @@
                                 </span>
                             @enderror
                         </div>
+                        <!-- Office -->
+                        <div class="input-group mb-3">
+                            <select name="office_id" class="custom-select @error('office_id') is-invalid @enderror" id="inputGroupSelect02">
+                                <option disabled selected>@lang('site.office')</option>
+                                @foreach ($offices as $office)
+                                    <option value="{{ $office->id }}">{{ $office->name }}</option>
+                                @endforeach
+                            </select>
+                            <div class="input-group-append">
+                                <label class="input-group-text" for="inputGroupSelect02"><i class="fa fa-briefcase" aria-hidden="true"></i></label>
+                            </div>
+                            @error('office_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <!-- Type -->
+                        <div class="input-group mb-3">
+                            <select name="type" class="custom-select @error('type') is-invalid @enderror" id="inputGroupSelect02">
+                                <option disabled selected>@lang('site.jobType')</option>
+                                @foreach ($types as $type)
+                                    <option value="{{ $type['title'] }}">{{ $type['title'] }}</option>
+                                @endforeach
+                            </select>
+                            <div class="input-group-append">
+                                <label class="input-group-text" for="inputGroupSelect02"><i class="fa fa-briefcase" aria-hidden="true"></i></label>
+                            </div>
+                            @error('type')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
                         <!-- Password -->
                         <div class="input-group mb-3">
                             <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="@lang('site.password')" required autocomplete="new-password">

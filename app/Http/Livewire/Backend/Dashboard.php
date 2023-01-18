@@ -8,8 +8,8 @@ use App\Models\Semester;
 use App\Models\User;
 use Livewire\Component;
 use Asantibanez\LivewireCharts\Facades\LivewireCharts;
-use Asantibanez\LivewireCharts\Models\RadarChartModel;
-use Asantibanez\LivewireCharts\Models\TreeMapChartModel;
+//use Asantibanez\LivewireCharts\Models\RadarChartModel;
+//use Asantibanez\LivewireCharts\Models\TreeMapChartModel;
 
 class Dashboard extends Component
 {
@@ -17,6 +17,7 @@ class Dashboard extends Component
     public $usersPlanCount;
 
     // for chart
+    public $items = [];
     public $types;
 
     public $colors = [];
@@ -44,35 +45,48 @@ class Dashboard extends Component
 
     public function getEventsCount($option = Null)
     {
-        $this->eventsCount = Event::query()
-            ->whereBetween('start', $this->getDateRange($option))->count();
+        if ($this->getDateRange($option)) {
+            $this->eventsCount = Event::query()
+                ->where('office_id', auth()->user()->office_id)
+                ->whereBetween('start', $this->getDateRange($option))
+                ->count();
+        }
     }
 
     public function getDateRange($option)
     {
         if ($option == Null) {
-            $event = Event::with('week.semester')->latest()->take(1)->get();
-            $semester =
-            $start = $event[0]->week->semester->start;
-            $end = $event[0]->week->semester->end;
-            return [$start, $end];
+            $semester = Semester::where('status', 1)->where('id', $this->semesterActive())->get();
+            if ($semester) {
+                $start = $semester[0]->start;
+                $end = $semester[0]->end;
+
+                return [$start, $end];
+
+            } else {
+
+                return Null;
+
+            }
+
         } else {
+
             $semester = Semester::where('status', 1)->where('id', $option)->get();
-            $semesterStart = $semester[0]->start;
-            $semesterEnd = $semester[0]->end;
-            return [$semesterStart, $semesterEnd];
+
+            $start = $semester[0]->start;
+            $end = $semester[0]->end;
+
+            return [$start, $end];
         }
     }
 
-    public function getUsersCount($option = 1)
+    public function getUsersCount($option = 2)
     {
         $this->usersPlanCount = Event::query()
+            ->where('office_id', auth()->user()->office_id)
             ->where('user_id', $option)
-            ->where(function ($query) {
-                $query->whereHas('week', function ($q) {
-                    $q->where('semester_id', $this->semesterActive());
-                });
-            })->count();
+            ->where('semester_id', $this->semesterActive())
+            ->count();
     }
 
     public function semesterActive()
@@ -84,52 +98,49 @@ class Dashboard extends Component
     public function render()
     {
         // for chart
-        $events = Event::where('status', true)
-        ->where(function ($query) {
-            $query->whereHas('week', function ($q) {
-                $q->where('semester_id', $this->semesterActive());
-            });
-        })->get();
+        $events = Event::where('status', 1)->whereNotIn('title', ['إجازة'])->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->get();
 
-        foreach ($events as $event) {
-            $items[] = $event->title;
+        if ($events) {
+            foreach ($events as $event) {
+                $this->items[] = $event->title;
+            }
+
+            $this->types =$this->items;
+
+            foreach ($this->items as $value) {
+                $this->colors += [
+                    $value => $this->randomHex(),
+                ];
+            }
+
+            $events = Event::whereIn('title', $this->types)->where('status', 1)->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->get();
+            $columnChartModel = $events->groupBy('title')
+            ->reduce(function ($columnChartModel, $data) {
+                $type = $data->first()->title;
+                $value = $data->count('title');
+
+                return $columnChartModel->addColumn($type, $value, $this->colors[$type]);
+            }, LivewireCharts::columnChartModel()
+                ->setTitle('احصائية خطط الزيارات خلال الفصل الدراسي')
+                ->setAnimated($this->firstRun)
+                ->withOnColumnClickEventName('onColumnClick')
+                ->setLegendVisibility(false)
+                ->setDataLabelsEnabled($this->showDataLabels)
+                ->setOpacity(0.60)
+                //->setColors(['#b01a1b', '#d41b2c', '#ec3c3b', '#f66665'])
+                ->setColumnWidth(70)
+                ->withGrid()
+            );
+
+            $this->firstRun = false;
         }
-
-        $this->types =$items;
-
-        foreach ($items as $value) {
-            $this->colors += [
-                $value => $this->randomHex(),
-            ];
-        }
-
-        $events = Event::whereIn('title', $this->types)->get();
-        $columnChartModel = $events->groupBy('title')
-        ->reduce(function ($columnChartModel, $data) {
-            $type = $data->first()->title;
-            $value = $data->count('title');
-
-            return $columnChartModel->addColumn($type, $value, $this->colors[$type]);
-        }, LivewireCharts::columnChartModel()
-            ->setTitle('Events by Type')
-            ->setAnimated($this->firstRun)
-            ->withOnColumnClickEventName('onColumnClick')
-            ->setLegendVisibility(false)
-            ->setDataLabelsEnabled($this->showDataLabels)
-            ->setOpacity(0.60)
-            //->setColors(['#b01a1b', '#d41b2c', '#ec3c3b', '#f66665'])
-            ->setColumnWidth(70)
-            ->withGrid()
-        );
-
-        $this->firstRun = false;
 
         // chart
-        $usersCount = User::where('status', 1)->count();
+        $usersCount = User::where('office_id', auth()->user()->office_id)->where('status', 1)->count();
         $semesters = Semester::where('status', 1)->orderBy('id')->latest()->take(3)->get();
-        $users = User::where('status', 1)->orderBy('id')->get();
-        $schools = School::where('status', 1)->whereNotIn('level_id',[4,5])->orderBy('name')->get();
-        $schoolsCount = School::where('status', 1)->whereNotIn('level_id',[4,5])->count();
+        $users = User::where('office_id', auth()->user()->office_id)->where('status', 1)->orderBy('id')->get();
+        $schools = School::where('office_id', auth()->user()->office_id)->where('status', 1)->whereNotIn('level_id',[4,5])->orderBy('name')->get();
+        $schoolsCount = School::where('office_id', auth()->user()->office_id)->where('status', 1)->whereNotIn('level_id',[4,5])->count();
         return view('livewire.backend.dashboard',[
             'usersCount' => $usersCount,
             'schoolsCount' => $schoolsCount,

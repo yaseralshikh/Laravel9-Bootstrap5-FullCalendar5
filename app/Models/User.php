@@ -25,6 +25,8 @@ class User extends Authenticatable
         'name',
         'email',
         'specialization_id',
+        'office_id',
+        'type',
         'password',
         'status',
     ];
@@ -61,5 +63,10 @@ class User extends Authenticatable
     public function specialization(): BelongsTo
     {
         return $this->belongsTo(Specialization::class);
+    }
+
+    public function office(): BelongsTo
+    {
+        return $this->belongsTo(Office::class);
     }
 }

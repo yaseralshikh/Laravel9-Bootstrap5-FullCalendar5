@@ -38,9 +38,10 @@ class SpecializationSeeder extends Seeder
             'تقنية المعلومات',
             'الاختبارات',
         ];
-        for ($i=0; $i < count($specializations); $i++) {
+
+        foreach ($specializations as $specialization) {
             Specialization::create([
-                'name' => $specializations[$i]
+                'name' => $specialization
             ]);
         }
     }

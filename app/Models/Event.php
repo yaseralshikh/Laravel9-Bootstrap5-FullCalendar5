@@ -17,6 +17,8 @@ class Event extends Model
         'end',
         'user_id',
         'week_id',
+        'semester_id',
+        'office_id',
         'color',
         'status',
     ];
@@ -34,6 +36,16 @@ class Event extends Model
     public function week(): BelongsTo
     {
         return $this->belongsTo(Week::class);
+    }
+
+    public function semester(): BelongsTo
+    {
+        return $this->belongsTo(Semester::class);
+    }
+
+    public function office(): BelongsTo
+    {
+        return $this->belongsTo(Office::class);
     }
 
     public function scopeSearch($query, $term)

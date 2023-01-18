@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('subtasks', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->foreignId('office_id')->constrained();
             $table->integer('position')->default(Null);
             $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->datetime('end');
             $table->foreignId('user_id')->constrained();
             $table->foreignId('week_id')->constrained();
+            $table->foreignId('semester_id')->constrained();
+            $table->foreignId('office_id')->constrained();
             $table->string('color')->nullable();
             $table->unsignedTinyInteger('status')->default(0);
             $table->timestamps();

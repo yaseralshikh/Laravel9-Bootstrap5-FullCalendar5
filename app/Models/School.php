@@ -13,12 +13,18 @@ class School extends Model
     protected $fillable = [
         'name',
         'level_id',
+        'office_id',
         'status',
     ];
 
     public function level(): BelongsTo
     {
         return $this->belongsTo(Level::class);
+    }
+
+    public function office(): BelongsTo
+    {
+        return $this->belongsTo(Office::class);
     }
 
     public function status(): string

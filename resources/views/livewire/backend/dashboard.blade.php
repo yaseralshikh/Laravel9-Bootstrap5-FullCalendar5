@@ -132,6 +132,63 @@
                     </div>
                     <!-- /.card -->
                 </section>
+
+                <!-- users Events plan -->
+
+                <section class="col-lg-12 connectedSortable">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="far fa-chart-bar"></i>
+                                @lang('site.events')
+                            </h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                {{-- <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button> --}}
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <div class="shadow rounded p-4 border" style="height: 32rem;">
+                                    <div class="table-responsive">
+                                        <table id="example2"  class="table text-center table-bordered table-hover dataTable dtr-inline" aria-describedby="example2_info">
+                                            <thead class="bg-light">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Name</th>
+                                                    <th>specialization</th>
+                                                    <th>type</th>
+                                                    <th>events</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse ($users as $user)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $user->name }}</td>
+                                                        <td>{{ $user->specialization->name }}</td>
+                                                        <td>{{ $user->type }}</td>
+                                                        <td>{{ $user->events->count() }}</td>
+                                                    </tr>
+                                                @empty
+                                                <tr>
+                                                    <td colspan="2" class="text-center">No Users found</td>
+                                                </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </section>
             </div>
             <!-- /.row (main row) -->
         </div><!-- /.container-fluid -->

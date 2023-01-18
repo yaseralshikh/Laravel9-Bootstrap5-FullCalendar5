@@ -33,32 +33,51 @@
             <li>التعديل عند اللزوم قبل اعتماد الخطط.</li>
         </ul>
         <hr>
-        <p class="mb-0">مع تحيات ادارة مكتب التعليم بوسط جازان - بنين.</p>
+        <p class="mb-0">مع تحيات ادارة {{ auth()->user()->office->name }}.</p>
     </div>
 
     {{-- Calender --}}
     <div id="calendar" wire:ignore></div>
 
     {{-- Create Event Modal --}}
-    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true"
+    <div dir="rtl" class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"
         wire:ignore.self>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="createModalLabel">Create New Event</h1>
+                    <h1 class="modal-title fs-5" id="createModalLabel">@lang('site.addEvent')</h1>
                     {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     --}}
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="save">
+                        <!-- Semester -->
+                        <div class="mb-3">
+                            <label for="semester_id" class="form-label">{{ __('site.semester') }} :</label>
+                            <select name="semester_id" wire:model.defer="semester_id"
+                                class="form-select  @error('semester_id') is-invalid @enderror" id="semester_id">
+                                <option value="" selected>@lang('site.choise') :</option>
+                                @foreach ($semesters as $semester)
+                                <option value="{{ $semester->id }}" style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
+                                    $semester->title . ' ( ' . $semester->school_year . ' )' }}</option>
+                                @endforeach
+                            </select>
+
+                            @error('semester_id')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+
                         <!-- Week -->
                         <div class="mb-3">
-                            <label for="week_id" class="form-label">{{ __('School Week') }} :</label>
+                            <label for="week_id" class="form-label">{{ __('site.schoolWeek') }} :</label>
                             <select name="week_id" wire:model.defer="week_id"
                                 class="form-select  @error('week_id') is-invalid @enderror" id="week_id">
                                 <option value="" selected>@lang('site.choise') :</option>
                                 @foreach ($weeks as $week)
-                                <option value="{{ $week->id }}" style="{{ $week->active ? 'color: blue;' : '' }}">{{
+                                <option value="{{ $week->id }}" style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
                                     $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
                                 @endforeach
                             </select>
@@ -70,8 +89,9 @@
                             @enderror
                         </div>
 
+                        <!-- Task -->
                         <div class="mb-3">
-                            <label for="title" class="col-form-label">المهمة:</label>
+                            <label for="title" class="col-form-label">@lang('site.task') :</label>
                             {{-- <input type="text" wire:model.defer="title"
                                 class="form-control @error('title') is-invalid @enderror" id="title"> --}}
                             <select name="title" wire:model.defer="title"
@@ -88,31 +108,33 @@
                             @enderror
                         </div>
 
+                        <!-- start -->
                         <div class="mb-3">
                             {{-- <label for="start" class="col-form-label">Start:</label> --}}
                             <input type="hidden" wire:model.defer="start" class="form-control" id="start">
                         </div>
 
+                        <!-- end -->
                         <div class="mb-3">
                             {{-- <label for="end" class="col-form-label">End:</label> --}}
                             <input type="hidden" wire:model.defer="end" class="form-control" id="end">
                         </div>
 
+                        {{-- Action --}}
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Save</button>
+                                <button type="button" class="btn btn-secondary" wire:click="resetErrorMsg" data-bs-dismiss="modal">@lang('site.cancel')</button>
+                                <button type="submit" class="btn btn-primary">@lang('site.save')</button>
                             </div>
                             @role('admin|superadmin')
-                            <div class="form-check">
-                                <input class="form-check-input" wire:model.defer="all_user" type="checkbox" value=""
-                                    id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    Event for All users
-                                </label>
-                            </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" wire:model.defer="all_user" type="checkbox" value=""
+                                        id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        @lang('site.eventForAllUsers')
+                                    </label>
+                                </div>
                             @endrole
-
                         </div>
                     </form>
                 </div>
@@ -121,26 +143,43 @@
     </div>
 
     {{-- Edit Event Modal --}}
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true"
+    <div dir="rtl" class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"
         wire:ignore.self>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="editModalLabel">Edit Event</h1>
+                    <h1 class="modal-title fs-5" id="editModalLabel">@lang('site.updateEvent')</h1>
                     {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     --}}
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="update">
+                        <!-- Semester -->
+                        <div class="mb-3">
+                            <label for="semester_id_1" class="form-label">{{ __('site.semester') }} :</label>
+                            <select name="semester_id" wire:model.defer="semester_id"
+                                class="form-select  @error('semester_id') is-invalid @enderror" id="semester_id_1">
+                                <option value="" selected>@lang('site.choise') :</option>
+                                @foreach ($semesters as $semester)
+                                    <option value="{{ $semester->id }}" style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
+                                    $semester->title . ' ( ' . $semester->school_year . ' )' }}</option>
+                                @endforeach
+                            </select>
+
+                            @error('semester_id')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+
                         <!-- Week -->
                         <div class="mb-3">
-                            <label for="week_id_1" class="col-form-label">School Week :</label>
-
+                            <label for="week_id_1" class="col-form-label">{{ __('site.schoolWeek') }} :</label>
                             <select wire:model.defer="week_id"
                                 class="form-select  @error('week_id') is-invalid @enderror" id="week_d_1">
                                 @foreach ($weeks as $week)
-                                <option value="{{ $week->id }}">{{ $week->title . ' ( ' . $week->semester->school_year .
-                                    ' )' }}</option>
+                                    <option value="{{ $week->id }}" style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
                                 @endforeach
                             </select>
 
@@ -152,7 +191,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="title1" class="col-form-label">Title:</label>
+                            <label for="title1" class="col-form-label">@lang('site.task') :</label>
                             <select wire:model.defer="title" class="form-select  @error('title') is-invalid @enderror"
                                 id="title1">
                                 @foreach ($schools as $school)
@@ -179,10 +218,10 @@
 
                         <div class="d-flex justify-content-between mt-5">
                             <div>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button class="btn btn-primary">Update</button>
+                                <button type="button" class="btn btn-secondary" wire:click="resetErrorMsg" data-bs-dismiss="modal">@lang('site.cancel')</button>
+                                <button class="btn btn-primary">@lang('site.updateEvent')</button>
                             </div>
-                            <button class="btn btn-danger" wire:click.prevent='delete'>Delete</button>
+                            <button class="btn btn-danger" wire:click.prevent='delete'>@lang('site.deleteEvent')</button>
                         </div>
                     </form>
                 </div>
@@ -195,6 +234,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             const createModalEl = document.getElementById('createModal');
             createModalEl.addEventListener('hidden.bs.modal', event => {
+                @this.office_id = '';
+                @this.semester_id = '';
                 @this.week_id = '';
                 @this.title = '';
                 @this.start = '';
@@ -204,6 +245,8 @@
             const editModalEl = document.getElementById('editModal');
             editModalEl.addEventListener('hidden.bs.modal', event => {
                 @this.event_id = '';
+                @this.office_id = '';
+                @this.semester_id = '';
                 @this.week_id = '';
                 @this.title = '';
                 @this.start = '';
@@ -214,6 +257,7 @@
             const checkbox = document.getElementById('drop-remove');
             const tooltip = null;
             const userID = {{ auth()->user()->id }};
+            const userOffice_id = {{ auth()->user()->office_id }};
             const userRole = {{ auth()->user()->roles[0]->id }};
 
             const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -264,6 +308,8 @@
                             })
                         } else {
                             @this.event_id  = event.id;
+                            @this.office_id   = event.extendedProps.office_id;
+                            @this.semester_id   = event.extendedProps.semester_id;
                             @this.week_id   = event.extendedProps.week_id;
                             @this.title     = event.title;
                             @this.start     = dayjs(event.startStr).format('YYYY-MM-DD');
@@ -298,7 +344,7 @@
 
                 eventMouseEnter: function (info) {
                     $(info.el).tooltip({
-                        title: info.event.extendedProps.week.title + ' ( ' + info.event.extendedProps.week.semester.school_year  + ' ) ' + '<br />' + info.event.title + '<br />'+ '<span class="text-info">' + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
+                        title: info.event.extendedProps.week.title + ' ( ' + info.event.extendedProps.semester.school_year  + ' ) ' + '<br />' + info.event.title + '<br />'+ '<span class="text-info">' + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
                         html: true,
                         content:'ssss',
                         placement: 'top',
