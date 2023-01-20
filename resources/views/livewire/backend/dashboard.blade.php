@@ -44,7 +44,7 @@
                             <div class="d-sm-inline-flex">
                                 <h3>{{ $eventsCount }}</h3>
                                 <div class="form-group pt-1 pl-4">
-                                    <select wire:change.loading.delay.longest="getEventsCount($event.target.value)" id="semesterID" class="form-control form-control-sm">
+                                    <select wire:change="getEventsCount($event.target.value)" id="semesterID" class="form-control form-control-sm">
                                         @foreach ($semesters as $semester)
                                             <option value="{{ $semester->id }}" {{ $semester->active ? 'selected' : '' }}>{{ $semester->title . ' ' . $semester->school_year }}</option>
                                         @endforeach
@@ -118,7 +118,7 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="far fa-chart-bar"></i>
-                                @lang('site.events')
+                                @lang('site.statisticsUsersEvent')
                             </h3>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -137,10 +137,10 @@
                                             <thead class="bg-light">
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Name</th>
-                                                    <th>specialization</th>
-                                                    <th>type</th>
-                                                    <th>events</th>
+                                                    <th>@lang('site.name')</th>
+                                                    <th>@lang('site.specialization')</th>
+                                                    <th>@lang('site.type')</th>
+                                                    <th>@lang('site.eventsTotal')</th>
                                                 </tr>
                                             </thead>
                                             <tbody>

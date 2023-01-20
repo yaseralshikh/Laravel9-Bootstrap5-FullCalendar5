@@ -16,6 +16,7 @@ class Dashboard extends Component
     public $eventsCount;
 
     // for chart
+
     public $items = [];
     public $types;
 
@@ -33,7 +34,6 @@ class Dashboard extends Component
         }
         return $color;
     }
-
     // end chart
 
     public function mount()
@@ -44,6 +44,7 @@ class Dashboard extends Component
     public function getEventsCount($option = Null)
     {
         if ($this->getDateRange($option)) {
+
             $this->eventsCount = Event::query()
                 ->where('office_id', auth()->user()->office_id)
                 ->whereBetween('start', $this->getDateRange($option))
@@ -54,7 +55,7 @@ class Dashboard extends Component
     public function getDateRange($option)
     {
         if ($option == Null) {
-            $semester = Semester::where('status', 1)->where('id', $this->semesterActive())->get();
+            $semester = Semester::whereStatus(1)->where('id', $this->semesterActive())->get();
             if ($semester) {
                 $start = $semester[0]->start;
                 $end = $semester[0]->end;
@@ -69,7 +70,7 @@ class Dashboard extends Component
 
         } else {
 
-            $semester = Semester::where('status', 1)->where('id', $option)->get();
+            $semester = Semester::whereStatus(1)->where('id', $option)->get();
 
             $start = $semester[0]->start;
             $end = $semester[0]->end;
@@ -89,14 +90,14 @@ class Dashboard extends Component
         return User::query()
         ->where('office_id', auth()->user()->office_id)
         ->with(['events' => function ($query) {
-            $query->where('semester_id', $this->semesterActive())->where('status', true);
+            $query->where('semester_id', $this->semesterActive())->whereStatus(true);
         }])->orderBy('name', 'asc')->get();
     }
 
     public function render()
     {
         // for chart
-        $events = Event::where('status', 1)->whereNotIn('title', ['إجازة'])->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->get();
+        $events = Event::whereStatus(1)->whereNotIn('title', ['إجازة'])->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->get();
 
         if ($events) {
             foreach ($events as $event) {
@@ -111,7 +112,10 @@ class Dashboard extends Component
                 ];
             }
 
-            $events = Event::whereIn('title', $this->types)->where('status', 1)->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->get();
+            $events = Event::whereIn('title', $this->types)->whereStatus(1)
+                ->where('semester_id', $this->semesterActive())
+                ->where('office_id', auth()->user()->office_id)
+                ->get();
             $columnChartModel = $events->groupBy('title')
             ->reduce(function ($columnChartModel, $data) {
                 $type = $data->first()->title;
@@ -132,13 +136,13 @@ class Dashboard extends Component
 
             $this->firstRun = false;
         }
-
         // chart
-        $usersCount = User::where('office_id', auth()->user()->office_id)->where('status', 1)->count();
-        $semesters = Semester::where('status', 1)->orderBy('id')->latest()->take(3)->get();
+
+        $usersCount = User::where('office_id', auth()->user()->office_id)->whereStatus(1)->count();
+        $semesters = Semester::whereStatus(1)->orderBy('id')->latest()->take(3)->get();
         $users = $users = $this->users;
-        $schools = School::where('office_id', auth()->user()->office_id)->where('status', 1)->whereNotIn('level_id',[4,5])->orderBy('name')->get();
-        $schoolsCount = School::where('office_id', auth()->user()->office_id)->where('status', 1)->whereNotIn('level_id',[4,5])->count();
+        $schools = School::where('office_id', auth()->user()->office_id)->whereStatus(1)->whereNotIn('level_id',[4,5])->orderBy('name')->get();
+        $schoolsCount = School::where('office_id', auth()->user()->office_id)->whereStatus(1)->whereNotIn('level_id',[4,5])->count();
         return view('livewire.backend.dashboard',[
             'usersCount' => $usersCount,
             'schoolsCount' => $schoolsCount,

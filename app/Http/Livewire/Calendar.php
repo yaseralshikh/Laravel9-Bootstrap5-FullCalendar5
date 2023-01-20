@@ -7,9 +7,10 @@ use App\Models\User;
 use App\Models\Week;
 use App\Models\Event;
 use App\Models\School;
-use App\Models\Semester;
-use App\Rules\EventOverLap;
 use Livewire\Component;
+use App\Models\Semester;
+use App\Rules\UserOverLap;
+use App\Rules\EventOverLap;
 
 class Calendar extends Component
 {
@@ -27,7 +28,7 @@ class Calendar extends Component
         return ([
             'semester_id'   => 'required',
             'week_id'       => 'required',
-            'title' => ['required', new EventOverLap($this->start)],
+            'title' => ['required', new EventOverLap($this->start), new UserOverLap($this->start)],
         ]);
     }
 
@@ -56,7 +57,7 @@ class Calendar extends Component
                 $color = '#298A08';
         }
         if ($this->all_user) {
-            $users = User::where('office_id', auth()->user()->office_id)->where('status', true)->get();
+            $users = User::where('office_id', auth()->user()->office_id)->whereStatus(1)->get();
             foreach ($users as $user) {
                 Event::create([
                     'user_id'       => $user->id,
@@ -203,9 +204,9 @@ class Calendar extends Component
 
     public function render()
     {
-        $schools = School::where('office_id', auth()->user()->office_id)->where('status', true)->get();
-        $weeks = Week::where('status', true)->get();
-        $semesters = Semester::where('status', true)->get();
+        $schools = School::where('office_id', auth()->user()->office_id)->whereStatus(1)->get();
+        $weeks = Week::whereStatus(1)->get();
+        $semesters = Semester::whereStatus(1)->get();
 
         return view('livewire.calendar', compact('schools', 'weeks', 'semesters'));
     }

@@ -23,18 +23,18 @@
                 <div class="card-header text-center">
                     <a href="{{ route('login') }}" class="h1"><b>Admin</b>LTE</a>
                     <h4 class="text-primary">خطة المشرف الأسبوعية</h4>
-                    <h6>مكتب التعليم بوسط جازان - بنين</h6>
+                    <h6>الإدارة العامة للتعليم بمنطقة جازان</h6>
                 </div>
-                <div class="card-body">
+                <div class="card-body" dir="rtl">
                     @if (session('status'))
-                            <div class="alert alert-success" role="alert">
+                            <div class="alert alert-success text-center" role="alert">
                                 {{ session('status') }}
                             </div>
                     @endif
-                    <p class="login-box-msg">You forgot your password? Here you can easily retrieve a new password.</p>
+                    <p class="login-box-msg">لقد نسيت كلمة المرور ?<br> هنا يمكنك استعادة كلمة مرور جديدة.</p>
                     <form method="POST" action="{{ route('password.email') }}">
                         @csrf
-                        <div class="input-group mb-3">
+                        <div class="input-group mb-3" dir="ltr">
                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 
                             <div class="input-group-append">
@@ -50,13 +50,13 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary btn-block">Request new password</button>
+                                <button type="submit" class="btn btn-primary btn-block">استعادة كلمة المرور</button>
                             </div>
                             <!-- /.col -->
                         </div>
                     </form>
                     <p class="mt-3 mb-1">
-                        <a href="{{ route('login') }}">Login</a>
+                        <a href="{{ route('login') }}">@lang('site.login')</a>
                     </p>
                 </div>
                 <!-- /.login-card-body -->

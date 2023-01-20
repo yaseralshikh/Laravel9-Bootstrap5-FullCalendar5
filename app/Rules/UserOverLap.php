@@ -5,7 +5,7 @@ namespace App\Rules;
 use App\Models\Event;
 use Illuminate\Contracts\Validation\Rule;
 
-class EventOverLap implements Rule
+class UserOverLap implements Rule
 {
     public $start;
 
@@ -28,9 +28,8 @@ class EventOverLap implements Rule
      */
     public function passes($attribute, $value)
     {
-        return Event::where('title', $value)
-            ->where('start', $this->start)
-            ->whereNotIn('title',['إجازة','يوم مكتبي','برنامج تدريبي'])
+        return Event::where('start', $this->start)
+            ->where('user_id', auth()->user()->id)
             ->count() == 0;
     }
 
@@ -41,6 +40,6 @@ class EventOverLap implements Rule
      */
     public function message()
     {
-        return 'تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرف اخر.';
+        return 'لا يمكن ادخال اكثر من مهمة لنفس المستخدم بنفس اليوم.';
     }
 }
