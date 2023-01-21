@@ -12,6 +12,7 @@ class Office extends Model
 
     protected $fillable = [
         'name',
+        'director',
         'status',
     ];
 
@@ -20,9 +21,9 @@ class Office extends Model
         return $this->hasMany(User ::class);
     }
 
-    public function schools(): HasMany
+    public function tasks(): HasMany
     {
-        return $this->hasMany(School ::class);
+        return $this->hasMany(Task ::class);
     }
 
     public function events(): HasMany

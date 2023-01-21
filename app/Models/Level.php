@@ -15,9 +15,9 @@ class Level extends Model
         'status',
     ];
 
-    public function schools(): HasMany
+    public function tasks(): HasMany
     {
-        return $this->hasMany(School ::class);
+        return $this->hasMany(Task ::class);
     }
 
     public function status(): string

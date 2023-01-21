@@ -58,8 +58,9 @@
                                 class="form-select  @error('semester_id') is-invalid @enderror" id="semester_id">
                                 <option value="" selected>@lang('site.choise') :</option>
                                 @foreach ($semesters as $semester)
-                                <option value="{{ $semester->id }}" style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
-                                    $semester->title . ' ( ' . $semester->school_year . ' )' }}</option>
+                                    <option value="{{ $semester->id }}" style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
+                                        $semester->title . ' ( ' . $semester->school_year . ' )' }}
+                                    </option>
                                 @endforeach
                             </select>
 
@@ -77,8 +78,9 @@
                                 class="form-select  @error('week_id') is-invalid @enderror" id="week_id">
                                 <option value="" selected>@lang('site.choise') :</option>
                                 @foreach ($weeks as $week)
-                                <option value="{{ $week->id }}" style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
-                                    $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
+                                    <option value="{{ $week->id }}" style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
+                                        $week->title . ' ( ' . $week->semester->school_year . ' )' }}
+                                    </option>
                                 @endforeach
                             </select>
 
@@ -97,8 +99,16 @@
                             <select name="title" wire:model.defer="title"
                                 class="form-select  @error('title') is-invalid @enderror" id="title">
                                 <option value="" selected>@lang('site.choise') :</option>
-                                @foreach ($schools as $school)
-                                <option value="{{ $school->name }}">{{ $school->name }}</option>
+                                @foreach ($tasks as $task)
+                                    <option  value="{{ $task->name }}"
+                                        style="
+                                        {{ $task->level_id == 1 ? 'background:#FBEFF2;' : '' }}
+                                        {{ $task->level_id == 2 ? 'background:#E6F8E0;' : '' }}
+                                        {{ $task->level_id == 3 ? 'background:#F7F8E0;' : '' }}
+                                        {{ $task->level_id == 4 ? 'background:#F8ECE0;' : '' }}
+                                        {{ $task->level_id == 5 ? 'background:#E0F2F7;' : '' }}">
+                                        {{ $task->name }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('title')
@@ -194,8 +204,16 @@
                             <label for="title1" class="col-form-label">@lang('site.task') :</label>
                             <select wire:model.defer="title" class="form-select  @error('title') is-invalid @enderror"
                                 id="title1">
-                                @foreach ($schools as $school)
-                                <option value="{{ $school->name }}">{{ $school->name }}</option>
+                                @foreach ($tasks as $task)
+                                    <option  value="{{ $task->name }}"
+                                        style="
+                                        {{ $task->level_id == 1 ? 'background:#FBEFF2;' : '' }}
+                                        {{ $task->level_id == 2 ? 'background:#E6F8E0;' : '' }}
+                                        {{ $task->level_id == 3 ? 'background:#F7F8E0;' : '' }}
+                                        {{ $task->level_id == 4 ? 'background:#F8ECE0;' : '' }}
+                                        {{ $task->level_id == 5 ? 'background:#E0F2F7;' : '' }}">
+                                        {{ $task->name }}
+                                    </option>
                                 @endforeach
                             </select>
 

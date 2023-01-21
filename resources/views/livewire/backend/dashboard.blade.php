@@ -22,7 +22,7 @@
         <div class="container-fluid">
             <!-- Small boxes (Stat box) -->
             <div class="row">
-                <div class="col-lg-4 col-4">
+                <div class="col-lg-3 col-3">
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
@@ -37,19 +37,34 @@
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-4 col-4">
+                <div class="col-lg-3 col-3">
+                    <!-- small box -->
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3>{{ $usersCount }}</h3>
+
+                            <p>@lang('site.users')</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-person-add"></i>
+                        </div>
+                        <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-3">
                     <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">
                             <div class="d-sm-inline-flex">
                                 <h3>{{ $eventsCount }}</h3>
-                                <div class="form-group pt-1 pl-4">
+                                {{-- <div class="form-group pt-1 pl-4">
                                     <select wire:change="getEventsCount($event.target.value)" id="semesterID" class="form-control form-control-sm">
                                         @foreach ($semesters as $semester)
                                             <option value="{{ $semester->id }}" {{ $semester->active ? 'selected' : '' }}>{{ $semester->title . ' ' . $semester->school_year }}</option>
                                         @endforeach
                                     </select>
-                                </div>
+                                </div> --}}
                             </div>
                             <p>@lang('site.events')</p>
                         </div>
@@ -60,18 +75,82 @@
                     </div>
                 </div>
                 <!-- ./col -->
-                <div class="col-lg-4 col-4">
+                <div class="col-lg-3 col-3">
                     <!-- small box -->
-                    <div class="small-box bg-warning">
+                    <div class="small-box bg-primary">
                         <div class="inner">
-                            <h3>{{ $usersCount }}</h3>
+                            <h3>{{ $weeksCount }}</h3>
 
-                            <p>@lang('site.supervisor')</p>
+                            <p>@lang('site.weeks')</p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-person-add"></i>
+                            <i class="ion ion-calendar"></i>
                         </div>
-                        <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{ route('admin.weeks') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-3">
+                    <!-- small box -->
+                    <div class="small-box" style="background-color:rgba(124, 47, 239, 0.3);">
+                        <div class="inner">
+                            <h3>{{ $eventsSchoolCount }}</h3>
+
+                            <p>@lang('site.eventsSchool')</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-model-s"></i>
+                        </div>
+                        <span class="small-box-footer"></span>
+                        {{-- <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a> --}}
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-3">
+                    <!-- small box -->
+                    <div class="small-box bg-dark">
+                        <div class="inner">
+                            <h3>{{ $eventsOfficeCount }}</h3>
+
+                            <p>@lang('site.eventsOffice')</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-home"></i>
+                        </div>
+                        <span class="small-box-footer"></span>
+                        {{-- <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a> --}}
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-3">
+                    <!-- small box -->
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>{{ $eventsTrainingCount }}</h3>
+
+                            <p>@lang('site.eventsTraining')</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-person-stalker"></i>
+                        </div>
+                        <span class="small-box-footer"></span>
+                        {{-- <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a> --}}
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-3">
+                    <!-- small box -->
+                    <div class="small-box bg-secondary">
+                        <div class="inner">
+                            <h3>{{ $eventsVacationCount }}</h3>
+
+                            <p>@lang('site.eventsVacation')</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-plane"></i>
+                        </div>
+                        <span class="small-box-footer"></span>
+                        {{-- <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a> --}}
                     </div>
                 </div>
                 <!-- ./col -->

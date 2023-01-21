@@ -18,10 +18,12 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
 
     protected $search;
     protected $selected_rows;
+    protected $office_id;
 
-    function __construct($search,$selectedRows) {
+    function __construct($search,$selectedRows,$office_id) {
         $this->search = $search;
         $this->selected_rows = $selectedRows;
+        $this->office_id = $office_id;
     }
 
     public function collection()
@@ -32,6 +34,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
         } else {
             return User::query()
             ->where('name', 'like', '%'.$this->search.'%')
+            ->where('office_id', $this->office_id)
             ->orderBy('name', 'asc')
             ->get();
         }
@@ -43,8 +46,9 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
             $user->name,
             $user->email,
             $user->specialization->name,
+            $user->type,
             $user->roles[0]->name,
-            $user->status,
+            $user->status ? 'مفعل' : 'غير مفعل',
         ] ;
     }
 
@@ -55,6 +59,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
             'name',
             'email',
             'specialization',
+            'type',
             'role',
             'status',
         ];
@@ -64,7 +69,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange = 'A1:F1'; // All headers
+                $cellRange = 'A1:G1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray(
                     array(

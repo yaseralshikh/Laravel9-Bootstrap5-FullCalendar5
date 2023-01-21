@@ -158,10 +158,12 @@
                     <div class="row">
                         <div class="col-6 text-right">
                             <p class="mb-2 text-sm text-muted"><i class="ml-2 fas fa-user"></i>@lang('site.specialization') :</p>
+                            <p class="mb-2 text-sm text-muted"><i class="ml-2 fas fa-user"></i>@lang('site.type') :</p>
                             <p class="mb-2 text-sm text-muted"><i class="ml-1 fas fa-user-lock"></i> @lang('site.role') :</p>
                         </div>
                         <div class="col-6">
                             <p class="mb-2 text-sm text-muted">{{ Str::title(Auth::user()->specialization->name) }}</p>
+                            <p class="mb-2 text-sm text-muted">{{ Str::title(Auth::user()->type) }}</p>
                             <p class="mb-2 text-sm text-muted">{{ Auth::user()->roles[0]->name }}</p>
                         </div>
                     </div>

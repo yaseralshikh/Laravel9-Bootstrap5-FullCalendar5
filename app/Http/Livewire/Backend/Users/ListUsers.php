@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Backend\Users;
 
+use PDF;
 use App\Models\User;
+use App\Models\Office;
 use Livewire\Component;
 use App\Exports\UsersExport;
 use App\Imports\UsersImport;
@@ -14,7 +16,6 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use PDF;
 
 class ListUsers extends Component
 {
@@ -30,6 +31,8 @@ class ListUsers extends Component
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
+
+    public $byOffice = null; //filter by office_id
 
     public $sortColumnName = 'name';
     public $sortDirection = 'asc';
@@ -180,13 +183,19 @@ class ListUsers extends Component
     {
         $validatedData = Validator::make($this->data, [
 			'name'                  => 'required',
-			'specialization_id'     => 'required',
 			'email'                 => 'required|email|unique:users',
+			'office_id'             => 'nullable',
+			'specialization_id'     => 'required',
+			'type'                  => 'required',
 			'password'              => 'required|confirmed',
             'status'                => 'required',
 		])->validate();
 
 		$validatedData['password'] = bcrypt($validatedData['password']);
+
+        if(empty($validatedData['office_id'])) {
+            $validatedData['office_id'] = auth()->user()->office_id;
+        }
 
 		$user = User::create($validatedData);
         $user->attachRole(3);
@@ -225,8 +234,10 @@ class ListUsers extends Component
         try {
             $validatedData = Validator::make($this->data, [
                 'name'                      => 'required',
-                'specialization_id'            => 'required',
                 'email'                     => 'required|email|unique:users,email,'.$this->user->id,
+                'office_id'                 => 'nullable',
+                'specialization_id'         => 'required',
+                'type'                      => 'required',
                 'status'                    => 'required',
                 'password'                  => 'sometimes|confirmed',
             ])->validate();
@@ -234,7 +245,6 @@ class ListUsers extends Component
             if(!empty($validatedData['password'])) {
                 $validatedData['password'] = bcrypt($validatedData['password']);
             }
-
 
             $this->user->update($validatedData);
 
@@ -274,7 +284,13 @@ class ListUsers extends Component
 
         $this->data['role_id'] = $user->roles[0]->id;
 
-        $this->data['created_at'] = $user->created_at->format('d-m-Y');
+        $this->data['office'] = $user->office->name;
+
+        $this->data['specialization'] = $user->specialization->name;
+
+        $this->data['type'] = $user->type;
+
+        $this->data['created_at'] = $user->created_at;
 
 		$this->dispatchBrowserEvent('show-modal-show');
     }
@@ -327,7 +343,7 @@ class ListUsers extends Component
     // Export Excel File
     public function exportExcel()
     {
-        return Excel::download(new UsersExport($this->searchTerm,$this->selectedRows), 'users.xlsx');
+        return Excel::download(new UsersExport($this->searchTerm,$this->selectedRows,$this->byOffice ? $this->byOffice : auth()->user()->office_id), 'users.xlsx');
     }
 
     // Show Import Excel Form
@@ -404,7 +420,7 @@ class ListUsers extends Component
             ]);
             return $message;
 
-            $this->importType = null;
+            $this->importTypevalue = null;
             $this->reset();
             $this->dispatchBrowserEvent('hide-import-excel-modal');
         }
@@ -417,7 +433,7 @@ class ListUsers extends Component
                 $users = User::whereIn('id', $this->selectedRows)->orderBy('name', 'asc')->get();
             } else {
                 //$users = $this->users;
-                $users = User::orderBy('name', 'asc')->get();
+                $users = User::where('office_id' , $this->byOffice ? $this->byOffice : auth()->user()->office_id)->orderBy('name', 'asc')->get();
             }
             $pdf = PDF::loadView('livewire.backend.users.users_pdf',['users' => $users]);
             return $pdf->stream('users');
@@ -426,10 +442,20 @@ class ListUsers extends Component
 
     public function getUsersProperty()
 	{
-        $users = User::query()
-        ->where('name', 'like', '%'.$this->searchTerm.'%')
-        ->orderBy($this->sortColumnName, $this->sortDirection)
-        ->paginate(15);
+        $byOffice = $this->byOffice;
+        if (auth()->user()->roles[0]->name == 'superadmin') {
+            $users = User::query()
+            ->where('name', 'like', '%'.$this->searchTerm.'%')
+            ->where('office_id', $byOffice)
+            ->orderBy($this->sortColumnName, $this->sortDirection)
+            ->paginate(30);
+        } else {
+            $users = User::query()
+            ->where('name', 'like', '%'.$this->searchTerm.'%')
+            ->where('office_id', auth()->user()->office_id)
+            ->orderBy($this->sortColumnName, $this->sortDirection)
+            ->paginate(30);
+        }
 
         return $users;
 	}
@@ -438,10 +464,35 @@ class ListUsers extends Component
     {
         $users = $this->users;
 
-        $specializations = Specialization::where('status',1)->get();
+        $specializations = Specialization::whereStatus(true)->get();
+        $offices = Office::whereStatus(true)->get();
+        $types = [
+            [
+                'id'    => 1,
+                'title' => 'مشرف تربوي'
+            ],
+            [
+                'id'    => 2,
+                'title' => 'تقنية المعلومات'
+            ],
+            [
+                'id'    => 3,
+                'title' => 'مساعد مدير المكتب للشؤون التعليمية'
+            ],
+            [
+                'id'    => 4,
+                'title' => 'مساعد مدير المكتب للشؤون المدرسية'],
+            [
+                'id'    => 5,
+                'title' => 'مدير مكتب التعليم'
+            ]
+        ];
+
         return view('livewire.backend.users.list-users',[
             'users' => $users,
             'specializations' => $specializations ,
+            'offices' => $offices ,
+            'types' => $types ,
         ])->layout('layouts.admin');
     }
 }

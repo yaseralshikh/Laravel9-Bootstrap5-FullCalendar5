@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use App\Models\Event;
 use App\Models\Semester;
+use App\Models\Task;
+use App\Models\User;
+use App\Models\Week;
+
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use Asantibanez\LivewireCharts\Facades\LivewireCharts;
@@ -29,12 +33,13 @@ class ViewServiceProvider extends ServiceProvider
         return $color;
     }
 
+    // end chart
+
     public function semesterActive()
     {
         $semester_active = Semester::where('active' ,1)->get();
         return $semester_active[0]->id;
     }
-    // end chart
 
     /**
      * Register services.
@@ -76,7 +81,7 @@ class ViewServiceProvider extends ServiceProvider
                             ];
                         }
 
-                        $events = Event::whereIn('title', $this->types)->where('status', 1)->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->get();
+                        $events = Event::whereIn('title', $this->types)->whereStatus(1)->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->get();
                         $columnChartModel = $events->groupBy('title')
                         ->reduce(function ($columnChartModel, $data) {
                             $type = $data->first()->title;
@@ -104,12 +109,37 @@ class ViewServiceProvider extends ServiceProvider
                 }
 
                 $columnChartModel = Cache::get('columnChartModel');
+                
+                // chart
+
+                $users = User::query()
+                ->where('office_id', auth()->user()->office_id)
+                ->with(['events' => function ($query) {
+                    $query->where('semester_id', $this->semesterActive())->whereStatus(true);
+                }])->orderBy('name', 'asc')->get();
+
+                $usersCount = User::where('office_id', auth()->user()->office_id)->whereStatus(1)->count();
+                $eventsCount = Event::whereStatus(1)->where('office_id', auth()->user()->office_id)->where('semester_id',$this->semesterActive())->count();
+                $weeksCount = Week::whereStatus(1)->where('semester_id',$this->semesterActive())->count();
+                $eventsSchoolCount = Event::whereStatus(1)->where('office_id', auth()->user()->office_id)->where('semester_id',$this->semesterActive())->whereNotIn('title',['يوم مكتبي','برنامج تدريبي','إجازة'])->count();
+                $eventsOfficeCount = Event::whereStatus(1)->where('office_id', auth()->user()->office_id)->where('semester_id',$this->semesterActive())->where('title','يوم مكتبي')->count();
+                $eventsTrainingCount = Event::whereStatus(1)->where('office_id', auth()->user()->office_id)->where('semester_id',$this->semesterActive())->where('title','برنامج تدريبي')->count();
+                $eventsVacationCount = Event::whereStatus(1)->where('office_id', auth()->user()->office_id)->where('semester_id',$this->semesterActive())->where('title','إجازة')->count();
+                $schoolsCount = Task::where('office_id', auth()->user()->office_id)->whereStatus(1)->whereNotIn('level_id',[4,5])->count();
 
                 $view->with([
                     'columnChartModel' => $columnChartModel,
+                    'usersCount' => $usersCount,
+                    'schoolsCount' => $schoolsCount,
+                    'users' => $users,
+                    'weeksCount' => $weeksCount,
+                    'eventsSchoolCount' => $eventsSchoolCount,
+                    'eventsOfficeCount' => $eventsOfficeCount,
+                    'eventsTrainingCount' => $eventsTrainingCount,
+                    'eventsVacationCount' => $eventsVacationCount,
+                    'eventsCount' => $eventsCount,
                 ]);
             });
-            // chart
         }
     }
 }
