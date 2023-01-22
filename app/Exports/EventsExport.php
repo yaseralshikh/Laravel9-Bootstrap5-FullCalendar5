@@ -22,20 +22,24 @@ class EventsExport implements FromCollection, WithHeadings, WithMapping, ShouldA
     protected $selected_rows;
     protected $byWeek;
     protected $byStatus;
+    protected $byOffice;
 
-    function __construct($search,$selectedRows,$byWeek,$byStatus) {
+    function __construct($search,$selectedRows,$byWeek,$byStatus,$byOffice) {
         $this->search = $search;
         $this->selected_rows = $selectedRows;
         $this->byWeek = $byWeek;
         $this->byStatus = $byStatus;
+        $this->byOffice = $byOffice;
     }
 
     public function collection()
     {
         $week =$this->byWeek;
+        $office =$this->byOffice ? $this->byOffice : auth()->user()->office_id;
+
         if ($this->selected_rows) {
             return Event::whereIn('id', $this->selected_rows)
-                ->where('status', $this->byStatus)->when($week, function($query) use ($week){
+                ->where('status', $this->byStatus)->where('office_id', $office)->when($week, function($query) use ($week){
                     $query->where('week_id', $week);
                 })
                 ->search(trim(($this->search)))
@@ -43,7 +47,7 @@ class EventsExport implements FromCollection, WithHeadings, WithMapping, ShouldA
                 ->orderBy('created_at', 'asc')->get();
         } else {
             return Event::query()
-            ->where('status', $this->byStatus)->when($this->byWeek, function($query) use ($week){
+            ->where('status', $this->byStatus)->where('office_id', $office)->when($this->byWeek, function($query) use ($week){
                 $query->where('week_id', $week);
             })
             ->search(trim(($this->search)))
@@ -58,7 +62,9 @@ class EventsExport implements FromCollection, WithHeadings, WithMapping, ShouldA
             $event->user->name,
             $event->title,
             Hijri::Date('Y-m-d', $event->start) .' / '. Hijri::Date('l', $event->start) .' / '. Carbon::parse($event->start)->toDateString(),
+            $event->semester->title,
             $event->week->title,
+            $event->office->name,
             $event->status ? 'Active' : 'Inactive',
         ] ;
     }
@@ -69,8 +75,10 @@ class EventsExport implements FromCollection, WithHeadings, WithMapping, ShouldA
             'id',
             'Name',
             'Event',
-            'date',
+            'Date',
+            'Semester',
             'Week',
+            'Office',
             'Status',
         ];
     }
@@ -79,7 +87,7 @@ class EventsExport implements FromCollection, WithHeadings, WithMapping, ShouldA
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange = 'A1:F1'; // All headers
+                $cellRange = 'A1:H1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray(
                     array(

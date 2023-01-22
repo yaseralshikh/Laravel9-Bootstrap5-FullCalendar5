@@ -90,7 +90,7 @@ return [
     'schoolWeek' => 'الأسبوع الدراسي',
     'status' => 'الحالة',
     'noDataFound' => 'لا توجد بيانات',
-    'choise' => 'إختر من القائمة',
+    'choise' => 'إختر :name' . ' من القائمة',
     'jobType' => 'العمل الحالي',
     'saveChanges' => 'حفظ التعديلات',
     'save' => 'حفظ',

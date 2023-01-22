@@ -10,7 +10,8 @@
     <style>
         /* Style the body */
         body {
-            font-family: 'amiri';
+            font-family: 'kfgqpcuthmantahanaskh';
+            /* font-weight: bold; */
             display: table;
         }
 
@@ -170,9 +171,9 @@
                                 </ul>
                             </td>
                             <td class="logo_header" style="width: 45%;">
-                                <h3>مدير مكتب التعليم بوسط جازان - بنين</h3>
+                                <h3>{{ $office->name }}</h3>
                                 <br>
-                                <h3>عبدالرحمن بن عسيري عكور</p>
+                                <h3>{{ $office->director }}</p>
                             </td>
                         </tr>
                     </tbody>

@@ -86,11 +86,11 @@
                         </div>
 
                         @role('superadmin')
-                        {{-- Week Filter --}}
+                        {{-- offices Filter --}}
                         <div>
                             <select dir="rtl" name="office_id" wire:model="byOffice"
                                 class="form-control form-control-sm">
-                                <option value="" selected>@lang('site.choise')</option>
+                                <option value="" selected>@lang('site.choise', ['name' => 'التخصص'])</option>
                                 @foreach ($offices as $office)
                                     <option value="{{ $office->id }}">{{ $office->name }}</option>
                                 @endforeach
@@ -266,7 +266,7 @@
                                 <div class="form-group">
                                     <label for="office_id">@lang('site.office')</label>
                                     <select id="office_id" class="form-control @error('office_id') is-invalid @enderror" wire:model.defer="data.office_id">
-                                        <option hidden>@lang('site.choise')</option>
+                                        <option hidden>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
                                         @foreach ($offices as $office)
                                             <option class="bg-light" value="{{ $office->id }}">{{ $office->name }}</option>
                                         @endforeach
@@ -284,7 +284,7 @@
                                 <div class="form-group">
                                     <label for="specialization_id">@lang('site.specialization')</label>
                                     <select id="specialization_id" class="form-control @error('specialization_id') is-invalid @enderror" wire:model.defer="data.specialization_id">
-                                        <option hidden>@lang('site.choise')</option>
+                                        <option hidden>@lang('site.choise', ['name' => 'التخصص'])</option>
                                         @foreach ($specializations as $specialization)
                                             <option class="bg-light" value="{{ $specialization->id }}">{{ $specialization->name }}</option>
                                         @endforeach
@@ -301,7 +301,7 @@
                                 <div class="form-group">
                                     <label for="type">@lang('site.type')</label>
                                     <select id="type" class="form-control @error('type') is-invalid @enderror" wire:model.defer="data.type">
-                                        <option hidden>@lang('site.choise')</option>
+                                        <option hidden>@lang('site.choise', ['name' => 'العمل الحالي'])</option>
                                         @foreach ($types as $type)
                                             <option class="bg-light" value="{{ $type['title'] }}">{{ $type['title'] }}</option>
                                         @endforeach

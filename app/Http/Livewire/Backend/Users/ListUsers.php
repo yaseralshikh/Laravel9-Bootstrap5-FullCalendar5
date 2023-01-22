@@ -443,6 +443,7 @@ class ListUsers extends Component
     public function getUsersProperty()
 	{
         $byOffice = $this->byOffice;
+
         if (auth()->user()->roles[0]->name == 'superadmin') {
             $users = User::query()
             ->where('name', 'like', '%'.$this->searchTerm.'%')

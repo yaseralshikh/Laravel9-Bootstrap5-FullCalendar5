@@ -54,7 +54,7 @@
                 <!-- ./col -->
                 <div class="col-lg-3 col-3">
                     <!-- small box -->
-                    <div class="small-box bg-success">
+                    <div class="small-box" style="background-color:rgba(38, 248, 255, 0.784);">
                         <div class="inner">
                             <div class="d-sm-inline-flex">
                                 <h3>{{ $eventsCount }}</h3>
@@ -71,7 +71,7 @@
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a href="{{ route('admin.events') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{ route('admin.events') }}" class="small-box-footer text-dark">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
@@ -92,7 +92,7 @@
                 <!-- ./col -->
                 <div class="col-lg-3 col-3">
                     <!-- small box -->
-                    <div class="small-box" style="background-color:rgba(124, 47, 239, 0.3);">
+                    <div class="small-box bg-success">
                         <div class="inner">
                             <h3>{{ $eventsSchoolCount }}</h3>
 
@@ -108,7 +108,7 @@
                 <!-- ./col -->
                 <div class="col-lg-3 col-3">
                     <!-- small box -->
-                    <div class="small-box bg-dark">
+                    <div class="small-box text-white bg-secondary">
                         <div class="inner">
                             <h3>{{ $eventsOfficeCount }}</h3>
 
@@ -124,7 +124,7 @@
                 <!-- ./col -->
                 <div class="col-lg-3 col-3">
                     <!-- small box -->
-                    <div class="small-box bg-danger">
+                    <div class="small-box" style="background-color:rgb(239, 117, 47);">
                         <div class="inner">
                             <h3>{{ $eventsTrainingCount }}</h3>
 
@@ -140,7 +140,7 @@
                 <!-- ./col -->
                 <div class="col-lg-3 col-3">
                     <!-- small box -->
-                    <div class="small-box bg-secondary">
+                    <div class="small-box" style="background-color:rgba(124, 47, 239, 0.3);">
                         <div class="inner">
                             <h3>{{ $eventsVacationCount }}</h3>
 
