@@ -484,18 +484,18 @@ class ListEvents extends Component
     public function exportPDF()
     {
         $byWeek = $this->byWeek;
-        $byOffice = $this->byOffice;
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
 
         if ($byWeek) {
-            $users = User::where('status',true)->where('office_id',$byOffice ? $byOffice : auth()->user()->office_id)->orderBy('name', 'asc')->whereHas('events', function ($query) use ($byWeek) {
+            $users = User::where('status',true)->where('office_id',$byOffice)->orderBy('name', 'asc')->whereHas('events', function ($query) use ($byWeek) {
                 $query->where('week_id', $byWeek)->where('status', true);
             })->with(['events' => function ($query) use ($byWeek) {
                 $query->where('week_id', $byWeek)->where('status', true)->whereNotIn('title', ['إجازة'])->orderBy('start', 'asc');
             }])->get();
 
             if ($users->count() != Null) {
-                $subtasks = Subtask::where('status',1)->orderBy('position', 'asc')->get();
-                $office = Office::where('id',$byOffice ? $byOffice : auth()->user()->office_id)->first();
+                $subtasks = Subtask::where('status',1)->where('office_id',$byOffice)->orderBy('position', 'asc')->get();
+                $office = Office::where('id',$byOffice)->first();
 
                 return response()->streamDownload(function() use($users, $subtasks, $office){
                     $pdf = PDF::loadView('livewire.backend.events.events_pdf',[

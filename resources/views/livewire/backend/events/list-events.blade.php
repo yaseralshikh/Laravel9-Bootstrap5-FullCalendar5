@@ -48,9 +48,37 @@
                                 <span>@lang('site.addEvent')</span>
                             </i>
                         </button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary btn-sm">@lang('site.action')</button>
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon"
+                                data-toggle="dropdown" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu" role="menu" style="">
+                                <a class="dropdown-item" wire:click.prevent="userNullPlan"
+                                    href="#">@lang('site.userWithoutPlan')</a>
+                                <div class="dropdown-divider"></div>
+                                <a dir="rtl" class="dropdown-item" wire:click.prevent="exportExcel" href="#"
+                                    aria-disabled="true">@lang('site.exportExcel')</a>
+                                {{-- <a class="dropdown-item" wire:click.prevent="importExcelForm" href="#">Import from
+                                    Excel</a> --}}
+                                <a dir="rtl" class="dropdown-item" wire:click.prevent="exportPDF"
+                                    href="#">@lang('site.exportPDF')</a>
+                                <div class="dropdown-divider"></div>
+                                {{-- @if ($selectedRows) --}}
+                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
+                                    wire:click.prevent="setAllAsActive" href="#">@lang('site.eventsAcive')</a>
+                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
+                                    wire:click.prevent="setAllAsInActive" href="#">@lang('site.eventsInAcive')</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm"
+                                    wire:click.prevent="deleteSelectedRows" href="#">@lang('site.deleteSelected')</a>
+                                {{-- @endif --}}
+                            </div>
+                        </div>
                     </h3>
 
-                    <div class="card-tools">
+                    {{-- <div class="card-tools">
                         <div class="btn-group pr-2">
                             <a href="#" class="btn btn-outline-secondary btn-sm hover-item"
                                 data-toggle="tooltip"
@@ -100,10 +128,7 @@
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                             <i class="fas fa-minus"></i>
                         </button>
-                        {{-- <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                            <i class="fas fa-times"></i>
-                        </button> --}}
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="card-body">
                     <div class="form-group d-flex justify-content-between align-items-center">
@@ -167,7 +192,7 @@
                     <div class="table-responsive">
                         <table id="example2" class="table text-center table-bordered table-hover dataTable dtr-inline"
                             aria-describedby="example2_info">
-                            <thead class="bg-light">
+                            <thead class="bg-light ">
                                 <tr>
                                     <th scope="col">
                                         <div class="custom-control custom-checkbox small">
@@ -256,27 +281,27 @@
                             <tbody>
                                 @forelse ($events as $event)
                                 <tr>
-                                    <td scope="col">
+                                    <td class="align-middle" scope="col">
                                         <div class="custom-control custom-checkbox small">
                                             <input type="checkbox" wire:model="selectedRows" value="{{ $event->id }}"
                                                 class="custom-control-input" id="{{ $event->id }}">
                                             <label class="custom-control-label" for="{{ $event->id }}"></label>
                                         </div>
                                     </td>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td class="dtr-control sorting_1" tabindex="0">{{ $event->user->name }}</td>
-                                    <td>{{ $event->user->specialization->name }}</td>
-                                    <td style="color: {{ $event->color }};">{{ $event->title }}</td>
-                                    <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start) }}<br>
+                                    <td class="align-middle">{{ $loop->iteration }}</td>
+                                    <td class="dtr-control align-middle">{{ $event->user->name }}</td>
+                                    <td class="align-middle">{{ $event->user->specialization->name }}</td>
+                                    <td class="align-middle" style="color: {{ $event->color }};">{{ $event->title }}</td>
+                                    <td class="align-middle">{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start) }}<br>
                                         {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->start) }}<br>
                                         {{ Carbon\Carbon::parse($event->start)->toDateString() }}
                                     </td>
                                     {{-- <td>{{
                                         (Carbon\Carbon::parse($event->end))->diffInDays(Carbon\Carbon::parse($event->start))
                                         }}</td> --}}
-                                    <td>{{ $event->week->title . ' (' . $event->week->semester->school_year . ' )' }}
+                                    <td class="align-middle">{{ $event->week->title . ' (' . $event->week->semester->school_year . ' )' }}
                                     </td>
-                                    <td>
+                                    <td class="align-middle">
                                         <span
                                             class="font-weight-bold badge text-white {{ $event->status == 1 ? 'bg-success' : 'bg-secondary' }}">
                                             {{ $event->status() }}
@@ -286,7 +311,7 @@
                                         {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->created_at) }}<br>
                                         {{ Carbon\Carbon::parse($event->created_at)->toDateString() }}
                                     </td> --}}
-                                    <td>
+                                    <td class="align-middle">
                                         <div class="btn-group btn-group-sm">
                                             <button wire:click.prevent="edit({{ $event }})"
                                                 class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
@@ -319,7 +344,7 @@
 
     <!-- Modal Create or Update Event -->
 
-    <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    <div class="modal fade" id="form" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
         wire:ignore.self>
         <div class="modal-dialog" role="document">
             <form autocomplete="off" wire:submit.prevent="{{ $showEditModal ? 'updateEvent' : 'createEvent' }}">
@@ -442,7 +467,7 @@
 
                                 <div class="form-group">
                                     <label for="start">@lang('site.date') :</label>
-                                    <input type="date" tabindex="3" wire:model.defer="data.start"
+                                    <input type="date" wire:model.defer="data.start"
                                         class="form-control @error('start') is-invalid @enderror" id="start"
                                         aria-describedby="startHelp" placeholder="Enter start">
                                     @error('start')
@@ -455,7 +480,7 @@
                                 <!-- Modal Event End -->
                                 {{-- <div class="form-group">
                                     <label for="end">End</label>
-                                    <input type="hidden" tabindex="3" wire:model.defer="data.end"
+                                    <input type="hidden" wire:model.defer="data.end"
                                         class="form-control @error('end') is-invalid @enderror" id="end"
                                         aria-describedby="endHelp" placeholder="Enter end">
                                     @error('end')
@@ -501,7 +526,7 @@
 
     <!-- Modal Delete Event -->
 
-    <div dir="rtl" class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div dir="rtl" class="modal fade" id="confirmationModal" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
