@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Backend\Users;
 
 use PDF;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Office;
 use Livewire\Component;
@@ -47,6 +48,28 @@ class ListUsers extends Component
 
     public $excelFile = Null;
     public $importTypevalue = 'addNew';
+
+
+        // Update User Role
+
+    public function updateUserRole(User $user ,$role)
+    {
+        Validator::make(['role' => $role],[
+            'role' => 'required|in:2,3',
+            // 'role' => 'required',
+        ])->validate();
+
+        $user->roles()->sync($role);
+
+        $this->alert('success', 'User role updated.', [
+            'position'  =>  'top-end',
+            'timer'  =>  1500,
+            'toast'  =>  true,
+            'text'  =>  null,
+            'showCancelButton'  =>  false,
+            'showConfirmButton'  =>  false
+        ]);
+    }
 
     // Updated Select Page Rows
 
@@ -442,21 +465,13 @@ class ListUsers extends Component
 
     public function getUsersProperty()
 	{
-        $byOffice = $this->byOffice;
+        $searchString = $this->searchTerm;
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
 
-        if (auth()->user()->roles[0]->name == 'superadmin') {
-            $users = User::query()
-            ->where('name', 'like', '%'.$this->searchTerm.'%')
-            ->where('office_id', $byOffice)
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(30);
-        } else {
-            $users = User::query()
-            ->where('name', 'like', '%'.$this->searchTerm.'%')
-            ->where('office_id', auth()->user()->office_id)
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(30);
-        }
+        $users = User::where('office_id', $byOffice)
+        ->search(trim(($searchString)))
+        ->orderBy($this->sortColumnName, $this->sortDirection)
+        ->paginate(35);
 
         return $users;
 	}
@@ -467,6 +482,7 @@ class ListUsers extends Component
 
         $specializations = Specialization::whereStatus(true)->get();
         $offices = Office::whereStatus(true)->get();
+        $roles = Role::whereNotIn('id',[1])->get();
         $types = [
             [
                 'id'    => 1,
@@ -494,6 +510,7 @@ class ListUsers extends Component
             'specializations' => $specializations ,
             'offices' => $offices ,
             'types' => $types ,
+            'roles' => $roles ,
         ])->layout('layouts.admin');
     }
 }

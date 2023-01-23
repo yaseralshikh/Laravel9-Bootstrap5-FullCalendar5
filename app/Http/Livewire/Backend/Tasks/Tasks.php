@@ -2,9 +2,10 @@
 
 namespace App\Http\Livewire\Backend\Tasks;
 
+use App\Models\Task;
 use App\Models\Level;
+use App\Models\Office;
 use Livewire\Component;
-use App\Models\School;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -21,6 +22,8 @@ class Tasks extends Component
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
+
+    public $byOffice = null; //filter by office_id
 
     public $sortColumnName = 'name';
     public $sortDirection = 'asc';
@@ -64,7 +67,7 @@ class Tasks extends Component
 
     public function setAllAsActive()
 	{
-		School::whereIn('id', $this->selectedRows)->update(['status' => 1]);
+		Task::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
         $this->alert('success', 'Tasks set As Active successfully.', [
             'position'  =>  'top-end',
@@ -82,7 +85,7 @@ class Tasks extends Component
 
 	public function setAllAsInActive()
 	{
-		School::whereIn('id', $this->selectedRows)->update(['status' => 0]);
+		Task::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
         $this->alert('success', 'Tasks set As Inactive successfully.', [
             'position'  =>  'top-end',
@@ -101,7 +104,7 @@ class Tasks extends Component
     public function deleteTasks()
     {
         // delete selected users from database
-		School::whereIn('id', $this->selectedRows)->delete();
+		Task::whereIn('id', $this->selectedRows)->delete();
 
         $this->alert('success', 'All selected tasks got deleted.', [
             'position'  =>  'top-end',
@@ -148,6 +151,7 @@ class Tasks extends Component
     {
         $this->reset();
         $this->showEditModal = false;
+        //$this->tasks = Task::whereStatus(1)->where('office_id',auth()->user()->office_id)->get();
         $this->dispatchBrowserEvent('show-form');
     }
 
@@ -157,11 +161,15 @@ class Tasks extends Component
     {
         $validatedData = Validator::make($this->data, [
 			'name'                  => 'required',
+			'office_id'              => 'nullable',
 			'level_id'              => 'required',
 		])->validate();
 
+        if(empty($validatedData['office_id'])) {
+            $validatedData['office_id'] = auth()->user()->office_id;
+        }
 
-		School::create($validatedData);
+		Task::create($validatedData);
 
         $this->dispatchBrowserEvent('hide-form');
 
@@ -177,7 +185,7 @@ class Tasks extends Component
 
     // show Update new user form modal
 
-    public function edit(School $task)
+    public function edit(Task $task)
     {
         $this->reset();
 
@@ -196,8 +204,9 @@ class Tasks extends Component
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'name'                      => 'required',
-                'level_id'                  => 'required',
+                'name'            => 'required',
+                'office_id'       => 'nullable',
+                'level_id'        => 'required',
             ])->validate();
 
             $this->task->update($validatedData);
@@ -240,7 +249,7 @@ class Tasks extends Component
     public function deleteTask()
     {
         try {
-            $task = School::findOrFail($this->taskIdBeingRemoved);
+            $task = Task::findOrFail($this->taskIdBeingRemoved);
 
             $task->delete();
 
@@ -269,11 +278,14 @@ class Tasks extends Component
 
     public function getTasksProperty()
 	{
-        $tasks = School::query()
-            ->where('name', 'like', '%'.$this->searchTerm.'%')
+        $searchString = $this->searchTerm;
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+
+        $tasks = Task::where('office_id', $byOffice)
+            ->search(trim(($searchString)))
             ->orderBy('level_id','ASC')
             ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(50);
+            ->paginate(100);
 
         return $tasks;
 	}
@@ -282,9 +294,11 @@ class Tasks extends Component
     {
         $tasks = $this->tasks;
         $levels = Level::all();
+        $offices = Office::whereStatus(true)->get();
 
         return view('livewire.backend.tasks.tasks',[
             'tasks'     => $tasks,
+            'offices'   => $offices,
             'levels'    => $levels,
         ])->layout('layouts.admin');
     }

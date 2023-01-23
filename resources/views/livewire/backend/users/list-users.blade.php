@@ -132,7 +132,7 @@
                                         </span>
                                     </th>
                                     <th>@lang('site.specialization')</th>
-                                    <th>@lang('site.role')</th>
+                                    <th class=" align-middle">@lang('site.role')</th>
                                     <th>
                                         @lang('site.status')
                                         <span wire:click="sortBy('status')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
@@ -155,8 +155,13 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td class="dtr-control sorting_1" tabindex="0">{{ $user->name }}</td>
                                         <td>{{ $user->specialization->name }}</td>
-                                        {{-- <td>{{ $user->email }}</td> --}}
-                                        <td>{{ $user->roles[0]->name }}</td>
+                                        <td class="align-middle">
+                                            <select class="form-control form-control-sm" wire:change='updateUserRole({{ $user }}, $event.target.value)'>
+                                                @foreach ($roles as $role)
+                                                    <option value="{{ $role->id }}" {{ $user->roles[0]->name == $role->name ? 'selected' : '' }}>{{ $role->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
                                         <td>
                                             <span  class="font-weight-bold badge text-white {{ $user->status == 1 ? 'bg-success' : 'bg-secondary' }}">
                                                 {{ $user->status() }}

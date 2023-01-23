@@ -56,7 +56,7 @@
                             <label for="semester_id" class="form-label">{{ __('site.semester') }} :</label>
                             <select name="semester_id" wire:model.defer="semester_id"
                                 class="form-select  @error('semester_id') is-invalid @enderror" id="semester_id">
-                                <option value="" selected>@lang('site.choise') :</option>
+                                <option value="" selected>@lang('site.choise', ['name' => 'ألفصل الدراسي']) :</option>
                                 @foreach ($semesters as $semester)
                                     <option value="{{ $semester->id }}" style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
                                         $semester->title . ' ( ' . $semester->school_year . ' )' }}
@@ -76,7 +76,7 @@
                             <label for="week_id" class="form-label">{{ __('site.schoolWeek') }} :</label>
                             <select name="week_id" wire:model.defer="week_id"
                                 class="form-select  @error('week_id') is-invalid @enderror" id="week_id">
-                                <option value="" selected>@lang('site.choise') :</option>
+                                <option value="" selected>@lang('site.choise', ['name' => 'الأسبوع الدراسي']) :</option>
                                 @foreach ($weeks as $week)
                                     <option value="{{ $week->id }}" style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
                                         $week->title . ' ( ' . $week->semester->school_year . ' )' }}
@@ -98,7 +98,7 @@
                                 class="form-control @error('title') is-invalid @enderror" id="title"> --}}
                             <select name="title" wire:model.defer="title"
                                 class="form-select  @error('title') is-invalid @enderror" id="title">
-                                <option value="" selected>@lang('site.choise') :</option>
+                                <option value="" selected>@lang('site.choise', ['name' => 'المهمة']) :</option>
                                 @foreach ($tasks as $task)
                                     <option  value="{{ $task->name }}"
                                         style="
@@ -169,7 +169,7 @@
                             <label for="semester_id_1" class="form-label">{{ __('site.semester') }} :</label>
                             <select name="semester_id" wire:model.defer="semester_id"
                                 class="form-select  @error('semester_id') is-invalid @enderror" id="semester_id_1">
-                                <option value="" selected>@lang('site.choise') :</option>
+                                <option value="" selected>@lang('site.choise', ['name' => 'الفصل الدراسي'])</option>
                                 @foreach ($semesters as $semester)
                                     <option value="{{ $semester->id }}" style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
                                     $semester->title . ' ( ' . $semester->school_year . ' )' }}</option>

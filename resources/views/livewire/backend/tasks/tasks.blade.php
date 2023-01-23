@@ -71,20 +71,34 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="form-group ">
-                            {{-- search --}}
-                            <div class="input-group" style="width: 200px;">
-                                <input type="search" wire:model="searchTerm" class="form-control" placeholder="Search for..." value="Lorem ipsum">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-default">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
+                    <div class="form-group d-flex justify-content-between align-items-center">
+
+                        {{-- search --}}
+                        <div class="input-group" style="width: 200px;">
+                            <input type="search" wire:model="searchTerm" class="form-control" placeholder="Search for..." value="Lorem ipsum">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fa fa-search"></i>
+                                </button>
                             </div>
                         </div>
 
-                        <label class="flex-wrap">Total Tasks : &nbsp{{ $tasks->total() }}</label>
+                        {{-- offices Filter --}}
+                        @role('superadmin')
+                        <div>
+                            <select dir="rtl" name="office_id" wire:model="byOffice"
+                                class="form-control form-control-sm">
+                                <option value="" selected>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
+                                @foreach ($offices as $office)
+                                    <option value="{{ $office->id }}">{{ $office->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @endrole
+
+                        <div>
+                            <label class="flex-wrap">Total Tasks : &nbsp{{ $tasks->total() }}</label>
+                        </div>
 
                     </div>
 
@@ -214,6 +228,24 @@
                         <div class="row h-100 justify-content-center align-items-center">
                             <div class="col-12">
 
+                                <!-- Modal Office -->
+                                @role('superadmin')
+                                <div class="form-group">
+                                    <label for="office_id">@lang('site.office')</label>
+                                    <select id="office_id" class="form-control @error('office_id') is-invalid @enderror" wire:model.defer="data.office_id">
+                                        <option hidden>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
+                                        @foreach ($offices as $office)
+                                            <option class="bg-light" value="{{ $office->id }}">{{ $office->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('office_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                @endrole
+
                                 <!-- Modal Task Full Name -->
 
                                 <div class="form-group">
@@ -226,7 +258,7 @@
                                     @enderror
                                 </div>
 
-                                <!-- Modal Task Specialization -->
+                                <!-- Modal Task Type -->
 
                                 <div class="form-group">
                                     <label for="level_id">Type</label>
