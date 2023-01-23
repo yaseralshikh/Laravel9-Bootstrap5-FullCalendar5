@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Backend\Subtask;
 
 use App\Models\Subtask as ModelsSubtask;
+use App\Models\Office;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Validator;
@@ -20,6 +21,8 @@ class Subtask extends Component
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
+
+    public $byOffice = null; //filter by office_id
 
     public $sortColumnName = 'position';
     public $sortDirection = 'asc';
@@ -156,9 +159,15 @@ class Subtask extends Component
     {
         $validatedData = Validator::make($this->data, [
 			'title'                  => 'required',
+			'section'                => 'required',
+            'office_id'              => 'nullable',
 		])->validate();
 
         $validatedData['position'] = 0;
+
+        if(empty($validatedData['office_id'])) {
+            $validatedData['office_id'] = auth()->user()->office_id;
+        }
 
 		ModelsSubtask::create($validatedData);
 
@@ -195,7 +204,9 @@ class Subtask extends Component
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'title'    => 'required',
+                'title'         => 'required',
+                'section'       => 'required',
+                'office_id'     => 'required',
             ])->validate();
 
             $this->subtask->update($validatedData);
@@ -285,8 +296,11 @@ class Subtask extends Component
 
     public function getSubtasksProperty()
 	{
-        $subtasks = ModelsSubtask::query()
-            ->where('title', 'like', '%'.$this->searchTerm.'%')
+        $searchString = $this->searchTerm;
+        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+
+        $subtasks = ModelsSubtask::where('office_id', $byOffice)
+            ->search(trim(($searchString)))
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate(30);
 
@@ -299,9 +313,23 @@ class Subtask extends Component
     public function render()
     {
         $subtasks = $this->subtasks;
+        $offices = Office::whereStatus(true)->get();
+
+        $sections = [
+            [
+                'id'    => 1,
+                'title' => 'مهمة فرعية'
+            ],
+            [
+                'id'    => 2,
+                'title' => 'حاشية'
+            ],
+        ];
 
         return view('livewire.backend.subtask.subtask',[
             'subtasks' => $subtasks,
+            'offices'  => $offices,
+            'sections'  => $sections,
         ])->layout('layouts.admin');
     }
 }

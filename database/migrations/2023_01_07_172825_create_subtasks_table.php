@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('subtasks', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->integer('section')->default(Null);
+            $table->string('section');
             $table->foreignId('office_id')->constrained();
             $table->integer('position')->default(Null);
             $table->unsignedTinyInteger('status')->default(1);

@@ -25,4 +25,13 @@ class Specialization extends Model
     {
         return $this->status ? 'Active' : 'Inactive';
     }
+
+    public function scopeSearch($query, $term)
+    {
+        $term = "%$term%";
+
+        $query->where(function($query) use ($term){
+            $query->where('name', 'like' , $term);
+        });
+    }
 }

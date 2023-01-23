@@ -16,8 +16,8 @@
         }
 
         .container {
-            margin: 15px;
-            padding: 15px;
+            margin: 10px;
+            padding: 10px;
             width: 210mm;
             height: 297mm;
             /*border: solid green;*/
@@ -72,7 +72,7 @@
         }
 
         .notes{
-            padding: 15px;
+            padding: 5px;
             height: 25mm;
             /*border:solid red;*/
             /* background-color: rgb(130, 128, 246); */
@@ -101,7 +101,15 @@
                 <table class="logo_header" cellpadding="5" border="0" cellspacing="5">
                     <tbody class="logo_header">
                         <tr class="logo_header">
-                            <td class="logo_header"><img src="{{ asset('backend/img/events/moe_logo_r.jpg') }}" width="150px" alt=""></td>
+                            <td style="font-size: 16px;" class="logo_header">
+                                <div>
+                                    <img style="display: block;" src="{{ asset('backend/img/events/moe_logo_r.jpg') }}" width="150px" alt="">
+                                    <div>
+                                        {{ $users[0]->office->name }}
+                                    </div>
+                                </div>
+
+                            </td>
                             <td class="logo_header"><img src="{{ asset('backend/img/events/moe_logo.jpg') }}" width="150px" alt=""></td>
                             <td class="logo_header"><img src="{{ asset('backend/img/events/logo_L.jpg') }}" width="150px" alt=""></td>
                         </tr>
@@ -144,9 +152,9 @@
                     </tbody>
                 </table>
                 <div>
-                    <ol style="text-align: justify;font-size: 14px;">
-                        <span style="text-align: justify;font-size: 14px;font-weight: bold;">المهام :</span>
-                        @foreach ($subtasks as $subtask)
+                    <ol style="text-align: justify;font-size: 15px;">
+                        <span style="text-align: justify;font-size: 15px;font-weight: bold;">المهام :</span>
+                        @foreach ($subtasks->where('section', 'مهمة فرعية') as $subtask)
                             <li>{{ $subtask->title }}</li>
                         @endforeach
                     </ol>
@@ -154,20 +162,14 @@
             </div>
 
             <div class="notes">
-                <table class="logo_header" cellpadding="5" border="0" cellspacing="5">
+                <table class="logo_header" cellpadding="5" cellspacing="5">
                     <tbody>
                         <tr>
                             <td dir="rtl" class="logo_header" style="text-align:justify;font-size: 11px;line-height: 1.5;">
                                 <ul style="list-style-type:none;">
-                                    <li>ص : متابعة الدوام</li>
-                                    <li>ص : الشؤون التعليمية / إدارة الاشراف.</li>
-                                    <li>ص : مكتب سعادة مدير التعليم.</li>
-                                </ul>
-                                <br>
-                                <ul>
-                                    <li>سيتم اعتماد الخطط في نظام نور في تمام الساعة 7:45 من صباح كل يوم أحد من كل أسبوع.</li>
-                                    <li>قد تكون هناك تعديلات على خطتك نظراً لتعارض زيارة أكثر من مشرف/يْن لمدرسة ، أو حسب توجيهات إدارة المكتب.</li>
-                                    <li>عند رصد غياب معلم مسند أكثر من خمسة أيام دون عذر خلال العام، أو غياب وتأخر نسبة كبيرة أثناء الزيارة يجب إبلاغ إدارة المكتب وتدوينه بتقرير الزيارة المدرسية.</li>
+                                    @foreach ($subtasks->where('section', 'حاشية') as $subtask)
+                                        <li>{!! $subtask->title !!}</li>
+                                    @endforeach
                                 </ul>
                             </td>
                             <td class="logo_header" style="width: 45%;">
@@ -181,13 +183,11 @@
             </div>
 
             <htmlpagefooter name="page-footer">
-                <table>
+                <table style="border-collapse: collapse;">
                     <tbody>
-                        <tr>
-                            <td style="text-align:center;font-size: 12px;">ت : 0173215614</td>
-                            <td style="text-align:center;font-size: 12px;">jazanoffice2015@gmail.com</td>
-                            <td style="text-align:center;font-size: 12px;">رؤيتنا : تعليم ريادي</td>
-                            <td style="text-align:center;font-size: 12px;">مكتب تعليم وسط جازان - بنين</td>
+                        <tr style="border-top: 1px solid rgb(100, 100, 100);">
+                            <td class="logo_header" style="text-align:center;font-size: 12px;">رؤيتنا : تعليم مُتميز عالي الجودة بِكوادر تعليمية مُؤهلة لِبناء مُواطن مُعتزّ بِقيمه الوطنية ومُنافس عالمياً.</td>
+                            <td class="logo_header" style="text-align:center;font-size: 12px;">{{ $users[0]->office->name }}</td>
                         </tr>
                     </tbody>
                 </table>

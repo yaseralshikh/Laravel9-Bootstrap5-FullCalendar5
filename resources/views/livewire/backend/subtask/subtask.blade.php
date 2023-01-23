@@ -78,20 +78,33 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="form-group ">
-                            {{-- search --}}
-                            <div class="input-group" style="width: 200px;">
-                                <input type="search" wire:model="searchTerm" class="form-control" placeholder="Search for..." value="Lorem ipsum">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-default">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
+                    <div class="form-group d-flex justify-content-between align-items-center">
+                        {{-- search --}}
+                        <div class="input-group" style="width: 200px;">
+                            <input type="search" wire:model="searchTerm" class="form-control" placeholder="Search for..." value="Lorem ipsum">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-default">
+                                    <i class="fa fa-search"></i>
+                                </button>
                             </div>
                         </div>
 
-                        <label class="flex-wrap">Total Subtasks : &nbsp{{ $subtasks->total() }}</label>
+                        {{-- offices Filter --}}
+                        @role('superadmin')
+                        <div>
+                            <select dir="rtl" name="office_id" wire:model="byOffice"
+                                class="form-control form-control-sm">
+                                <option value="" selected>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
+                                @foreach ($offices as $office)
+                                    <option value="{{ $office->id }}">{{ $office->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @endrole
+
+                        <div>
+                            <label class="flex-wrap">Total Subtasks : &nbsp{{ $subtasks->total() }}</label>
+                        </div>
 
                     </div>
 
@@ -117,6 +130,7 @@
                                     </th>
                                     <th>#</th>
                                     <th>Subtask</th>
+                                    <th>Section</th>
                                     <th>
                                         Status
                                         <span wire:click="sortBy('status')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
@@ -138,7 +152,10 @@
                                             </div>
                                         </td>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td dir="rtl" class="text-justify" tabindex="0">{{ $subtask->title }}</td>
+                                        <td dir="rtl" class="text-justify">{{ $subtask->title }}</td>
+                                        <td dir="rtl" class="text-justify">
+                                            {{ $subtask->section }}
+                                        </td>
                                         <td>
                                             <span  class="font-weight-bold badge text-white {{ $subtask->status == 1 ? 'bg-success' : 'bg-secondary' }}">
                                                 {{ $subtask->status() }}
@@ -189,7 +206,7 @@
 
     <!-- Modal Create or Update Subtask -->
 
-    <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+    <div class="modal fade" id="form" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog" role="document">
             <form autocomplete="off" wire:submit.prevent="{{ $showEditModal ? 'updateSubtask' : 'createSubtask' }}">
                 <div class="modal-content">
@@ -209,13 +226,49 @@
                         <div class="row h-100 justify-content-center align-items-center">
                             <div class="col-12">
 
+                                <!-- Modal Office -->
+
+                                @role('superadmin')
+                                <div class="form-group">
+                                    <label for="office_id">@lang('site.office')</label>
+                                    <select id="office_id" class="form-control @error('office_id') is-invalid @enderror" wire:model.defer="data.office_id">
+                                        <option hidden>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
+                                        @foreach ($offices as $office)
+                                            <option class="bg-light" value="{{ $office->id }}">{{ $office->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('office_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                @endrole
+
                                 <!-- Modal Subtask Title -->
 
                                 <div class="form-group">
                                     <label for="title">Subtask</label>
 
-                                    <textarea dir="rtl" tabindex="1" wire:model.defer="data.title" class="text-justify form-control @error('title') is-invalid @enderror" rows="3"  id="title" aria-describedby="titleHelp" placeholder="Enter Subtask .."></textarea>
+                                    <textarea dir="rtl" wire:model.defer="data.title" class="text-justify form-control @error('title') is-invalid @enderror" rows="3"  id="title" aria-describedby="titleHelp" placeholder="Enter Subtask .."></textarea>
                                     @error('title')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Modal Subtask Title -->
+
+                                <div class="form-group">
+                                    <label for="section">@lang('site.section')</label>
+                                    <select id="section" class="form-control @error('section') is-invalid @enderror" wire:model.defer="data.section">
+                                        <option hidden>@lang('site.choise', ['name' => 'القسم'])</option>
+                                        @foreach ($sections as $section)
+                                            <option class="bg-light" value="{{ $section['title'] }}">{{  $section['title'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('section')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -242,7 +295,7 @@
 
     <!-- Modal Delete Subtask -->
 
-    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+    <div class="modal fade" id="confirmationModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">

@@ -16,17 +16,23 @@ return [
             'users' => 'c,r,u,d',
             'events' => 'c,r,u,d',
             'pecializations' => 'c,r,u,d',
-            'schools' => 'c,r,u,d',
+            'tasks' => 'c,r,u,d',
+            'subtasks' => 'c,r,u,d',
+            'levels' => 'c,r,u,d',
+            'offices' => 'c,r,u,d',
+            'semesters' => 'c,r,u,d',
+            'weeks' => 'c,r,u,d',
             'profile' => 'r,u'
         ],
         'admin' => [
             'users' => 'c,r,u,d',
             'events' => 'c,r,u,d',
-            'pecializations' => 'c,r,u,d',
-            'schools' => 'c,r,u,d',
+            'tasks' => 'c,r,u,d',
+            'subtasks' => 'c,r,u,d',
             'profile' => 'r,u'
         ],
         'user' => [
+            'events' => 'c,r,u,d',
             'profile' => 'r,u',
         ],
     ],

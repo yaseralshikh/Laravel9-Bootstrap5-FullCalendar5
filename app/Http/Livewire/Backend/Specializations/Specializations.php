@@ -266,8 +266,9 @@ class Specializations extends Component
 
     public function getSpecializationsProperty()
 	{
-        $specializations = Specialization::query()
-            ->where('name', 'like', '%'.$this->searchTerm.'%')
+        $searchString = $this->searchTerm;
+
+        $specializations = Specialization::search(trim(($searchString)))
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate(30);
 
