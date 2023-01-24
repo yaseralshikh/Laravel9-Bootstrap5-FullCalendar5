@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -13,6 +14,8 @@ class Office extends Model
     protected $fillable = [
         'name',
         'director',
+        'director_signature_path',
+        'assistant_signature_path',
         'status',
     ];
 
@@ -46,7 +49,29 @@ class Office extends Model
         $term = "%$term%";
 
         $query->where(function($query) use ($term){
-            $query->where('name', 'like' , $term);
+            $query->where('name', 'like' , $term)->orWhere('director', 'like' , $term);
         });
+    }
+
+    protected $appends = [
+        'director_url',
+        'assistant_url',
+    ];
+
+    public function getDirectorUrlAttribute()
+    {
+        if ($this->director_signature_path && Storage::disk('signature_photos')->exists($this->director_signature_path)) {
+            return Storage::disk('signature_photos')->url($this->director_signature_path);
+        }
+        return asset('backend/img/noimage.png');
+    }
+
+    public function getAssistantUrlAttribute()
+    {
+        if ($this->assistant_signature_path && Storage::disk('signature_photos')->exists($this->assistant_signature_path)) {
+            return Storage::disk('signature_photos')->url($this->assistant_signature_path);
+        }
+
+        return asset('backend/img/noimage.png');
     }
 }

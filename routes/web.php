@@ -7,6 +7,7 @@ use App\Http\Livewire\Backend\Events\Events;
 use App\Http\Livewire\Backend\Users\ListUsers;
 use App\Http\Livewire\Backend\Events\ListEvents;
 use App\Http\Livewire\Backend\Levels\Levels;
+use App\Http\Livewire\Backend\Offices\Office;
 use App\Http\Livewire\Backend\Semesters\Semesters;
 use App\Http\Livewire\Backend\Specializations\Specializations;
 use App\Http\Livewire\Backend\Subtask\Subtask;
@@ -43,5 +44,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'ro
     Route::get('levels', Levels::class )->name('levels');
     Route::get('weeks', Weeks::class )->name('weeks');
     Route::get('semesters', Semesters::class )->name('semesters');
+    Route::get('offices', Office::class )->name('offices');
     // Route::get('events2', Events::class )->name('events2');
 });

@@ -153,6 +153,19 @@
                     </a>
                 </li>
 
+                <li class="nav-header text-secondary">
+                    <h6>@lang('site.officesSection')</h6>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.offices') }}"
+                        class="nav-link {{ request()->is('admin/offices') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-graduation-cap"></i>
+                        <p>
+                            @lang('site.offices')
+                        </p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

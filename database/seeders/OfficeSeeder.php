@@ -22,31 +22,27 @@ class OfficeSeeder extends Seeder
             ],
             [
                 'name'         => 'مكتب التعليم بوسط جازان بنات',
-                'director'     => 'not yet',
+                'director'     => 'وردة علي بركات',
             ],
             [
                 'name'         => 'مكتب التعليم بأبي عريش',
-                'director'     => 'not yet',
+                'director'     => 'الدكتور حسن بن أبكر خضي',
             ],
             [
                 'name'         => 'مكتب التعليم بصامطة',
-                'director'     => 'not yet',
+                'director'     => 'عبدالرزاق بن محمد الصميلي',
             ],
             [
                 'name'         => 'مكتب التعليم بالمسارحة والحرث',
-                'director'     => 'not yet',
+                'director'     => 'الدكتور علي بن محمد عطيف',
             ],
             [
                 'name'         => 'مكتب التعليم بالعارضة',
-                'director'     => 'not yet',
+                'director'     => 'الدكتور إبراهيم محزري',
             ],
             [
                 'name'         => 'مكتب التعليم بفرسان',
-                'director'     => 'not yet',
-            ],
-            [
-                'name'         => 'الإدارة العامة للتعليم بمنطقة جازان',
-                'director'         => 'not yet',
+                'director'     => 'عبدالله بن محمد نسيب',
             ],
         ];
 
