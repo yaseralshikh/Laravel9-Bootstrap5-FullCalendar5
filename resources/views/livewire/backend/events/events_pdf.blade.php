@@ -157,6 +157,7 @@
                         @foreach ($subtasks->where('section', 'مهمة فرعية') as $subtask)
                             <li>{{ $subtask->title }}</li>
                         @endforeach
+                        <img src="{{ $office->assistant_url }}" style=""  width="75px" alt="">
                     </ol>
                 </div>
             </div>
@@ -174,8 +175,8 @@
                             </td>
                             <td class="logo_header" style="width: 45%;">
                                 <h3>{{ $office->name }}</h3>
-                                <br>
-                                <h3>{{ $office->director }}</p>
+                                <img src="{{ $office->director_url }}" style=""  width="150px" alt="">
+                                <h3>{{ $office->director }}</h3>
                             </td>
                         </tr>
                     </tbody>
