@@ -10,7 +10,7 @@
     <style>
         /* Style the body */
         body {
-            font-family: 'kfgqpcuthmantahanaskh';
+            font-family: 'amiri';
             /* font-weight: bold; */
             display: table;
         }
@@ -85,6 +85,7 @@
             /*border:solid red;*/
             /* background-color: rgb(71, 156, 89); */
         }
+
         @page {
             margin-header: 5mm;
 	        margin-footer: 5mm;
@@ -152,8 +153,8 @@
                     </tbody>
                 </table>
                 <div>
-                    <ol style="text-align: justify;font-size: 15px;">
-                        <span style="text-align: justify;font-size: 15px;font-weight: bold;">المهام :</span>
+                    <ol style="text-align: justify;font-size: 13px;">
+                        <span style="text-align: justify;font-size: 13px;font-weight: bold;">المهام :</span>
                         @foreach ($subtasks->where('section', 'مهمة فرعية') as $subtask)
                             <li>{{ $subtask->title }}</li>
                         @endforeach
@@ -175,7 +176,7 @@
                             </td>
                             <td class="logo_header" style="width: 45%;">
                                 <h3>{{ $office->name }}</h3>
-                                <img src="{{ $office->director_url }}" style=""  width="150px" alt="">
+                                <img src="{{ $office->director_url }}" style=""  width="130px" alt="">
                                 <h3>{{ $office->director }}</h3>
                             </td>
                         </tr>
