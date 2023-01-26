@@ -3,14 +3,16 @@
 namespace App\Http\Livewire;
 
 use Carbon\Carbon;
+use App\Models\Task;
 use App\Models\User;
 use App\Models\Week;
 use App\Models\Event;
-use App\Models\Task;
+use App\Rules\WeekRule;
 use Livewire\Component;
 use App\Models\Semester;
 use App\Rules\UserOverLap;
 use App\Rules\EventOverLap;
+use App\Rules\SemesterRule;
 
 class Calendar extends Component
 {
@@ -26,8 +28,8 @@ class Calendar extends Component
     protected function rules() : array
     {
         return ([
-            'semester_id'   => 'required',
-            'week_id'       => 'required',
+            'semester_id'   => ['required', new SemesterRule($this->start)],
+            'week_id'       => ['required', new WeekRule($this->start)],
             'title' => ['required', new EventOverLap($this->start), new UserOverLap($this->start)],
         ]);
     }
