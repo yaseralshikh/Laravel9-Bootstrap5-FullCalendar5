@@ -92,6 +92,17 @@
                             </div>
                         </div>
 
+                        {{-- Semester Filter --}}
+                        <div>
+                            <select dir="rtl" wire:model="bySemester" class="form-control form-control-sm mr-5">
+                                <option value="" selected>@lang('site.choise', ['name' => 'ألفصل الدراسي'])</option>
+                                @foreach ($semesters as $semester)
+                                <option value="{{ $semester->id }}" style="{{
+                                    $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $semester->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         {{-- Status Filter --}}
                         <div class="custom-control custom-switch">
                             <input type="checkbox" wire:model="byStatus" class="custom-control-input"
@@ -248,7 +259,7 @@
 
                                 @empty
                                 <tr>
-                                    <td colspan="9" class="text-center">No Weeks found</td>
+                                    <td colspan="10" class="text-center">No Weeks found</td>
                                 </tr>
                                 @endforelse
                             </tbody>
@@ -296,6 +307,26 @@
                         <div class="row h-100 justify-content-center align-items-center">
                             <div class="col-12">
 
+                                <!-- Modal Week semester -->
+
+                                <div class="form-group">
+                                    <label for="semester_id">Semester</label>
+                                    <select id="semester_id" tabindex="4"
+                                        class="form-control @error('semester_id') is-invalid @enderror"
+                                        wire:model.defer="data.semester_id">
+                                        <option hidden>Select semester ..</option>
+                                        @foreach ($semesters as $semester)
+                                        <option class="bg-light" value="{{ $semester->id }}">{{ $semester->title . ' - '
+                                            . $semester->school_year }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('semester_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
                                 <!-- Modal Week Title -->
 
                                 <div class="form-group">
@@ -332,26 +363,6 @@
                                         class="form-control @error('end') is-invalid @enderror" id="end"
                                         aria-describedby="endHelp" placeholder="Enter week end">
                                     @error('end')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-
-                                <!-- Modal Week semester -->
-
-                                <div class="form-group">
-                                    <label for="semester_id">Semester</label>
-                                    <select id="semester_id" tabindex="4"
-                                        class="form-control @error('semester_id') is-invalid @enderror"
-                                        wire:model.defer="data.semester_id">
-                                        <option hidden>Select semester ..</option>
-                                        @foreach ($semesters as $semester)
-                                        <option class="bg-light" value="{{ $semester->id }}">{{ $semester->title . ' - '
-                                            . $semester->school_year }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('semester_id')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>

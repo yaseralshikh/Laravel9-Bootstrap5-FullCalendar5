@@ -167,7 +167,7 @@ class Semesters extends Component
 
     public function addNewSemester()
     {
-        $this->reset();
+        $this->reset('data');
         $this->showEditModal = false;
         $this->dispatchBrowserEvent('show-form');
     }
@@ -201,7 +201,7 @@ class Semesters extends Component
 
     public function edit(Semester $semester)
     {
-        $this->reset();
+        $this->reset('data');
 
         $this->showEditModal = true;
 

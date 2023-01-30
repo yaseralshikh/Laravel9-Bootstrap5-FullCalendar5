@@ -28,9 +28,10 @@ class UserOverLap implements Rule
      */
     public function passes($attribute, $value)
     {
-        return Event::where('start', $this->start)
+        $event = Event::where('start', $this->start)
             ->where('user_id', auth()->user()->id)
             ->count() == 0;
+        return $event ;
     }
 
     /**

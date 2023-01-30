@@ -63,7 +63,7 @@
         th {
             border: 1px solid;
             text-align: center;
-            font-size: large;
+            font-size: inherit;
         }
 
         th {
@@ -120,7 +120,7 @@
             </htmlpageheader>
 
             <div class="content">
-                <div class="">
+                <div style="padding-bottom: 0.30cm">
                     <h3 style="font-size: 30px;">تكليف مشرف تربوي</h3>
                     <h3>المكرم المشرف التربوي : <span style="font-size: 22px;background-color:#f4f4f4;">&nbsp;{{ $user->name }}&nbsp;</span> &nbsp;&nbsp;&nbsp;وفقه الله</h3>
                     <h3>السلام عليكم ورحمة الله وبركاته</h3>
@@ -129,9 +129,9 @@
 
                 <table>
                     <thead>
-                        <tr>
+                        {{-- <tr>
                             <th colspan="4">تفاصيل الزيارة</th>
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <th>#</th>
                             {{-- <th>الاسبوع</th> --}}
@@ -155,10 +155,16 @@
                 <div>
                     <ol style="text-align: justify;font-size: 13px;">
                         <span style="text-align: justify;font-size: 13px;font-weight: bold;">المهام :</span>
+
                         @foreach ($subtasks->where('section', 'مهمة فرعية') as $subtask)
                             <li>{{ $subtask->title }}</li>
                         @endforeach
-                        <img src="{{ $office->assistant_url }}" style=""  width="75px" alt="">
+
+                        @if ($office->assistant_signature_path)
+                            <img src="{{ $office->assistant_url }}" style=""  width="75px" alt="">
+                        @else
+                            <br>
+                        @endif
                     </ol>
                 </div>
             </div>
@@ -176,7 +182,13 @@
                             </td>
                             <td class="logo_header" style="width: 45%;">
                                 <h3>{{ $office->name }}</h3>
-                                <img src="{{ $office->director_url }}" style=""  width="130px" alt="">
+
+                                @if ($office->director_signature_path)
+                                    <img src="{{ $office->director_url }}" style=""  width="130px" alt="">
+                                @else
+                                    <br>
+                                @endif
+
                                 <h3>{{ $office->director }}</h3>
                             </td>
                         </tr>

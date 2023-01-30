@@ -184,16 +184,16 @@ class ListUsers extends Component
 
     //  Filter Users By Roles
 
-    public function filterUsersByRoles($roleFilter = null)
-    {
-        $this->roleFilter = $roleFilter;
-    }
+    // public function filterUsersByRoles($roleFilter = null)
+    // {
+    //     $this->roleFilter = $roleFilter;
+    // }
 
     // show add new user form modal
 
     public function addNewUser()
     {
-        $this->reset();
+        $this->reset('data');
         $this->showEditModal = false;
         $this->data['role_id'] = 3;
         $this->data['status'] = 1;
@@ -239,7 +239,7 @@ class ListUsers extends Component
 
     public function edit(User $user)
     {
-        $this->reset();
+        $this->reset('data');
 
 		$this->showEditModal = true;
 
@@ -465,10 +465,16 @@ class ListUsers extends Component
 
     public function getUsersProperty()
 	{
+
         $searchString = $this->searchTerm;
         $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
 
         $users = User::where('office_id', $byOffice)
+        ->where(function ($qu) {
+                $qu->whereHas('roles', function ($q) {
+                    $q->whereNot('name', 'superadmin');
+            });
+        })
         ->search(trim(($searchString)))
         ->orderBy($this->sortColumnName, $this->sortDirection)
         ->paginate(35);

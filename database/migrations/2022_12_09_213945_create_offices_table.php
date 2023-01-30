@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('director');
+            $table->string('director_signature_path', 2048)->nullable();
+            $table->string('assistant_signature_path', 2048)->nullable();
             $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
         });

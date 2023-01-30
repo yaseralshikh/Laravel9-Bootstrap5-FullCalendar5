@@ -219,17 +219,25 @@
                                                     <th>@lang('site.name')</th>
                                                     <th>@lang('site.specialization')</th>
                                                     <th>@lang('site.type')</th>
+                                                    <th>@lang('site.eventsSchool')</th>
+                                                    <th>@lang('site.eventsOffice')</th>
+                                                    <th>@lang('site.eventsTraining')</th>
+                                                    <th>@lang('site.eventsVacation')</th>
                                                     <th>@lang('site.eventsTotal')</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @forelse ($users as $user)
                                                     <tr>
-                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td class="bg-light">{{ $loop->iteration }}</td>
                                                         <td>{{ $user->name }}</td>
                                                         <td>{{ $user->specialization->name }}</td>
                                                         <td>{{ $user->type }}</td>
-                                                        <td>{{ $user->events->count() }}</td>
+                                                        <td>{{ $user->events->whereNotIn('title',['يوم مكتبي','برنامج تدريبي','إجازة'])->count() }}</td>
+                                                        <td>{{ $user->events->where('title', 'يوم مكتبي')->count() }}</td>
+                                                        <td>{{ $user->events->where('title', 'برنامج تدريبي')->count() }}</td>
+                                                        <td>{{ $user->events->where('title', 'إجازة')->count() }}</td>
+                                                        <td class="bg-light">{{ $user->events->count() }}</td>
                                                     </tr>
                                                 @empty
                                                 <tr>

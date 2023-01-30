@@ -22,7 +22,8 @@ class Weeks extends Component
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
-    public $byStatus = 1;
+    public $byStatus = 1; // filter bt status
+    public $bySemester = null; // filter bt Semester
 
     public $sortColumnName = 'created_at';
     public $sortDirection = 'asc';
@@ -168,7 +169,7 @@ class Weeks extends Component
 
     public function addNewWeek()
     {
-        $this->reset();
+        $this->reset('data');
         $this->showEditModal = false;
         $this->dispatchBrowserEvent('show-form');
     }
@@ -203,7 +204,7 @@ class Weeks extends Component
 
     public function edit(Week $week)
     {
-        $this->reset();
+        $this->reset('data');
 
         $this->showEditModal = true;
 
@@ -293,12 +294,21 @@ class Weeks extends Component
         }
     }
 
+    // Get Semester Active
+    public function semesterActive()
+    {
+        $semester_active = Semester::where('active' ,1)->get();
+        return $semester_active[0]->id;
+    }
+
     public function getWeeksProperty()
 	{
         $searchString = $this->searchTerm;
         $byStatus = $this->byStatus;
+        $bySemester = $this->bySemester ? $this->bySemester : $this->semesterActive();
 
-        $weeks = Week::where('status', $byStatus)
+        $weeks = Week::where('semester_id', $bySemester)
+            ->where('status', $byStatus)
             ->search(trim(($searchString)))
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate(30);

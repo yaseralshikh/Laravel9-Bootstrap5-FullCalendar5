@@ -149,7 +149,7 @@ class Tasks extends Component
 
     public function addNewTask()
     {
-        $this->reset();
+        $this->reset('data');
         $this->showEditModal = false;
         //$this->tasks = Task::whereStatus(1)->where('office_id',auth()->user()->office_id)->get();
         $this->dispatchBrowserEvent('show-form');
@@ -187,7 +187,7 @@ class Tasks extends Component
 
     public function edit(Task $task)
     {
-        $this->reset();
+        $this->reset('data');
 
         $this->showEditModal = true;
 

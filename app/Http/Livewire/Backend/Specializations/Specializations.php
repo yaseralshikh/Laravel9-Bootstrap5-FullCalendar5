@@ -145,7 +145,7 @@ class Specializations extends Component
 
     public function addNewSpecialization()
     {
-        $this->reset();
+        $this->reset('data');
         $this->showEditModal = false;
         $this->dispatchBrowserEvent('show-form');
     }
@@ -177,7 +177,7 @@ class Specializations extends Component
 
     public function edit(Specialization $specialization)
     {
-        $this->reset();
+        $this->reset('data');
 
         $this->showEditModal = true;
 

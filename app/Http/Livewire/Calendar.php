@@ -13,9 +13,12 @@ use App\Models\Semester;
 use App\Rules\UserOverLap;
 use App\Rules\EventOverLap;
 use App\Rules\SemesterRule;
+use Illuminate\Support\Facades\Validator;
 
 class Calendar extends Component
 {
+    public $data = [];
+
     public $all_user;
     public $semester_id;
     public $week_id;
@@ -24,6 +27,8 @@ class Calendar extends Component
     public $start;
     public $end;
     public $event_id;
+
+    public $weeks = [];
 
     protected function rules() : array
     {
@@ -86,8 +91,6 @@ class Calendar extends Component
             ]);
         }
 
-
-
         $this->reset();
         $this->dispatchBrowserEvent('closeModalCreate', ['close' => true]);
         $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
@@ -103,7 +106,20 @@ class Calendar extends Component
 
     public function update()
     {
-        $this->validate();
+        $this->data = [
+            'semester_id' => $this->semester_id,
+            'week_id' => $this->week_id,
+            'office_id' => $this->office_id,
+            'title' => $this->title,
+            'start' => $this->start,
+            'end' => $this->end,
+        ];
+
+        $validatedData = Validator::make($this->data, [
+            'semester_id'   => ['required', new SemesterRule($this->start)],
+            'week_id'       => ['required', new WeekRule($this->start)],
+            'title' => ['required', new EventOverLap($this->start)],
+        ])->validate();
 
         $color = null;
 
@@ -121,16 +137,15 @@ class Calendar extends Component
                 $color = '#298A08';
         }
 
-        Event::findOrFail($this->event_id)->update([
-            'office_id'     => auth()->user()->office_id,
-            'semester_id'   => $this->semester_id,
-            'week_id'       => $this->week_id,
-            'title'         => $this->title,
-            'start'         => $this->start,
-            'end'           => $this->end,
-            'color'         => $color,
-        ]);
+        $validatedData['office_id']     = auth()->user()->office_id;
+        $validatedData['semester_id']   = $this->semester_id;
+        $validatedData['week_id']       = $this->week_id;
+        $validatedData['title']         = $this->title;
+        $validatedData['start']         = $this->start;
+        $validatedData['end']           = $this->end;
+        $validatedData['color']         = $color;
 
+        Event::findOrFail($this->event_id)->update($validatedData);
 
         $this->dispatchBrowserEvent('closeModalEdit', ['close' => true]);
         $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
@@ -174,21 +189,38 @@ class Calendar extends Component
                     'position'              =>'center'
                 ]);
             } else {
-                $eventStart =  Carbon::create($event['start'])->toDateString();
-                $eventEnd =  Carbon::create($event['end'])->toDateString();
 
-                $eventdata->start = $eventStart;
-                $eventdata->end = $eventEnd;
-                $eventdata->save();
+                $eventOverLap = Event::where('title', $eventdata->title)
+                    ->where('start', $event['start'])
+                    ->whereNotIn('title',['إجازة','يوم مكتبي','برنامج تدريبي'])
+                    ->count() == 0;
 
-                $this->dispatchBrowserEvent('swal', [
-                    'title'                 => 'Event updated',
-                    'timer'                 =>2000,
-                    'icon'                  =>'success',
-                    'toast'                 =>true,
-                    'showConfirmButton'     => false,
-                    'position'              =>'center'
-                ]);
+                if ($eventOverLap) {
+                    $eventStart =  Carbon::create($event['start'])->toDateString();
+                    $eventEnd =  Carbon::create($event['end'])->toDateString();
+
+                    $eventdata->start = $eventStart;
+                    $eventdata->end = $eventEnd;
+                    $eventdata->save();
+
+                    $this->dispatchBrowserEvent('swal', [
+                        'title'                 => 'Event updated',
+                        'timer'                 =>2000,
+                        'icon'                  =>'success',
+                        'toast'                 =>true,
+                        'showConfirmButton'     => false,
+                        'position'              =>'center'
+                    ]);
+                } else {
+                    $this->dispatchBrowserEvent('swal', [
+                        'title'                 => 'تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرف اخر.',
+                        'timer'                 =>3500,
+                        'icon'                  =>'error',
+                        'toast'                 =>true,
+                        'showConfirmButton'     => false,
+                        'position'              =>'center'
+                    ]);
+                }
             }
         } else {
             $this->dispatchBrowserEvent('swal', [
@@ -204,11 +236,33 @@ class Calendar extends Component
         $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
     }
 
+    // Get Semester Active
+    // public function semesterActive()
+    // {
+    //     $semester_active = Semester::where('active' ,1)->get();
+    //     return $semester_active[0]->id;
+    // }
+
+    public function semesterOption($option)
+    {
+        if ($option) {
+            $this->weeks = Week::whereStatus(1)->where('semester_id' , $option)->get();
+        } else {
+            $this->weeks = Week::whereStatus(1)->get();
+        }
+
+    }
+
+    public function booted()
+    {
+        $this->weeks = Week::whereStatus(1)->get();
+    }
+
     public function render()
     {
-        $tasks = Task::where('office_id', auth()->user()->office_id)->whereStatus(1)->get();
-        $weeks = Week::whereStatus(1)->get();
         $semesters = Semester::whereStatus(1)->get();
+        $weeks = Week::whereStatus(1)->get();
+        $tasks = Task::where('office_id', auth()->user()->office_id)->whereStatus(1)->get();
 
         return view('livewire.calendar', compact('tasks', 'weeks', 'semesters'));
     }

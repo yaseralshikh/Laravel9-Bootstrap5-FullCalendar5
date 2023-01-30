@@ -10,8 +10,10 @@ use App\Models\Week;
 use App\Models\Event;
 use App\Models\Office;
 use App\Models\Subtask;
+use App\Rules\WeekRule;
 use Livewire\Component;
 use App\Models\Semester;
+use App\Rules\SemesterRule;
 use Livewire\WithPagination;
 use App\Exports\EventsExport;
 use Livewire\WithFileUploads;
@@ -25,9 +27,6 @@ class ListEvents extends Component
     use WithFileUploads;
     use LivewireAlert;
 
-    public $tasks = []; // for office tasks connected
-    public $users = []; // for office users connected
-
     protected $paginationTheme = 'bootstrap';
 
     public $data = [];
@@ -36,9 +35,14 @@ class ListEvents extends Component
 
     public $event;
 
+    // public $bySemester = null; //filter by semester_id
     public $byWeek = null; //filter by week_id
-    public $byOffice = null; //filter by office_id
+    // public $byOffice = null; //filter by office_id
     public $byStatus = 0; // filter bt status
+
+    // public $users = []; // for office -> users connected
+    // public $weeks = []; // for semester -> weeks connected
+    // public $tasks = []; // for office -> tasks connected
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
@@ -159,7 +163,7 @@ class ListEvents extends Component
     {
         return $this->sortDirection === 'asc' ? 'desc' : 'asc';
     }
-    // Swap filter by status
+    // Swap filter by Event status
 
     public function swapByStatus()
     {
@@ -176,13 +180,12 @@ class ListEvents extends Component
 
     public function addNewEvent()
     {
-        $this->reset();
+        $this->reset('data');
+        //$this->resetExcept(['byStatus','byWeek','searchTerm']);
         $this->showEditModal = false;
         $this->data['status'] = 1;
-        $this->data['semester_id'] = $this->semesterActive();
-
-        $this->tasks = Task::whereStatus(1)->where('office_id',auth()->user()->office_id)->get();
-        $this->users = User::whereStatus(1)->where('office_id',auth()->user()->office_id)->get();
+        // $this->data['semester_id'] = $this->semesterActive();
+        $this->data['week_id'] = $this->weekActive();
 
         $this->dispatchBrowserEvent('show-form');
     }
@@ -191,66 +194,73 @@ class ListEvents extends Component
 
     public function createEvent()
     {
-        $validatedData = Validator::make($this->data, [
-			'title'                 => 'required|max:255',
-			'user_id'               => 'required',
-			'semester_id'               => 'required',
-			'week_id'               => 'required',
-			'office_id'             => 'nullable',
-			'semester_id'           => 'required',
-			'start'                 => 'required',
-            'status'                => 'required',
-		])->validate();
+        try {
+            $validatedData = Validator::make($this->data, [
+                'title'                 => 'required|max:255',
+                'user_id'               => 'required',
+                //'semester_id'           => ['required_with:start', new SemesterRule($this->data['start'])],
+                'week_id'               => ['required_with:start', new WeekRule($this->data['start'])],
+                //'office_id'             => 'nullable',
+                'start'                 => 'required',
+                'status'                => ['required'],
+            ])->validate();
 
-        switch ($validatedData['title']) {
-            case "يوم مكتبي":
-                $color = '#000000';
-              break;
-            case "برنامج تدريبي":
-                $color = '#eb6c0c';
-              break;
-            case "إجازة مطولة":
-                $color = '#cf87fa';
-              break;
-            default:
-                $color = '#298A08';
+            switch ($validatedData['title']) {
+                case "يوم مكتبي":
+                    $color = '#000000';
+                break;
+                case "برنامج تدريبي":
+                    $color = '#eb6c0c';
+                break;
+                case "إجازة مطولة":
+                    $color = '#cf87fa';
+                break;
+                default:
+                    $color = '#298A08';
+            }
+
+            $validatedData['end'] = date('Y-m-d', strtotime($validatedData['start']. ' + 1 days'));
+            $validatedData['color'] = $color;
+
+            if(empty($validatedData['semester_id'])) {
+                $validatedData['semester_id'] = $this->semesterActive();
+            }
+
+            if(empty($validatedData['office_id'])) {
+                $validatedData['office_id'] = auth()->user()->office_id;
+            }
+
+            Event::create($validatedData);
+
+            $this->dispatchBrowserEvent('hide-form');
+
+            $this->alert('success', 'Event Added Successfully.', [
+                'position'  =>  'top-end',
+                'timer'  =>  3000,
+                'toast'  =>  true,
+                'text'  =>  null,
+                'showCancelButton'  =>  false,
+                'showConfirmButton'  =>  false
+            ]);
+
+        } catch (\Throwable $th) {
+            $message = $this->alert('error', $th->getMessage() . '<br>' . 'ادخال تاريخ المهمة مطلوب', [
+                'position'  =>  'center',
+                'timer'  =>  3000,
+                'toast'  =>  true,
+                'text'  =>  null,
+                'showCancelButton'  =>  false,
+                'showConfirmButton'  =>  false
+            ]);
+            return $message;
         }
-
-        // $user = User::where('id', $validatedData['user_id'])->first();
-
-        // $username = $user->name;
-        // $username = explode(' ', $username);
-
-        // $firstName = $username[0];
-        // $lastName = (isset($username[count($username)-1])) ? $username[count($username)-1] : '';
-
-        // $validatedData['title'] = $validatedData['title'] . ' - ' . $firstName . ' '. $lastName;
-
-        $validatedData['end'] = date('Y-m-d', strtotime($validatedData['start']. ' + 1 days'));
-        $validatedData['color'] = $color;
-        if(empty($validatedData['office_id'])) {
-            $validatedData['office_id'] = auth()->user()->office_id;
-        }
-
-		Event::create($validatedData);
-
-        $this->dispatchBrowserEvent('hide-form');
-
-        $this->alert('success', 'Event Added Successfully.', [
-            'position'  =>  'top-end',
-            'timer'  =>  3000,
-            'toast'  =>  true,
-            'text'  =>  null,
-            'showCancelButton'  =>  false,
-            'showConfirmButton'  =>  false
-        ]);
     }
 
     // show Update new event form modal
 
     public function edit(Event $event)
     {
-        $this->reset();
+        $this->reset('data');
 
 		$this->showEditModal = true;
 
@@ -258,10 +268,9 @@ class ListEvents extends Component
 
 		$this->data = $event->toArray();
 
-		$this->data['start'] = Carbon::parse($this->data['start'])->toDateString();
+        // dd($this->data);
 
-        $this->tasks = Task::whereStatus(1)->where('office_id',auth()->user()->office_id)->get();
-        $this->users = User::whereStatus(1)->where('office_id',auth()->user()->office_id)->get();
+		$this->data['start'] = Carbon::parse($this->data['start'])->toDateString();
 
 		$this->dispatchBrowserEvent('show-form');
     }
@@ -274,8 +283,8 @@ class ListEvents extends Component
             $validatedData = Validator::make($this->data, [
                 'title'       => 'required|max:255',
                 'user_id'     => 'required',
-                'semester_id'     => 'required',
-                'week_id'     => 'required',
+                'semester_id' => ['required', new SemesterRule($this->data['start'])],
+                'week_id'     => ['required', new WeekRule($this->data['start'])],
                 'office_id'   => 'nullable',
                 'start'       => 'required',
                 'status'      => 'required',
@@ -296,7 +305,6 @@ class ListEvents extends Component
             }
 
             $validatedData['color'] = $color;
-
 
             $validatedData['end'] = date('Y-m-d', strtotime($validatedData['start']. ' + 1 days'));
 
@@ -373,16 +381,16 @@ class ListEvents extends Component
     {
         $byStatus = $this->byStatus;
         $byWeek = $this->byWeek;
-        $byOffice = $this->byOffice;
+        $byOffice = auth()->user()->office_id;
 
         if ($byStatus) {
-            if ($byWeek || $byOffice) {
+            if ($byWeek) {
                 return Excel::download(new EventsExport(
                     $this->searchTerm,
                     $this->selectedRows,
                     $this->byWeek,
                     $this->byStatus,
-                    $this->byOffice),
+                    $byOffice),
                     'events.xlsx');
             } else {
                 $this->alert('error', 'Select Week or office befor that !', [
@@ -427,9 +435,9 @@ class ListEvents extends Component
     public function userNullPlan()
     {
         $byWeek = $this->byWeek;
-        $byOffice = $this->byOffice;
+        $byOffice = auth()->user()->office_id;
 
-        if ($byWeek || $byOffice) {
+        if ($byWeek) {
 
             $users = User::where('status',true)->where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)->with(['events' => function ($query) use ($byWeek) {
                 $query->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
@@ -440,13 +448,13 @@ class ListEvents extends Component
 
             foreach ($users as $user) {
                 if ($user->events->count() == Null || $user->events->count() < 5) {
-                    $this->items[] = '<li>' . $user->name . "</li><br>";
+                    $this->items[] = '<li>' . $user->name . ' ( ' . $user->events->count() . ' )' . "</li><br>";
                 }
             }
 
             array_push($this->items, '</ol>');
 
-            if ($this->items != Null) {
+            if (count($this->items) > 3) {
                 $this->alert('error', implode(" ", $this->items) , [
                     'position'  =>  'center',
                     'timer'  =>  null,
@@ -460,7 +468,7 @@ class ListEvents extends Component
 
             } else {
                 $this->alert('success', 'All User has Events', [
-                    'position'  =>  'top-end',
+                    'position'  =>  'center',
                     'timer'  =>  3000,
                     'toast'  =>  true,
                     'text'  =>  null,
@@ -484,7 +492,7 @@ class ListEvents extends Component
     public function exportPDF()
     {
         $byWeek = $this->byWeek;
-        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+        $byOffice = auth()->user()->office_id;
 
         if ($byWeek) {
             $users = User::where('status',true)->where('office_id',$byOffice)->orderBy('name', 'asc')->whereHas('events', function ($query) use ($byWeek) {
@@ -528,55 +536,98 @@ class ListEvents extends Component
         }
     }
 
-    // Get Semester Active
+    //Get Semester Active
     public function semesterActive()
     {
         $semester_active = Semester::where('active' ,1)->get();
         return $semester_active[0]->id;
     }
 
-    public function officeOption($option = Null)
+    //Get Week Active
+    public function weekActive()
     {
-        $this->tasks = Task::whereStatus(1)->where('office_id',$option)->get();
-        $this->users = User::whereStatus(1)->where('office_id',$option)->get();
+        $week_active = Week::where('active' ,1)->get();
+        return $week_active[0]->id;
     }
 
-    // Get Events Property
 
+
+    // public function officeOption($option)
+    // {
+    //     dd('Office ID :' . $option );
+    //     // if ($option) {
+    //     //     $this->tasks = Task::whereStatus(1)->where('office_id',$option)->get();
+    //     //     $this->users = User::whereStatus(1)->where('office_id',$option)->get();
+    //     // } else {
+    //     //     $this->tasks = Task::whereStatus(1)->where('office_id',auth()->user()->office_id)->get();
+    //     //     $this->users = User::whereStatus(1)->where('office_id',auth()->user()->office_id)->get();
+    //     // }
+    // }
+
+    // public function semesterOption($option)
+    // {
+    //     if ($option) {
+    //         $this->weeks = Week::whereStatus(1)->where('semester_id' , $option)->get();
+    //     } else {
+    //         $this->weeks = Week::whereStatus(1)->get();
+    //     }
+    // }
+
+    // public function booted()
+    // {
+    //     $this->tasks = Task::whereStatus(1)->where('office_id' , auth()->user()->office_id)->get();
+    //     $this->users = User::whereStatus(1)->where('office_id' , auth()->user()->office_id)->get();
+    // }
+
+
+
+    // public function getUsersProperty()
+    // {
+    //     $users = User::whereStatus(1)->where('office_id',auth()->user()->office_id)->get();
+    //     return $users;
+    // }
+
+    // public function getTasksProperty()
+    // {
+    //     $tasks = Task::whereStatus(1)->where('office_id' , auth()->user()->office_id)->get();
+    //     return $tasks;
+    // }
+
+    // public function getWeeksProperty()
+    // {
+    //     $weeks = Week::whereStatus(1)->where('semester_id' , auth()->user()->office_id)->get();
+    //     return $weeks;
+    // }
+
+    // Get Events Property
     public function getEventsProperty()
 	{
         $searchString = $this->searchTerm;
-        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+        $byOffice = auth()->user()->office_id;
+        // $bySemester = $this->bySemester;
         $byWeek = $this->byWeek;
         $byStatus = $this->byStatus;
 
-        // if (auth()->user()->roles[0]->name == 'superadmin') {
-            $events = Event::where('status', $byStatus)->where('office_id',$byOffice)->when($byWeek, function($query) use ($byWeek){
-                $query->where('week_id', $byWeek);
-            })
-            ->search(trim(($searchString)))
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->latest('created_at')
-            ->paginate(100);
-        // } else {
-        //     $events = Event::where('status', $byStatus)->where('office_id',auth()->user()->office_id)->when($byWeek, function($query) use ($byWeek){
-        //         $query->where('week_id', $byWeek);
-        //     })
-        //     ->search(trim(($searchString)))
-        //     ->orderBy($this->sortColumnName, $this->sortDirection)
-        //     ->latest('created_at')
-        //     ->paginate(100);
-        // }
+        // $this->weeks = empty($this->weeks) ? Week::whereStatus(1)->where('semester_id',$this->semesterActive())->get() : $this->weeks;
 
-
+        $events = Event::where('status', $byStatus)
+        ->when($byOffice, function($query) use ($byOffice){
+            $query->where('office_id', $byOffice);
+        })
+        ->when($byWeek, function($query) use ($byWeek){
+            $query->where('week_id', $byWeek);
+        })
+        ->search(trim(($searchString)))
+        ->orderBy($this->sortColumnName, $this->sortDirection)
+        ->latest('created_at')
+        ->paginate(100);
 
         return $events;
 	}
 
     public function render()
     {
-        $events = $this->events;
-        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+        //$byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
 
         // $users = User::whereStatus(1)->where('office_id',$byOffice)->get();
 
@@ -588,23 +639,24 @@ class ListEvents extends Component
         //     });
         // })->get();
 
-        $weeks = Week::whereStatus(1)->get();
-        // $tasks = Task::whereStatus(1)->where('office_id',$byOffice)->get();
+        // $weeks = empty($this->weeks) ? Week::whereStatus(1)->where('semester_id',$this->semesterActive())->get() : $this->weeks;
+        // // $tasks = Task::whereStatus(1)->where('office_id',$byOffice)->get();
 
-        //dd($this->tasks);
-
-        $tasks = empty($this->tasks) ? Task::whereStatus(1)->where('office_id',auth()->user()->office_id)->get() : $this->tasks;
-        $users = empty($this->users) ? User::whereStatus(1)->where('office_id',auth()->user()->office_id)->get() : $this->users;
-        $offices = Office::whereStatus(true)->get();
-        $semesters = Semester::whereStatus(true)->get();
-
+        // $tasks = empty($this->tasks) ? Task::whereStatus(1)->where('office_id',auth()->user()->office_id)->get() : $this->tasks;
+        // $users = empty($this->users) ? User::whereStatus(1)->where('office_id',auth()->user()->office_id)->get() : $this->users;
+        // $offices = Office::whereStatus(true)->get();
+        // $semesters = Semester::whereStatus(true)->get();
+        $events = $this->events;
+        $users = User::whereStatus(1)->where('office_id',auth()->user()->office_id)->get();
+        $tasks = Task::whereStatus(1)->where('office_id' , auth()->user()->office_id)->get();
+        $weeks = Week::whereStatus(1)->where('semester_id' , $this->semesterActive())->get();
         return view('livewire.backend.events.list-events',[
             'events'  => $events,
             'users'   => $users,
             'weeks'   => $weeks,
             'tasks'   => $tasks,
-            'offices' => $offices,
-            'semesters' => $semesters,
+            //'offices' => $offices,
+            //'semesters' => $semesters,
         ])->layout('layouts.admin');
     }
 }

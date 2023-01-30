@@ -230,9 +230,8 @@
                                 </div>
 
                                 <!-- Modal director signature -->
-
                                 <div class="form-group">
-                                    <label for="custom-file">director signature</label>
+                                    <label for="custom-file">@lang('site.directorSignature')</label>
                                     @if ($director_signature_image)
                                         <img src="{{ $director_signature_image->temporaryUrl() }}" class="mb-2 d-block img img-circle" width="100px" alt="">
                                     @else
@@ -253,16 +252,17 @@
                                                 {{ $director_signature_image->getClientOriginalName() }}
                                                 <img src="{{ $director_signature_image }}" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
                                             @else
-                                                Choose Image
+                                                @lang('site.chooseImage')
                                             @endif
                                         </label>
                                     </div>
                                 </div>
 
+
                                 <!-- Modal assistant signature -->
 
                                 <div class="form-group">
-                                    <label for="custom-file">assistant signature</label>
+                                    <label for="custom-file">@lang('site.assistantSignature')</label>
                                     @if ($assistant_signature_image)
                                         <img src="{{ $assistant_signature_image->temporaryUrl() }}" class="mb-2 d-block img img-circle" width="100px" alt="">
                                     @else
@@ -283,7 +283,7 @@
                                                 {{ $assistant_signature_image->getClientOriginalName() }}
                                                 <img src="{{ $assistant_signature_image }}" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
                                             @else
-                                                Choose Image
+                                                @lang('site.chooseImage')
                                             @endif
                                         </label>
                                     </div>

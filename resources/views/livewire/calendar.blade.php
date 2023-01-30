@@ -40,8 +40,8 @@
     <div id="calendar" wire:ignore></div>
 
     {{-- Create Event Modal --}}
-    <div dir="rtl" class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"
-        wire:ignore.self>
+    <div dir="rtl" class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -55,12 +55,14 @@
                         <div class="mb-3">
                             <label for="semester_id" class="form-label">{{ __('site.semester') }} :</label>
                             <select name="semester_id" wire:model.defer="semester_id"
+                                wire:change="semesterOption($event.target.value)"
                                 class="form-select  @error('semester_id') is-invalid @enderror" id="semester_id">
-                                <option value="" selected>@lang('site.choise', ['name' => 'ألفصل الدراسي']) :</option>
+                                <option value="" >@lang('site.choise', ['name' => 'ألفصل الدراسي']) :</option>
                                 @foreach ($semesters as $semester)
-                                    <option value="{{ $semester->id }}" style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
-                                        $semester->title . ' ( ' . $semester->school_year . ' )' }}
-                                    </option>
+                                <option value="{{ $semester->id }}"
+                                    style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
+                                    $semester->title . ' ( ' . $semester->school_year . ' )' }}
+                                </option>
                                 @endforeach
                             </select>
 
@@ -76,11 +78,12 @@
                             <label for="week_id" class="form-label">{{ __('site.schoolWeek') }} :</label>
                             <select name="week_id" wire:model.defer="week_id"
                                 class="form-select  @error('week_id') is-invalid @enderror" id="week_id">
-                                <option value="" selected>@lang('site.choise', ['name' => 'الأسبوع الدراسي']) :</option>
+                                <option value="" >@lang('site.choise', ['name' => 'الأسبوع الدراسي']) :</option>
                                 @foreach ($weeks as $week)
-                                    <option value="{{ $week->id }}" style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
-                                        $week->title . ' ( ' . $week->semester->school_year . ' )' }}
-                                    </option>
+                                <option value="{{ $week->id }}"
+                                    style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
+                                    $week->title . ' ( ' . $week->semester->school_year . ' )' }}
+                                </option>
                                 @endforeach
                             </select>
 
@@ -100,15 +103,14 @@
                                 class="form-select  @error('title') is-invalid @enderror" id="title">
                                 <option value="" selected>@lang('site.choise', ['name' => 'المهمة']) :</option>
                                 @foreach ($tasks as $task)
-                                    <option  value="{{ $task->name }}"
-                                        style="
+                                <option value="{{ $task->name }}" style="
                                         {{ $task->level_id == 1 ? 'background:#FBEFF2;' : '' }}
                                         {{ $task->level_id == 2 ? 'background:#E6F8E0;' : '' }}
                                         {{ $task->level_id == 3 ? 'background:#F7F8E0;' : '' }}
                                         {{ $task->level_id == 4 ? 'background:#F8ECE0;' : '' }}
                                         {{ $task->level_id == 5 ? 'background:#E0F2F7;' : '' }}">
-                                        {{ $task->name }}
-                                    </option>
+                                    {{ $task->name }}
+                                </option>
                                 @endforeach
                             </select>
                             @error('title')
@@ -133,17 +135,18 @@
                         {{-- Action --}}
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <button type="button" class="btn btn-secondary" wire:click="resetErrorMsg" data-bs-dismiss="modal">@lang('site.cancel')</button>
+                                <button type="button" class="btn btn-secondary" wire:click="resetErrorMsg"
+                                    data-bs-dismiss="modal">@lang('site.cancel')</button>
                                 <button type="submit" class="btn btn-primary">@lang('site.save')</button>
                             </div>
                             @role('admin|superadmin')
-                                <div class="form-check">
-                                    <input class="form-check-input" wire:model.defer="all_user" type="checkbox" value=""
-                                        id="flexCheckDefault">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        @lang('site.eventForAllUsers')
-                                    </label>
-                                </div>
+                            <div class="form-check">
+                                <input class="form-check-input" wire:model.defer="all_user" type="checkbox" value=""
+                                    id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    @lang('site.eventForAllUsers')
+                                </label>
+                            </div>
                             @endrole
                         </div>
                     </form>
@@ -153,8 +156,8 @@
     </div>
 
     {{-- Edit Event Modal --}}
-    <div dir="rtl" class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"
-        wire:ignore.self>
+    <div dir="rtl" class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -168,10 +171,12 @@
                         <div class="mb-3">
                             <label for="semester_id_1" class="form-label">{{ __('site.semester') }} :</label>
                             <select name="semester_id" wire:model.defer="semester_id"
-                                class="form-select  @error('semester_id') is-invalid @enderror" id="semester_id_1">
-                                <option value="" selected>@lang('site.choise', ['name' => 'الفصل الدراسي'])</option>
+                                wire:change="semesterOption($event.target.value)"
+                                class="form-select @error('semester_id') is-invalid @enderror" id="semester_id_1">
+                                <option value="" >@lang('site.choise', ['name' => 'الفصل الدراسي'])</option>
                                 @foreach ($semesters as $semester)
-                                    <option value="{{ $semester->id }}" style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
+                                <option value="{{ $semester->id }}"
+                                    style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
                                     $semester->title . ' ( ' . $semester->school_year . ' )' }}</option>
                                 @endforeach
                             </select>
@@ -188,8 +193,12 @@
                             <label for="week_id_1" class="col-form-label">{{ __('site.schoolWeek') }} :</label>
                             <select wire:model.defer="week_id"
                                 class="form-select  @error('week_id') is-invalid @enderror" id="week_d_1">
+                                <option value="" >@lang('site.choise', ['name' => 'الأسبوع الدراسي'])</option>
                                 @foreach ($weeks as $week)
-                                    <option value="{{ $week->id }}" style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
+                                    <option value="{{ $week->id }}"
+                                        style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
+                                        $week->title . ' ( ' . $week->semester->school_year . ' )' }}
+                                    </option>
                                 @endforeach
                             </select>
 
@@ -205,15 +214,14 @@
                             <select wire:model.defer="title" class="form-select  @error('title') is-invalid @enderror"
                                 id="title1">
                                 @foreach ($tasks as $task)
-                                    <option  value="{{ $task->name }}"
-                                        style="
+                                <option value="{{ $task->name }}" style="
                                         {{ $task->level_id == 1 ? 'background:#FBEFF2;' : '' }}
                                         {{ $task->level_id == 2 ? 'background:#E6F8E0;' : '' }}
                                         {{ $task->level_id == 3 ? 'background:#F7F8E0;' : '' }}
                                         {{ $task->level_id == 4 ? 'background:#F8ECE0;' : '' }}
                                         {{ $task->level_id == 5 ? 'background:#E0F2F7;' : '' }}">
-                                        {{ $task->name }}
-                                    </option>
+                                    {{ $task->name }}
+                                </option>
                                 @endforeach
                             </select>
 
@@ -236,10 +244,12 @@
 
                         <div class="d-flex justify-content-between mt-5">
                             <div>
-                                <button type="button" class="btn btn-secondary" wire:click="resetErrorMsg" data-bs-dismiss="modal">@lang('site.cancel')</button>
+                                <button type="button" class="btn btn-secondary" wire:click="resetErrorMsg"
+                                    data-bs-dismiss="modal">@lang('site.cancel')</button>
                                 <button class="btn btn-primary">@lang('site.updateEvent')</button>
                             </div>
-                            <button class="btn btn-danger" wire:click.prevent='delete'>@lang('site.deleteEvent')</button>
+                            <button class="btn btn-danger"
+                                wire:click.prevent='delete'>@lang('site.deleteEvent')</button>
                         </div>
                     </form>
                 </div>
@@ -325,13 +335,13 @@
                                 position: 'center'
                             })
                         } else {
-                            @this.event_id  = event.id;
-                            @this.office_id   = event.extendedProps.office_id;
+                            @this.event_id      = event.id;
+                            @this.office_id     = event.extendedProps.office_id;
                             @this.semester_id   = event.extendedProps.semester_id;
-                            @this.week_id   = event.extendedProps.week_id;
-                            @this.title     = event.title;
-                            @this.start     = dayjs(event.startStr).format('YYYY-MM-DD');
-                            @this.end       = dayjs(event.endStr).format('YYYY-MM-DD');
+                            @this.week_id       = event.extendedProps.week_id;
+                            @this.title         = event.title;
+                            @this.start         = dayjs(event.startStr).format('YYYY-MM-DD');
+                            @this.end           = dayjs(event.endStr).format('YYYY-MM-DD');
                             $('#editModal').modal('toggle');
                         }
                     } else {

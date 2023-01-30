@@ -1,20 +1,21 @@
 <div>
     @section('style')
-        <style>
-            .disabled-link{
-                cursor: default;
-                pointer-events: none;
-                text-decoration: none;
-                color: rgb(174, 172, 172);
-            }
-            .draggable-mirror{
-                background-color: white;
-                width: 950px;
-                display: flex;
-                justify-content: space-between;
-                box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-            }
-        </style>
+    <style>
+        .disabled-link {
+            cursor: default;
+            pointer-events: none;
+            text-decoration: none;
+            color: rgb(174, 172, 172);
+        }
+
+        .draggable-mirror {
+            background-color: white;
+            width: 950px;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+        }
+    </style>
     @endsection
 
     <!-- Content Header (Page header) -->
@@ -43,26 +44,31 @@
                 <div class="card-header bg-light">
                     <h3 class="card-title">
                         <button wire:click.prevent='addNewSubtask' class="ml-1 btn btn-sm btn-primary">
-                            <i class="mr-2 fa fa-plus-circle"
-                                aria-hidden="true">
+                            <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
                                 <span>Add New Subtask</span>
                             </i>
                         </button>
 
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary btn-sm">Action</button>
-                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon"
+                                data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <div class="dropdown-menu" role="menu" style="">
-                                {{-- <a class="dropdown-item" wire:click.prevent="exportExcel" href="#" aria-disabled="true">Export to Excel</a> --}}
-                                {{-- <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a> --}}
+                                {{-- <a class="dropdown-item" wire:click.prevent="exportExcel" href="#"
+                                    aria-disabled="true">Export to Excel</a> --}}
+                                {{-- <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a>
+                                --}}
                                 <div class="dropdown-divider"></div>
                                 {{-- @if ($selectedRows) --}}
-                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}" wire:click.prevent="setAllAsActive" href="#">Set as Acive</a>
-                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}" wire:click.prevent="setAllAsInActive" href="#">Set as InActive</a>
+                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
+                                    wire:click.prevent="setAllAsActive" href="#">Set as Acive</a>
+                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
+                                    wire:click.prevent="setAllAsInActive" href="#">Set as InActive</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">Delete Selected</a>
+                                <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm"
+                                    wire:click.prevent="deleteSelectedRows" href="#">Delete Selected</a>
                                 {{-- @endif --}}
                             </div>
                         </div>
@@ -81,7 +87,8 @@
                     <div class="form-group d-flex justify-content-between align-items-center">
                         {{-- search --}}
                         <div class="input-group" style="width: 200px;">
-                            <input type="search" wire:model="searchTerm" class="form-control" placeholder="Search for..." value="Lorem ipsum">
+                            <input type="search" wire:model="searchTerm" class="form-control"
+                                placeholder="Search for..." value="Lorem ipsum">
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-default">
                                     <i class="fa fa-search"></i>
@@ -96,7 +103,7 @@
                                 class="form-control form-control-sm">
                                 <option value="" selected>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
                                 @foreach ($offices as $office)
-                                    <option value="{{ $office->id }}">{{ $office->name }}</option>
+                                <option value="{{ $office->id }}">{{ $office->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -109,22 +116,26 @@
                     </div>
 
                     @if ($selectedRows)
-                        <span class="mb-2 text-success">
-                            <i class="fa fa-level" aria-hidden="true"></i>
-                            selected
-                            <span class="text-dark font-weight-bold">{{ count($selectedRows) }}</span> {{ Str::plural('subtask', count($selectedRows)) }}
-                            <a class="ml-2 text-gray" href="" wire:click="resetSelectedRows" data-toggle="tooltip" data-placement="top" title="Reset Selected Rows"><i class="fas fa-times"></i></a>
-                        </span>
+                    <span class="mb-2 text-success">
+                        <i class="fa fa-level" aria-hidden="true"></i>
+                        selected
+                        <span class="text-dark font-weight-bold">{{ count($selectedRows) }}</span> {{
+                        Str::plural('subtask', count($selectedRows)) }}
+                        <a class="ml-2 text-gray" href="" wire:click="resetSelectedRows" data-toggle="tooltip"
+                            data-placement="top" title="Reset Selected Rows"><i class="fas fa-times"></i></a>
+                    </span>
                     @endif
 
                     <div class="table-responsive">
-                        <table id="example2"  class="table text-center table-hover dataTable dtr-inline" aria-describedby="example2_info">
+                        <table id="example2" class="table text-center table-hover dataTable dtr-inline"
+                            aria-describedby="example2_info">
                             <thead class="bg-light">
                                 <tr>
                                     <th></th>
                                     <th scope="col">
                                         <div class="custom-control custom-checkbox small">
-                                            <input type="checkbox" wire:model="selectPageRows" value="" class="custom-control-input" id="customCheck">
+                                            <input type="checkbox" wire:model="selectPageRows" value=""
+                                                class="custom-control-input" id="customCheck">
                                             <label class="custom-control-label" for="customCheck"></label>
                                         </div>
                                     </th>
@@ -133,9 +144,12 @@
                                     <th>Section</th>
                                     <th>
                                         Status
-                                        <span wire:click="sortBy('status')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
-                                            <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                            <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                        <span wire:click="sortBy('status')" class="text-sm float-sm-right"
+                                            style="cursor: pointer;font-size:10px;">
+                                            <i class="mr-1 fa fa-arrow-up"
+                                                style="color:{{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                            <i class="fa fa-arrow-down"
+                                                style="color : {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                         </span>
                                     </th>
                                     <th colspan="2">actions</th>
@@ -143,44 +157,52 @@
                             </thead>
                             <tbody wire:sortable="updateSubtaskPosition">
                                 @forelse ($subtasks as $subtask)
-                                    <tr wire:sortable.item="{{ $subtask->id }}" wire:key="subtask-{{ $subtask->id }}">
-                                        <td wire:sortable.handle style="width:10px; cursor: move;" width="10px"><i class="fa fa-arrows-alt text-muted"></i></td>
-                                        <td scope="col">
-                                            <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" wire:model="selectedRows" value="{{ $subtask->id }}" class="custom-control-input" id="{{ $subtask->id }}">
-                                                <label class="custom-control-label" for="{{ $subtask->id }}"></label>
-                                            </div>
-                                        </td>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td dir="rtl" class="text-justify">{{ $subtask->title }}</td>
-                                        <td dir="rtl" class="text-justify">
-                                            {{ $subtask->section }}
-                                        </td>
-                                        <td>
-                                            <span  class="font-weight-bold badge text-white {{ $subtask->status == 1 ? 'bg-success' : 'bg-secondary' }}">
-                                                {{ $subtask->status() }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div class="btn-group btn-group-sm">
-                                                <button wire:click.prevent="edit({{ $subtask }})" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
-                                                @if (auth()->user()->roles[0]->name == 'superadmin')
-                                                    <button wire:click.prevent="confirmSubtaskRemoval({{ $subtask->id }})" class="btn btn-danger btn-sm"><i class="fa fa-trash bg-danger"></i></button>
-                                                @else
-                                                    <button class="btn btn-danger btn-sm" disabled><i class="fa fa-trash bg-danger"></i></button>
-                                                @endif
-                                            </div>
-                                            {{-- <form action="" method="post" id="delete-subtask-{{ $subtask->id }}" class="d-none">
-                                                @csrf
-                                                @method('DELETE')
-                                            </form> --}}
-                                        </td>
-                                    </tr>
+                                <tr wire:sortable.item="{{ $subtask->id }}" wire:key="subtask-{{ $subtask->id }}">
+                                    <td wire:sortable.handle style="width:10px; cursor: move;" width="10px"><i
+                                            class="fa fa-arrows-alt text-muted"></i></td>
+                                    <td scope="col">
+                                        <div class="custom-control custom-checkbox small">
+                                            <input type="checkbox" wire:model="selectedRows" value="{{ $subtask->id }}"
+                                                class="custom-control-input" id="{{ $subtask->id }}">
+                                            <label class="custom-control-label" for="{{ $subtask->id }}"></label>
+                                        </div>
+                                    </td>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td dir="rtl" class="text-justify">{{ $subtask->title }}</td>
+                                    <td dir="rtl" class="text-justify">
+                                        {{ $subtask->section }}
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="font-weight-bold badge text-white {{ $subtask->status == 1 ? 'bg-success' : 'bg-secondary' }}">
+                                            {{ $subtask->status() }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button wire:click.prevent="edit({{ $subtask }})"
+                                                class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
+                                            @if (auth()->user()->roles[0]->name == 'superadmin')
+                                            <button wire:click.prevent="confirmSubtaskRemoval({{ $subtask->id }})"
+                                                class="btn btn-danger btn-sm"><i
+                                                    class="fa fa-trash bg-danger"></i></button>
+                                            @else
+                                            <button class="btn btn-danger btn-sm" disabled><i
+                                                    class="fa fa-trash bg-danger"></i></button>
+                                            @endif
+                                        </div>
+                                        {{-- <form action="" method="post" id="delete-subtask-{{ $subtask->id }}"
+                                            class="d-none">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form> --}}
+                                    </td>
+                                </tr>
 
                                 @empty
-                                    <tr>
-                                        <td colspan="8" class="text-center">No Subtasks found</td>
-                                    </tr>
+                                <tr>
+                                    <td colspan="8" class="text-center">No Subtasks found</td>
+                                </tr>
                                 @endforelse
                             </tbody>
                             {{-- <tfoot>
@@ -206,14 +228,15 @@
 
     <!-- Modal Create or Update Subtask -->
 
-    <div class="modal fade" id="form" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+    <div class="modal fade" id="form" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        wire:ignore.self>
         <div class="modal-dialog" role="document">
             <form autocomplete="off" wire:submit.prevent="{{ $showEditModal ? 'updateSubtask' : 'createSubtask' }}">
                 <div class="modal-content">
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
                             @if ($showEditModal)
-                                <span>Edit Subtask</span>
+                            <span>Edit Subtask</span>
                             @else
                             <span>Add New Subtask</span>
                             @endif
@@ -231,10 +254,11 @@
                                 @role('superadmin')
                                 <div class="form-group">
                                     <label for="office_id">@lang('site.office')</label>
-                                    <select id="office_id" class="form-control @error('office_id') is-invalid @enderror" wire:model.defer="data.office_id">
+                                    <select id="office_id" class="form-control @error('office_id') is-invalid @enderror"
+                                        wire:model.defer="data.office_id">
                                         <option hidden>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
                                         @foreach ($offices as $office)
-                                            <option class="bg-light" value="{{ $office->id }}">{{ $office->name }}</option>
+                                        <option class="bg-light" value="{{ $office->id }}">{{ $office->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('office_id')
@@ -250,7 +274,10 @@
                                 <div class="form-group">
                                     <label for="title">Subtask</label>
 
-                                    <textarea dir="rtl" wire:model.defer="data.title" class="text-justify form-control @error('title') is-invalid @enderror" rows="3"  id="title" aria-describedby="titleHelp" placeholder="Enter Subtask .."></textarea>
+                                    <textarea dir="rtl" wire:model.defer="data.title"
+                                        class="text-justify form-control @error('title') is-invalid @enderror" rows="3"
+                                        id="title" aria-describedby="titleHelp"
+                                        placeholder="Enter Subtask .."></textarea>
                                     @error('title')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -262,10 +289,12 @@
 
                                 <div class="form-group">
                                     <label for="section">@lang('site.section')</label>
-                                    <select id="section" class="form-control @error('section') is-invalid @enderror" wire:model.defer="data.section">
+                                    <select id="section" class="form-control @error('section') is-invalid @enderror"
+                                        wire:model.defer="data.section">
                                         <option hidden>@lang('site.choise', ['name' => 'القسم'])</option>
                                         @foreach ($sections as $section)
-                                            <option class="bg-light" value="{{ $section['title'] }}">{{  $section['title'] }}</option>
+                                        <option class="bg-light" value="{{ $section['title'] }}">{{ $section['title'] }}
+                                        </option>
                                         @endforeach
                                     </select>
                                     @error('section')
@@ -279,10 +308,11 @@
                     </div>
 
                     <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                                class="mr-1 fa fa-times"></i> Cancel</button>
                         <button type="submit" class="btn btn-primary"><i class="mr-1 fa fa-save"></i>
                             @if ($showEditModal)
-                                <span>Save Changes</span>
+                            <span>Save Changes</span>
                             @else
                             <span>Save</span>
                             @endif
@@ -295,7 +325,8 @@
 
     <!-- Modal Delete Subtask -->
 
-    <div class="modal fade" id="confirmationModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+    <div class="modal fade" id="confirmationModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        wire:ignore.self>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">
@@ -307,8 +338,10 @@
                 </div>
 
                 <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Cancel</button>
-                    <button type="button" wire:click.prevent="deleteSubtask" class="btn btn-danger"><i class="mr-1 fa fa-trash"></i>Delete Subtask</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                            class="mr-1 fa fa-times"></i> Cancel</button>
+                    <button type="button" wire:click.prevent="deleteSubtask" class="btn btn-danger"><i
+                            class="mr-1 fa fa-trash"></i>Delete Subtask</button>
                 </div>
             </div>
         </div>
@@ -316,8 +349,8 @@
 
     @section('script')
 
-        <script>
-            $(document).ready( function() {
+    <script>
+        $(document).ready( function() {
                 window.addEventListener('hide-form', function (event) {
                     $('#form').modal('hide');
                 });
@@ -331,12 +364,12 @@
                     $('#confirmationModal').modal('hide');
                 });
             });
-        </script>
+    </script>
 
-        {{-- show-delete-alert-confirmation --}}
+    {{-- show-delete-alert-confirmation --}}
 
-        <script>
-            window.addEventListener('show-delete-alert-confirmation', event =>{
+    <script>
+        window.addEventListener('show-delete-alert-confirmation', event =>{
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
@@ -351,7 +384,7 @@
                     }
                 })
             })
-        </script>
+    </script>
 
     @endsection
 

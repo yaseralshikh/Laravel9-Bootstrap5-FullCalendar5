@@ -148,7 +148,7 @@ class Subtask extends Component
 
     public function addNewSubtask()
     {
-        $this->reset();
+        $this->reset('data');
         $this->showEditModal = false;
         $this->dispatchBrowserEvent('show-form');
     }
@@ -187,7 +187,7 @@ class Subtask extends Component
 
     public function edit(ModelsSubtask $subtask)
     {
-        $this->reset();
+        $this->reset('data');
 
         $this->showEditModal = true;
 

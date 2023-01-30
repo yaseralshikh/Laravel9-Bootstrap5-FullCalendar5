@@ -107,7 +107,7 @@ class Office extends Component
 
         public function deleteOffices()
         {
-            // delete images for users if exists from Storage folder
+            // delete images for offices if exists from Storage folder
             $signatureImages = ModelsOffice::whereIn('id', $this->selectedRows)->get(['director_signature_path']);
             foreach($signatureImages as $signatureImage){
                 $imageFileName = $signatureImage->director_signature_path;
@@ -166,11 +166,11 @@ class Office extends Component
         $this->resetPage();
     }
 
-    // show add new Semester form modal
+    // show add new Office form modal
 
     public function addNewOffice()
     {
-        $this->reset();
+        $this->reset('data');
         $this->showEditModal = false;
         $this->dispatchBrowserEvent('show-form');
     }
@@ -184,12 +184,13 @@ class Office extends Component
 			'director'                  => 'required',
 		])->validate();
 
+
         if ($this->director_signature_image) {
-			$validatedData['director_signature_path'] = $this->director_signature_image->store('/', 'signature_photos');
+            $validatedData['director_signature_path'] = $this->director_signature_image->store('/', 'signature_photos');
 		}
 
         if ($this->assistant_signature_image) {
-			$validatedData['assistant_signature_path'] = $this->assistant_signature_image->store('/', 'signature_photos');
+            $validatedData['assistant_signature_path'] = $this->assistant_signature_image->store('/', 'signature_photos');
 		}
 
 		ModelsOffice::create($validatedData);
@@ -210,7 +211,7 @@ class Office extends Component
 
     public function edit(ModelsOffice $office)
     {
-        $this->reset();
+        $this->reset('data');
 
         $this->showEditModal = true;
 
@@ -269,19 +270,19 @@ class Office extends Component
                     'showConfirmButton'  =>  false
                 ]);
                 return $message;
-            }
+            };
         }
 
-    // Show Modal Form to Confirm Semester Removal
+    // Show Modal Form to Confirm Office Removal
 
-    public function confirmOfficeRemoval($semesterId)
+    public function confirmOfficeRemoval($officeId)
     {
-        $this->officeIdBeingRemoved = $semesterId;
+        $this->officeIdBeingRemoved = $officeId;
 
         $this->dispatchBrowserEvent('show-delete-modal');
     }
 
-    // Delete Semester
+    // Delete Office
 
     public function deleteOffice()
     {
@@ -327,12 +328,12 @@ class Office extends Component
 	{
         $searchString = $this->searchTerm;
 
-        $semesters = ModelsOffice::search(trim(($searchString)))
+        $offices = ModelsOffice::search(trim(($searchString)))
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->orderBy('id','asc')
             ->paginate(30);
 
-        return $semesters;
+        return $offices;
 	}
 
     public function render()

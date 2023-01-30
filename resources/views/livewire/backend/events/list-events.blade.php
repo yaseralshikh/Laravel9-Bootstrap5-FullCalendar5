@@ -11,7 +11,8 @@
             text-decoration: none;
             color: rgb(174, 172, 172);
         }
-        .hover-item:hover{
+
+        .hover-item:hover {
             background-color: rgb(174, 172, 172);
         }
     </style>
@@ -80,46 +81,34 @@
 
                     {{-- <div class="card-tools">
                         <div class="btn-group pr-2">
-                            <a href="#" class="btn btn-outline-secondary btn-sm hover-item"
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="@lang('site.userWithoutPlan')"
-                                wire:click.prevent="userNullPlan"
-                                >
+                            <a href="#" class="btn btn-outline-secondary btn-sm hover-item" data-toggle="tooltip"
+                                data-placement="top" title="@lang('site.userWithoutPlan')"
+                                wire:click.prevent="userNullPlan">
                                 <i class="fa fa-calendar text-primary"></i>
                             </a>
-                            <a href="#" class="btn btn-outline-secondary btn-sm hover-item"
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="@lang('site.exportExcel')"
-                                wire:click.prevent="exportExcel">
+                            <a href="#" class="btn btn-outline-secondary btn-sm hover-item" data-toggle="tooltip"
+                                data-placement="top" title="@lang('site.exportExcel')" wire:click.prevent="exportExcel">
                                 <i class="fa fa-file-excel text-success"></i>
                             </a>
-                            <a href="#" class="btn btn-outline-secondary btn-sm hover-item"
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="@lang('site.exportPDF')"
-                                wire:click.prevent="exportPDF">
+                            <a href="#" class="btn btn-outline-secondary btn-sm hover-item" data-toggle="tooltip"
+                                data-placement="top" title="@lang('site.exportPDF')" wire:click.prevent="exportPDF">
                                 <i class="fa fa-file-pdf text-danger"></i>
                             </a>
-                            <a href="#" class="btn btn-outline-secondary btn-sm hover-item {{ $selectedRows ? '' : 'disabled' }}"
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="@lang('site.eventsAcive')"
+                            <a href="#"
+                                class="btn btn-outline-secondary btn-sm hover-item {{ $selectedRows ? '' : 'disabled' }}"
+                                data-toggle="tooltip" data-placement="top" title="@lang('site.eventsAcive')"
                                 wire:click.prevent="setAllAsActive">
                                 <i class="fa fa-regular fa-thumbs-up text-success"></i>
                             </a>
-                            <a href="#" class="btn btn-outline-secondary btn-sm hover-item {{ $selectedRows ? '' : 'disabled' }}"
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="@lang('site.eventsInAcive')"
+                            <a href="#"
+                                class="btn btn-outline-secondary btn-sm hover-item {{ $selectedRows ? '' : 'disabled' }}"
+                                data-toggle="tooltip" data-placement="top" title="@lang('site.eventsInAcive')"
                                 wire:click.prevent="setAllAsInActive">
                                 <i class="fa fa-solid fa-thumbs-down text-dark"></i>
                             </a>
-                            <a href="#" class="btn bg-danger text-white btn-sm hover-item {{ $selectedRows ? '' : 'disabled' }} delete-confirm"
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="@lang('site.deleteSelected')"
+                            <a href="#"
+                                class="btn bg-danger text-white btn-sm hover-item {{ $selectedRows ? '' : 'disabled' }} delete-confirm"
+                                data-toggle="tooltip" data-placement="top" title="@lang('site.deleteSelected')"
                                 wire:click.prevent="deleteSelectedRows">
                                 <i class="fa fa-duotone fa-trash"></i>
                             </a>
@@ -142,36 +131,56 @@
                                 </button>
                             </div>
                         </div>
-                        @role('superadmin')
-                        {{-- offices Filter --}}
-                        <div>
-                            <select dir="rtl" name="office_id" wire:model="byOffice"
-                                class="form-control form-control-sm">
-                                <option value="" selected>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
-                                @foreach ($offices as $office)
-                                    <option value="{{ $office->id }}">{{ $office->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @endrole
+
                         {{-- Week Filter --}}
                         <div>
                             <select dir="rtl" name="week_id" wire:model="byWeek"
                                 class="form-control form-control-sm mr-5">
-                                <option value="" selected>@lang('site.allWeeks')</option>
+                                <option value="" selected>@lang('site.choise', [ 'name' => 'الأسبوع الدراسي'])</option>
                                 @foreach ($weeks as $week)
                                 <option value="{{ $week->id }}" {{ $week->active ? 'selected' : '' }} style="{{
-                                    $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $week->title . ' ( ' .
+                                    $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $week->title . ' ( '
+                                    .
                                     $week->semester->school_year . ' )' }}</option>
                                 @endforeach
                             </select>
                         </div>
+
+                        {{-- Semester Filter --}}
+                        {{-- <div>
+                            <select dir="rtl" name="semester_id" wire:model="bySemester"
+                                wire:change="semesterOption($event.target.value)"
+                                class="form-control form-control-sm mr-5">
+                                <option value="" selected>@lang('site.choise', [ 'name' => 'الفصل الدراسي'])</option>
+                                @foreach ($semesters as $semester)
+                                <option value="{{ $semester->id }}" {{ $semester->active ? 'selected' : '' }} style="{{
+                                    $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $semester->title . ' ( '
+                                    .
+                                    $semester->school_year . ' )' }}</option>
+                                @endforeach
+                            </select>
+                        </div> --}}
+
+                        {{-- offices Filter --}}
+                        {{-- @role('superadmin')
+                        <div>
+                            <select dir="rtl" name="office_id" wire:model="byOffice"
+                                class="form-control form-control-sm">
+                                <option value="">@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
+                                @foreach ($offices as $office)
+                                <option value="{{ $office->id }} {{ $office->id == auth()->user()->office_id }} ? 'selected' : ''">{{ $office->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @endrole --}}
+
                         {{-- Status Filter --}}
                         <div class="custom-control custom-switch">
                             <input type="checkbox" wire:model="byStatus" class="custom-control-input"
                                 id="customSwitch1">
                             <label class="custom-control-label" for="customSwitch1">@lang('site.activeEvents')</label>
                         </div>
+
                         {{-- Total Events --}}
                         <div>
                             <label class="flex-wrap">@lang('site.totalEvents') : &nbsp( {{ $events->total() }} )</label>
@@ -179,14 +188,14 @@
                     </div>
 
                     @if ($selectedRows)
-                    <span class="mb-2 text-success">
-                        <i class="fa fa-user" aria-hidden="true"></i>
-                        selected
-                        <span class="text-dark font-weight-bold">{{ count($selectedRows) }}</span> {{
-                        Str::plural('event', count($selectedRows)) }}
-                        <a class="ml-2 text-gray" href="" wire:click="resetSelectedRows" data-toggle="tooltip"
-                            data-placement="top" title="Reset Selected Rows"><i class="fas fa-times"></i></a>
-                    </span>
+                        <span class="mb-2 text-success">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            selected
+                            <span class="text-dark font-weight-bold">{{ count($selectedRows) }}</span> {{
+                            Str::plural('event', count($selectedRows)) }}
+                            <a class="ml-2 text-gray" href="" wire:click="resetSelectedRows" data-toggle="tooltip"
+                                data-placement="top" title="Reset Selected Rows"><i class="fas fa-times"></i></a>
+                        </span>
                     @endif
 
                     <div class="table-responsive">
@@ -291,15 +300,18 @@
                                     <td class="align-middle">{{ $loop->iteration }}</td>
                                     <td class="dtr-control align-middle">{{ $event->user->name }}</td>
                                     <td class="align-middle">{{ $event->user->specialization->name }}</td>
-                                    <td class="align-middle" style="color: {{ $event->color }};">{{ $event->title }}</td>
-                                    <td class="align-middle">{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start) }}<br>
+                                    <td class="align-middle" style="color: {{ $event->color }};">{{ $event->title }}
+                                    </td>
+                                    <td class="align-middle">{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start)
+                                        }}<br>
                                         {{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->start) }}<br>
                                         {{ Carbon\Carbon::parse($event->start)->toDateString() }}
                                     </td>
                                     {{-- <td>{{
                                         (Carbon\Carbon::parse($event->end))->diffInDays(Carbon\Carbon::parse($event->start))
                                         }}</td> --}}
-                                    <td class="align-middle">{{ $event->week->title . ' (' . $event->week->semester->school_year . ' )' }}
+                                    <td class="align-middle">{{ $event->week->title . ' (' .
+                                        $event->week->semester->school_year . ' )' }}
                                     </td>
                                     <td class="align-middle">
                                         <span
@@ -364,14 +376,18 @@
                     <div class="modal-body">
                         <div class="row h-100 justify-content-center align-items-center">
                             <div class="col-12">
+                                
                                 <!-- Modal Office -->
-                                @role('superadmin')
+                                {{-- @role('superadmin')
                                 <div class="form-group">
                                     <label for="office_id">@lang('site.office')</label>
-                                    <select id="office_id" class="form-control @error('office_id') is-invalid @enderror" wire:model.defer="data.office_id" wire:change="officeOption($event.target.value)">
-                                        <option hidden>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
+                                    <select id="office_id" class="form-control @error('office_id') is-invalid @enderror"
+                                        wire:model.defer="data.office_id"
+                                        wire:change="officeOption($event.target.value)"
+                                        >
+                                        <option value="" selected>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
                                         @foreach ($offices as $office)
-                                            <option class="bg-light" value="{{ $office->id }}">{{ $office->name }}</option>
+                                        <option class="bg-light" value="{{ $office->id }}">{{ $office->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('office_id')
@@ -380,7 +396,7 @@
                                     </div>
                                     @enderror
                                 </div>
-                                @endrole
+                                @endrole --}}
 
                                 <!-- Modal user_id -->
                                 <div class="form-group">
@@ -388,9 +404,10 @@
 
                                     <select name="user_id" wire:model.defer="data.user_id"
                                         class="form-control  @error('user_id') is-invalid @enderror" id="user_id">
-                                        <option value="" selected>@lang('site.choise', ['name' => 'المشرف التربوي'])</option>
+                                        <option value="" selected>@lang('site.choise', ['name' => 'المشرف التربوي'])
+                                        </option>
                                         @foreach ($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
                                         @endforeach
                                     </select>
 
@@ -402,15 +419,18 @@
                                 </div>
 
                                 <!-- Modal Semester -->
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label for="semester_id" class="form-label">{{ __('site.semester') }} :</label>
 
                                     <select name="semester_id" wire:model.defer="data.semester_id"
-                                        class="form-control  @error('semester_id') is-invalid @enderror" id="semester_id">
-                                        <option value="">@lang('site.choise', ['name' => 'الفصل الدراسي'])</option>
+                                        wire:change="semesterOption($event.target.value)"
+                                        class="form-control  @error('semester_id') is-invalid @enderror"
+                                        id="semester_id">
+                                        <option value="" selected>@lang('site.choise', ['name' => 'الفصل الدراسي'])</option>
                                         @foreach ($semesters as $semester)
                                         <option value="{{ $semester->id }}"
-                                            style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $semester->title . ' ( ' .
+                                            style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
+                                            $semester->title . ' ( ' .
                                             $semester->school_year . ' )' }}</option>
                                         @endforeach
                                     </select>
@@ -420,19 +440,19 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
-                                </div>
+                                </div> --}}
 
-                                <!-- Modal School Week -->
+                                <!-- Modal Week -->
                                 <div class="form-group">
                                     <label for="week_id" class="form-label">{{ __('site.schoolWeek') }} :</label>
 
                                     <select name="week_id" wire:model.defer="data.week_id"
                                         class="form-control  @error('week_id') is-invalid @enderror" id="week_id">
-                                        <option value="">@lang('site.choise', ['name' => 'الأسبوع الدراسي'])</option>
+                                        <option value="" selected>@lang('site.choise', ['name' => 'الأسبوع الدراسي'])</option>
                                         @foreach ($weeks as $week)
                                         <option value="{{ $week->id }}"
-                                            style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $week->title . ' ( ' .
-                                            $week->semester->school_year . ' )' }}</option>
+                                            style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">
+                                            {{  $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
                                         @endforeach
                                     </select>
 
@@ -443,7 +463,7 @@
                                     @enderror
                                 </div>
 
-                                <!-- Modal Event Title -->
+                                <!-- Modal Task (Event Title) -->
 
                                 <div class="form-group">
                                     <label for="title" class="col-form-label">@lang('site.task') :</label>
@@ -452,7 +472,7 @@
                                         class="form-control  @error('title') is-invalid @enderror" id="title">
                                         <option value="" selected>@lang('site.choise', ['name' => 'المهمة'])</option>
                                         @foreach ($tasks as $task)
-                                        <option value="{{ $task->name }}">{{ $task->name }}</option>
+                                            <option value="{{ $task->name }}">{{ $task->name }}</option>
                                         @endforeach
                                     </select>
 
@@ -513,9 +533,9 @@
                                 class="mr-1 fa fa-times"></i> @lang('site.cancel')</button>
                         <button type="submit" class="btn btn-primary"><i class="mr-1 fa fa-save"></i>
                             @if ($showEditModal)
-                                <span>@lang('site.saveChanges')</span>
+                            <span>@lang('site.saveChanges')</span>
                             @else
-                                <span>@lang('site.save')</span>
+                            <span>@lang('site.save')</span>
                             @endif
                         </button>
                     </div>

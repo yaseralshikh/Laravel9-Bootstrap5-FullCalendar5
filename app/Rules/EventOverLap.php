@@ -28,10 +28,12 @@ class EventOverLap implements Rule
      */
     public function passes($attribute, $value)
     {
-        return Event::where('title', $value)
+        $event = Event::where('title', $value)
             ->where('start', $this->start)
             ->whereNotIn('title',['إجازة','يوم مكتبي','برنامج تدريبي'])
             ->count() == 0;
+
+        return $event ;
     }
 
     /**

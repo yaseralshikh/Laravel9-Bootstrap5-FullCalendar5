@@ -145,7 +145,7 @@ class Levels extends Component
 
     public function addNewLevel()
     {
-        $this->reset();
+        $this->reset('data');
         $this->showEditModal = false;
         $this->dispatchBrowserEvent('show-form');
     }
@@ -177,7 +177,7 @@ class Levels extends Component
 
     public function edit(Level $level)
     {
-        $this->reset();
+        $this->reset('data');
 
         $this->showEditModal = true;
 
