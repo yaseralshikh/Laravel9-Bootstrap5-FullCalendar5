@@ -108,53 +108,59 @@
                                             <label class="custom-control-label" for="customCheck"></label>
                                         </div>
                                     </th>
-                                    <th>#</th>
-                                    <th>
+                                    <th class="align-middle">#</th>
+                                    <th class="align-middle">
                                         @lang('site.name')
                                         <span wire:click="sortBy('title')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'title' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                             <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'title' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                         </span>
                                     </th>
-                                    <th>
+                                    <th class="align-middle">
                                         @lang('site.director')
                                     </th>
                                     <th class="align-middle" scope="col">director signature</th>
                                     <th class="align-middle" scope="col">assistant signature</th>
-                                    <th>
+                                    <th class="align-middle">
                                         Status
                                         <span wire:click="sortBy('status')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                             <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                         </span>
-                                    </th>
+                                    </th class="align-middle">
                                     <th colspan="2">actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($offices as $office)
                                     <tr>
-                                        <td scope="col">
+                                        <td scope="col" class="align-middle">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" wire:model="selectedRows" value="{{ $office->id }}" class="custom-control-input" id="{{ $office->id }}">
                                                 <label class="custom-control-label" for="{{ $office->id }}"></label>
                                             </div>
                                         </td>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $office->name }}</td>
-                                        <td>{{ $office->director }}</td>
-                                        <td>
+                                        <td class="align-middle">{{ $loop->iteration }}</td>
+                                        <td class="align-middle">{{ $office->name }}</td>
+                                        <td class="align-middle">{{ $office->director }}</td>
+                                        <td class="align-middle">
                                             <img src="{{ $office->director_url }}" style="width: 50px;" class="img" alt="">
+                                            @if ($office->director_signature_path)
+                                                <button wire:click.prevent="removeDirectorImage({{ $office->id }})" class="btn btn-outline-danger btn-xs">@lang('site.removeImage')</button>
+                                            @endif
                                         </td>
-                                        <td>
+                                        <td class="align-middle">
                                             <img src="{{ $office->assistant_url }}" style="width: 50px;" class="img" alt="">
+                                            @if ($office->assistant_signature_path)
+                                                <button wire:click.prevent="removeAssistantImage({{ $office->id }})" class="btn btn-outline-danger btn-xs">@lang('site.removeImage')</button>
+                                            @endif
                                         </td>
-                                        <td>
+                                        <td class="align-middle">
                                             <span  class="font-weight-bold badge text-white {{ $office->status == 1 ? 'bg-success' : 'bg-secondary' }}">
                                                 {{ $office->status() }}
                                             </span>
                                         </td>
-                                        <td>
+                                        <td class="align-middle">
                                             <div class="btn-group btn-group-sm">
                                                 <button wire:click.prevent="edit({{ $office }})" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
                                                 @if (auth()->user()->roles[0]->name == 'superadmin')

@@ -222,56 +222,135 @@ class Office extends Component
         $this->dispatchBrowserEvent('show-form');
     }
 
-        // Update Task
+    // Update Task
 
-        public function updateOffice()
-        {
-            try {
-                $validatedData = Validator::make($this->data, [
-                    'name'                      => 'required',
-                    'director_signature_path'   => 'max:2048',
-                    'assistant_signature_path'  => 'max:2048',
-                    'director'                  => 'required',
-                ])->validate();
+    public function updateOffice()
+    {
+        try {
+            $validatedData = Validator::make($this->data, [
+                'name'                      => 'required',
+                'director_signature_path'   => 'max:2048',
+                'assistant_signature_path'  => 'max:2048',
+                'director'                  => 'required',
+            ])->validate();
 
-                if ($this->director_signature_image) {
-                    if($this->office->director_signature_path){
-                        Storage::disk('signature_photos')->delete($this->office->director_signature_path);
-                    }
-                    $validatedData['director_signature_path'] = $this->director_signature_image->store('/', 'signature_photos');
+            if ($this->director_signature_image) {
+                if($this->office->director_signature_path){
+                    Storage::disk('signature_photos')->delete($this->office->director_signature_path);
                 }
-                if ($this->assistant_signature_image) {
-                    if($this->office->assistant_signature_path){
-                        Storage::disk('signature_photos')->delete($this->office->assistant_signature_path);
-                    }
-                    $validatedData['assistant_signature_path'] = $this->assistant_signature_image->store('/', 'signature_photos');
+                $validatedData['director_signature_path'] = $this->director_signature_image->store('/', 'signature_photos');
+            }
+            if ($this->assistant_signature_image) {
+                if($this->office->assistant_signature_path){
+                    Storage::disk('signature_photos')->delete($this->office->assistant_signature_path);
                 }
+                $validatedData['assistant_signature_path'] = $this->assistant_signature_image->store('/', 'signature_photos');
+            }
 
-                $this->office->update($validatedData);
+            $this->office->update($validatedData);
 
-                $this->dispatchBrowserEvent('hide-form');
+            $this->director_signature_image = null;
+            $this->assistant_signature_image = null;
 
-                $this->alert('success', 'Office updated Successfully.', [
-                    'position'  =>  'top-end',
+            $this->dispatchBrowserEvent('hide-form');
+
+            $this->alert('success', 'Office updated Successfully.', [
+                'position'  =>  'top-end',
+                'timer'  =>  3000,
+                'toast'  =>  true,
+                'text'  =>  null,
+                'showCancelButton'  =>  false,
+                'showConfirmButton'  =>  false
+            ]);
+
+        } catch (\Throwable $th) {
+            $message = $this->alert('error', $th->getMessage(), [
+                'position'  =>  'top-end',
+                'timer'  =>  3000,
+                'toast'  =>  true,
+                'text'  =>  null,
+                'showCancelButton'  =>  false,
+                'showConfirmButton'  =>  false
+            ]);
+            return $message;
+        };
+    }
+
+    public function removeDirectorImage($officeId)
+    {
+        try {
+            $office = ModelsOffice::findOrFail($officeId);
+            $directorFileName = $office->director_signature_path;
+
+            if($directorFileName){
+                Storage::disk('signature_photos')->delete($directorFileName);
+
+                $office->update([
+                    'director_signature_path' => null,
+                ]);
+
+                $this->director_signature_image = null;
+
+                $this->alert('success', 'director signature deleted Successfully.', [
+                    'position'  =>  'center',
                     'timer'  =>  3000,
                     'toast'  =>  true,
                     'text'  =>  null,
                     'showCancelButton'  =>  false,
                     'showConfirmButton'  =>  false
                 ]);
+            }
 
-            } catch (\Throwable $th) {
-                $message = $this->alert('error', $th->getMessage(), [
-                    'position'  =>  'top-end',
-                    'timer'  =>  3000,
-                    'toast'  =>  true,
-                    'text'  =>  null,
-                    'showCancelButton'  =>  false,
-                    'showConfirmButton'  =>  false
-                ]);
-                return $message;
-            };
+        } catch (\Throwable $th) {
+            $message = $this->alert('error', $th->getMessage(), [
+                'position'  =>  'center',
+                'timer'  =>  3000,
+                'toast'  =>  true,
+                'text'  =>  null,
+                'showCancelButton'  =>  false,
+                'showConfirmButton'  =>  false
+            ]);
+            return $message;
         }
+    }
+
+    public function removeAssistantImage($officeId)
+    {
+        try {
+            $office = ModelsOffice::findOrFail($officeId);
+            $assistantFileName = $office->assistant_signature_path;
+
+            if($assistantFileName){
+                Storage::disk('signature_photos')->delete($assistantFileName);
+
+                $office->update([
+                    'assistant_signature_path' => null,
+                ]);
+
+                $this->assistant_signature_image = null;
+
+                $this->alert('success', 'assistant signature deleted Successfully.', [
+                    'position'  =>  'center',
+                    'timer'  =>  3000,
+                    'toast'  =>  true,
+                    'text'  =>  null,
+                    'showCancelButton'  =>  false,
+                    'showConfirmButton'  =>  false
+                ]);
+            }
+
+        } catch (\Throwable $th) {
+            $message = $this->alert('error', $th->getMessage(), [
+                'position'  =>  'center',
+                'timer'  =>  3000,
+                'toast'  =>  true,
+                'text'  =>  null,
+                'showCancelButton'  =>  false,
+                'showConfirmButton'  =>  false
+            ]);
+            return $message;
+        }
+    }
 
     // Show Modal Form to Confirm Office Removal
 
@@ -295,6 +374,7 @@ class Office extends Component
             if($directorFileName){
                 Storage::disk('signature_photos')->delete($directorFileName);
             }
+
             if($assistantFileName){
                 Storage::disk('signature_photos')->delete($assistantFileName);
             }
