@@ -52,7 +52,7 @@ class User extends Authenticatable
 
     public function status(): string
     {
-        return $this->status ? 'Active' : 'Inactive';
+        return $this->status ? __('site.active') : __('site.inActive');
     }
 
     public function events(): HasMany

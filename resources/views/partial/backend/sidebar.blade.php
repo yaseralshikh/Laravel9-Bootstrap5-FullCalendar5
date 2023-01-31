@@ -15,7 +15,7 @@
                     alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">{{ Str::upper(Auth::user()->name) }}</a>
+                <a href="{{ route('admin.dashboard') }}" class="d-block">{{ Str::upper(Auth::user()->name) }}</a>
             </div>
         </div>
 
@@ -57,6 +57,7 @@
                         </p>
                     </a>
                 </li>
+                @role('superadmin')
                 <li class="nav-item">
                     <a href="{{ route('admin.specializations') }}"
                         class="nav-link {{ request()->is('admin/specializations') ? 'active' : '' }}">
@@ -66,7 +67,6 @@
                         </p>
                     </a>
                 </li>
-                @role('superadmin')
                 <li class="nav-item">
                     <a href="{{ url('/laratrust') }}"
                         class="nav-link {{ request()->is('/laratrust') ? 'active' : '' }}">
@@ -120,6 +120,7 @@
                         </p>
                     </a>
                 </li>
+                @role('superadmin')
                 <li class="nav-item">
                     <a href="{{ route('admin.levels') }}"
                         class="nav-link {{ request()->is('admin/levels') ? 'active' : '' }}">
@@ -166,6 +167,7 @@
                         </p>
                     </a>
                 </li>
+                @endrole
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

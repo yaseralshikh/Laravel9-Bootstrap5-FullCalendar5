@@ -83,7 +83,7 @@
                             {{-- search --}}
                             <div class="input-group" style="width: 200px;">
                                 <input type="search" wire:model="searchTerm" class="form-control"
-                                    placeholder="Search for..." value="Lorem ipsum">
+                                    placeholder="Search for..." value="">
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-default">
                                         <i class="fa fa-search"></i>

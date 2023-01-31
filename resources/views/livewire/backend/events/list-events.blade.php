@@ -46,7 +46,7 @@
                     <h3 class="card-title">
                         <button wire:click.prevent='addNewEvent' class="ml-1 btn btn-sm btn-primary">
                             <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
-                                <span>@lang('site.addEvent')</span>
+                                <span>@lang('site.addRecord', ['name' => 'خطة'])</span>
                             </i>
                         </button>
                         <div class="btn-group">
@@ -183,7 +183,7 @@
 
                         {{-- Total Events --}}
                         <div>
-                            <label class="flex-wrap">@lang('site.totalEvents') : &nbsp( {{ $events->total() }} )</label>
+                            <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'الخطط']) : &nbsp( {{ $events->total() }} )</label>
                         </div>
                     </div>
 
@@ -364,9 +364,9 @@
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
                             @if ($showEditModal)
-                            <span>@lang('site.updateEvent')</span>
+                            <span>@lang('site.updateRecord', ['name' => 'خطة'])</span>
                             @else
-                            <span>@lang('site.addEvent')</span>
+                            <span>@lang('site.addRecord', ['name' => 'خطة'])</span>
                             @endif
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -376,7 +376,7 @@
                     <div class="modal-body">
                         <div class="row h-100 justify-content-center align-items-center">
                             <div class="col-12">
-                                
+
                                 <!-- Modal Office -->
                                 {{-- @role('superadmin')
                                 <div class="form-group">
@@ -551,11 +551,11 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">
-                    <h5>@lang('site.deleteEvent')</h5>
+                    <h5>@lang('site.deleteRecord', ['name' => 'خطة'])</h5>
                 </div>
 
                 <div class="modal-body">
-                    <h4>@lang('site.deleteMessage') ?</h4>
+                    <h4>@lang('site.deleteMessage')</h4>
                 </div>
 
                 <div class="modal-footer bg-light">

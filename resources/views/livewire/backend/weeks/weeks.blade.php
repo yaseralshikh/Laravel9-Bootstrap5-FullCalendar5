@@ -15,12 +15,13 @@
         <div class="container-fluid">
             <div class="mb-2 row">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Weeks</h1>
+                    <h1 class="m-0">@lang('site.weeks')</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Weeks</li>
+                        <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">@lang('site.dashboard')</a>
+                        </li>
+                        <li class="breadcrumb-item active">@lang('site.weeks')</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -38,13 +39,13 @@
                         <button wire:click.prevent='addNewWeek' class="ml-1 btn btn-sm btn-primary " {{
                             auth()->user()->roles[0]->name == 'superadmin' ? '' : 'disabled' }}>
                             <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
-                                <span>Add New Week</span>
+                                <span>@lang('site.addRecord', ['name' => 'أسبوع دراسي'])</span>
                             </i>
                         </button>
 
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary btn-sm" {{ auth()->user()->roles[0]->name ==
-                                'superadmin' ? '' : 'disabled' }}>Action</button>
+                                'superadmin' ? '' : 'disabled' }}>@lang('site.action')</button>
                             <button type="button"
                                 class="btn btn-primary btn-sm dropdown-toggle dropdown-icon {{ auth()->user()->roles[0]->name == 'superadmin' ? '' : 'disabled' }}"
                                 data-toggle="dropdown" aria-expanded="false">
@@ -55,15 +56,15 @@
                                     aria-disabled="true">Export to Excel</a> --}}
                                 {{-- <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a>
                                 --}}
-                                <div class="dropdown-divider"></div>
+                                {{-- <div class="dropdown-divider"></div> --}}
                                 {{-- @if ($selectedRows) --}}
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
-                                    wire:click.prevent="setAllAsActive" href="#">Set as Acive</a>
+                                    wire:click.prevent="setAllAsActive" href="#">@lang('site.setActive')</a>
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
-                                    wire:click.prevent="setAllAsInActive" href="#">Set as InActive</a>
+                                    wire:click.prevent="setAllAsInActive" href="#">@lang('site.setInActive')</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm"
-                                    wire:click.prevent="deleteSelectedRows" href="#">Delete Selected</a>
+                                    wire:click.prevent="deleteSelectedRows" href="#">@lang('site.deleteSelected')</a>
                                 {{-- @endif --}}
                             </div>
                         </div>
@@ -83,8 +84,7 @@
 
                         {{-- search --}}
                         <div class="input-group" style="width: 200px;">
-                            <input type="search" wire:model="searchTerm" class="form-control"
-                                placeholder="Search for..." value="Lorem ipsum">
+                            <input dir="rtl" type="search" wire:model="searchTerm" class="form-control" placeholder="@lang('site.searchFor')..." value="">
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-default">
                                     <i class="fa fa-search"></i>
@@ -98,7 +98,8 @@
                                 <option value="" selected>@lang('site.choise', ['name' => 'ألفصل الدراسي'])</option>
                                 @foreach ($semesters as $semester)
                                 <option value="{{ $semester->id }}" style="{{
-                                    $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $semester->title }}</option>
+                                    $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $semester->title
+                                    }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -107,10 +108,10 @@
                         <div class="custom-control custom-switch">
                             <input type="checkbox" wire:model="byStatus" class="custom-control-input"
                                 id="customSwitch1">
-                            <label class="custom-control-label" for="customSwitch1">InActive Weeks</label>
+                            <label class="custom-control-label" for="customSwitch1">@lang('site.activeWeeks')</label>
                         </div>
 
-                        <label class="flex-wrap">Total Weeks : &nbsp{{ $weeks->total() }}</label>
+                        <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'الأسابيع']) : &nbsp{{ $weeks->total() }}</label>
 
                     </div>
 
@@ -140,7 +141,7 @@
                                     </th>
                                     <th>#</th>
                                     <th>
-                                        Week title
+                                        @lang('site.schoolWeek')
                                         <span wire:click="sortBy('title')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up"
@@ -150,7 +151,7 @@
                                         </span>
                                     </th>
                                     <th>
-                                        Week start
+                                        @lang('site.start')
                                         <span wire:click="sortBy('start')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up"
@@ -160,7 +161,7 @@
                                         </span>
                                     </th>
                                     <th>
-                                        Week end
+                                        @lang('site.end')
                                         <span wire:click="sortBy('end')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up"
@@ -170,7 +171,7 @@
                                         </span>
                                     </th>
                                     <th>
-                                        Semester
+                                        @lang('site.semester')
                                         <span wire:click="sortBy('semester_id')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up"
@@ -180,13 +181,13 @@
                                         </span>
                                     </th>
                                     <th>
-                                        School Year
+                                        @lang('site.schoolYear')
                                     </th>
                                     <td>
-                                        Active
+                                        @lang('site.currently')
                                     </td>
                                     <th>
-                                        Status
+                                        @lang('site.status')
                                         <span wire:click="sortBy('status')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up"
@@ -195,7 +196,7 @@
                                                 style="color : {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                         </span>
                                     </th>
-                                    <th colspan="2">actions</th>
+                                    <th colspan="2">@lang('site.action')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -259,7 +260,7 @@
 
                                 @empty
                                 <tr>
-                                    <td colspan="10" class="text-center">No Weeks found</td>
+                                    <td colspan="10" class="text-center">@lang('site.noDataFound')</td>
                                 </tr>
                                 @endforelse
                             </tbody>
@@ -294,9 +295,9 @@
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
                             @if ($showEditModal)
-                            <span>Edit Week</span>
+                            <span>@lang('site.updateRecord', ['name' => 'أسبوع دراسي'])</span>
                             @else
-                            <span>Add New Week</span>
+                            <span>@lang('site.addRecord', ['name' => 'أسبوع دراسي'])</span>
                             @endif
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -310,11 +311,11 @@
                                 <!-- Modal Week semester -->
 
                                 <div class="form-group">
-                                    <label for="semester_id">Semester</label>
-                                    <select id="semester_id" tabindex="4"
+                                    <label for="semester_id">@lang('site.semester')</label>
+                                    <select id="semester_id"
                                         class="form-control @error('semester_id') is-invalid @enderror"
                                         wire:model.defer="data.semester_id">
-                                        <option hidden>Select semester ..</option>
+                                        <option hidden>@lang('site.choise', ['name' => 'الفصل الدراسي'])</option>
                                         @foreach ($semesters as $semester)
                                         <option class="bg-light" value="{{ $semester->id }}">{{ $semester->title . ' - '
                                             . $semester->school_year }}</option>
@@ -330,10 +331,10 @@
                                 <!-- Modal Week Title -->
 
                                 <div class="form-group">
-                                    <label for="title">Week title</label>
-                                    <input type="text" tabindex="1" wire:model.defer="data.title"
+                                    <label for="title">@lang('site.week')</label>
+                                    <input type="text" wire:model.defer="data.title"
                                         class="form-control @error('title') is-invalid @enderror" id="title"
-                                        aria-describedby="titleHelp" placeholder="Enter title">
+                                        aria-describedby="titleHelp" dir="rtl" placeholder="@lang('site.enterFieldName', ['name' => 'الأسبوع الدراسي مثال : ف2 - الأسبوع الأول'])">
                                     @error('title')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -344,8 +345,8 @@
                                 <!-- Modal Week start -->
 
                                 <div class="form-group">
-                                    <label for="start">Week start</label>
-                                    <input type="date" tabindex="2" wire:model.defer="data.start"
+                                    <label for="start">@lang('site.start')</label>
+                                    <input type="date" wire:model.defer="data.start"
                                         class="form-control @error('start') is-invalid @enderror" id="start"
                                         aria-describedby="startHelp" placeholder="Enter week start">
                                     @error('start')
@@ -358,8 +359,8 @@
                                 <!-- Modal Week end -->
 
                                 <div class="form-group">
-                                    <label for="end">Week start</label>
-                                    <input type="date" tabindex="3" wire:model.defer="data.end"
+                                    <label for="end">@lang('site.end')</label>
+                                    <input type="date" wire:model.defer="data.end"
                                         class="form-control @error('end') is-invalid @enderror" id="end"
                                         aria-describedby="endHelp" placeholder="Enter week end">
                                     @error('end')
@@ -374,12 +375,12 @@
 
                     <div class="modal-footer bg-light">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                class="mr-1 fa fa-times"></i> Cancel</button>
+                                class="mr-1 fa fa-times"></i> @lang('site.cancel')</button>
                         <button type="submit" class="btn btn-primary"><i class="mr-1 fa fa-save"></i>
                             @if ($showEditModal)
-                            <span>Save Changes</span>
+                            <span>@lang('site.saveChanges')</span>
                             @else
-                            <span>Save</span>
+                            <span>@lang('site.save')</span>
                             @endif
                         </button>
                     </div>
@@ -395,18 +396,18 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">
-                    <h5>Delete Week</h5>
+                    <h5>@lang('site.deleteRecord', ['name' => 'أسبوع دراسي'])</h5>
                 </div>
 
                 <div class="modal-body">
-                    <h4>Are you sure you want to delete this week?</h4>
+                    <h4>@lang('site.deleteMessage')</h4>
                 </div>
 
                 <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                            class="mr-1 fa fa-times"></i> Cancel</button>
+                            class="mr-1 fa fa-times"></i> @lang('site.cancel')</button>
                     <button type="button" wire:click.prevent="deleteWeek" class="btn btn-danger"><i
-                            class="mr-1 fa fa-trash"></i>Delete Week</button>
+                            class="mr-1 fa fa-trash"></i>@lang('site.delete')</button>
                 </div>
             </div>
         </div>

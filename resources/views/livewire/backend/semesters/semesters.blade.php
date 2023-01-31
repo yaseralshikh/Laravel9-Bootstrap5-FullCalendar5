@@ -38,12 +38,12 @@
                     <h3 class="card-title">
                         <button wire:click.prevent='addNewSemester' class="ml-1 btn btn-sm btn-primary">
                             <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
-                                <span>Add New Semester</span>
+                                <span>@lang('site.addRecord', ['name' => 'فصل دراسي'])</span>
                             </i>
                         </button>
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm">Action</button>
+                            <button type="button" class="btn btn-primary btn-sm">@lang('site.action')</button>
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon"
                                 data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
@@ -56,12 +56,12 @@
                                 <div class="dropdown-divider"></div>
                                 {{-- @if ($selectedRows) --}}
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
-                                    wire:click.prevent="setAllAsActive" href="#">Set as Acive</a>
+                                    wire:click.prevent="setAllAsActive" href="#">@lang('site.setActive')</a>
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
-                                    wire:click.prevent="setAllAsInActive" href="#">Set as InActive</a>
+                                    wire:click.prevent="setAllAsInActive" href="#">@lang('site.setInActive')</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm"
-                                    wire:click.prevent="deleteSelectedRows" href="#">Delete Selected</a>
+                                    wire:click.prevent="deleteSelectedRows" href="#">@lang('site.deleteSelected')</a>
                                 {{-- @endif --}}
                             </div>
                         </div>
@@ -80,8 +80,7 @@
                     <div class="form-group d-flex justify-content-between align-items-center">
                         {{-- search --}}
                         <div class="input-group" style="width: 200px;">
-                            <input type="search" wire:model="searchTerm" class="form-control"
-                                placeholder="Search for..." value="Lorem ipsum">
+                            <input dir="rtl" type="search" wire:model="searchTerm" class="form-control" placeholder="@lang('site.searchFor')..." value="">
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-default">
                                     <i class="fa fa-search"></i>
@@ -93,10 +92,10 @@
                         <div class="custom-control custom-switch">
                             <input type="checkbox" wire:model="byStatus" class="custom-control-input"
                                 id="customSwitch1">
-                            <label class="custom-control-label" for="customSwitch1">InActive Semesters</label>
+                            <label class="custom-control-label" for="customSwitch1">@lang('site.activeSemesters')</label>
                         </div>
 
-                        <label class="flex-wrap">Total Semesters : &nbsp{{ $semesters->total() }}</label>
+                        <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'الفصول الدراسية']) : &nbsp{{ $semesters->total() }}</label>
 
                     </div>
 
@@ -125,7 +124,7 @@
                                     </th>
                                     <th>#</th>
                                     <th>
-                                        Semester Title
+                                        @lang('site.semester')
                                         <span wire:click="sortBy('title')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up"
@@ -135,13 +134,13 @@
                                         </span>
                                     </th>
                                     <th>
-                                        Semester Start
+                                        @lang('site.start')
                                     </th>
                                     <th>
-                                        Semester End
+                                        @lang('site.end')
                                     </th>
                                     <th>
-                                        School Year
+                                        @lang('site.schoolYear')
                                         <span wire:click="sortBy('school_year')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up"
@@ -151,10 +150,10 @@
                                         </span>
                                     </th>
                                     <th>
-                                        Active
+                                        @lang('site.currently')
                                     </th>
                                     <th>
-                                        Status
+                                        @lang('site.status')
                                         <span wire:click="sortBy('status')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up"
@@ -163,7 +162,7 @@
                                                 style="color : {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                         </span>
                                     </th>
-                                    <th colspan="2">actions</th>
+                                    <th colspan="2">@lang('site.action')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -223,7 +222,7 @@
 
                                 @empty
                                 <tr>
-                                    <td colspan="8" class="text-center">No Semesters found</td>
+                                    <td colspan="8" class="text-center">@lang('site.noDataFound')</td>
                                 </tr>
                                 @endforelse
                             </tbody>
@@ -258,9 +257,9 @@
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
                             @if ($showEditModal)
-                            <span>Edit Semester</span>
+                            <span>@lang('site.updateRecord', ['name' => 'فصل دراسي'])</span>
                             @else
-                            <span>Add New Semester</span>
+                            <span>@lang('site.addRecord', ['name' => 'فصل دراسي'])</span>
                             @endif
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -272,10 +271,10 @@
                             <div class="col-12">
                                 <!-- Modal Semester Name -->
                                 <div class="form-group">
-                                    <label for="title">Semester title</label>
-                                    <input type="text" tabindex="1" wire:model.defer="data.title"
+                                    <label for="title">@lang('site.semester')</label>
+                                    <input type="text" wire:model.defer="data.title"
                                         class="form-control @error('title') is-invalid @enderror" id="title"
-                                        aria-describedby="titleHelp" placeholder="Enter title">
+                                        aria-describedby="titleHelp" dir="rtl" placeholder="@lang('site.enterFieldName', ['name' => 'عنوان الفصل الدراسي'])">
                                     @error('title')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -284,10 +283,10 @@
                                 </div>
                                 <!-- Modal Semester Start -->
                                 <div class="form-group">
-                                    <label for="start">Semester Start</label>
-                                    <input type="date" tabindex="2" wire:model.defer="data.start"
+                                    <label for="start">@lang('site.start')</label>
+                                    <input type="date" wire:model.defer="data.start"
                                         class="form-control @error('start') is-invalid @enderror" id="start"
-                                        aria-describedby="startHelp" placeholder="Enter start date">
+                                        aria-describedby="startHelp" dir="rtl">
                                     @error('start')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -296,10 +295,10 @@
                                 </div>
                                 <!-- Modal Semester End -->
                                 <div class="form-group">
-                                    <label for="end">Semester End</label>
-                                    <input type="date" tabindex="3" wire:model.defer="data.end"
+                                    <label for="end">@lang('site.end')</label>
+                                    <input type="date" wire:model.defer="data.end"
                                         class="form-control @error('end') is-invalid @enderror" id="end"
-                                        aria-describedby="endHelp" placeholder="Enter end date">
+                                        aria-describedby="endHelp" dir="rtl">
                                     @error('end')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -308,10 +307,10 @@
                                 </div>
                                 <!-- Modal school_year -->
                                 <div class="form-group">
-                                    <label for="school_year">School Year</label>
-                                    <input type="number" tabindex="4" wire:model.defer="data.school_year"
+                                    <label for="school_year">@lang('site.schoolYear')</label>
+                                    <input type="number" wire:model.defer="data.school_year"
                                         class="form-control @error('school_year') is-invalid @enderror" id="school_year"
-                                        aria-describedby="school_yearHelp" placeholder="Enter school year">
+                                        aria-describedby="school_yearHelp" dir="rtl" placeholder="@lang('site.enterFieldName', ['name' => 'العام الدراسي'])">
                                     @error('school_year')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -339,12 +338,12 @@
 
                     <div class="modal-footer bg-light">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                class="mr-1 fa fa-times"></i> Cancel</button>
+                                class="mr-1 fa fa-times"></i> @lang('site.cancel')</button>
                         <button type="submit" class="btn btn-primary"><i class="mr-1 fa fa-save"></i>
                             @if ($showEditModal)
-                            <span>Save Changes</span>
+                            <span>@lang('site.saveChanges')</span>
                             @else
-                            <span>Save</span>
+                            <span>@lang('site.save')</span>
                             @endif
                         </button>
                     </div>
@@ -360,18 +359,18 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">
-                    <h5>Delete Semester</h5>
+                    <h5>@lang('site.deleteRecord', ['name' => 'فصل دراسي'])</h5>
                 </div>
 
                 <div class="modal-body">
-                    <h4>Are you sure you want to delete this semester?</h4>
+                    <h4>@lang('site.deleteMessage')</h4>
                 </div>
 
                 <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                            class="mr-1 fa fa-times"></i> Cancel</button>
+                            class="mr-1 fa fa-times"></i> @lang('site.cancel')</button>
                     <button type="button" wire:click.prevent="deleteSemester" class="btn btn-danger"><i
-                            class="mr-1 fa fa-trash"></i>Delete Semester</button>
+                            class="mr-1 fa fa-trash"></i>@lang('site.delete')</button>
                 </div>
             </div>
         </div>

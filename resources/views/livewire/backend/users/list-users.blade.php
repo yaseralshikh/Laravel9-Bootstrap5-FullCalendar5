@@ -38,7 +38,7 @@
                     <h3 class="card-title">
                         <button wire:click.prevent='addNewUser' class="ml-1 btn btn-sm btn-primary">
                             <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
-                                <span>@lang('site.addUser')</span>
+                                <span>@lang('site.addRecord', ['name' => 'مستخدم'])</span>
                             </i>
                         </button>
 
@@ -60,9 +60,9 @@
                                 <div class="dropdown-divider"></div>
                                 {{-- @if ($selectedRows) --}}
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
-                                    wire:click.prevent="setAllAsActive" href="#">@lang('site.active')</a>
+                                    wire:click.prevent="setAllAsActive" href="#">@lang('site.setActive')</a>
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
-                                    wire:click.prevent="setAllAsInActive" href="#">@lang('site.inActive')</a>
+                                    wire:click.prevent="setAllAsInActive" href="#">@lang('site.setInActive')</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm"
                                     wire:click.prevent="deleteSelectedRows" href="#">@lang('site.deleteSelected')</a>
@@ -85,7 +85,7 @@
                         {{-- search --}}
                         <div class="input-group" style="width: 200px;">
                             <input type="search" wire:model="searchTerm" class="form-control"
-                                placeholder="@lang('site.searchFor')" value="Lorem ipsum">
+                                placeholder="@lang('site.searchFor')" value="">
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-default">
                                     <i class="fa fa-search"></i>
@@ -107,7 +107,8 @@
                         @endrole
 
                         <div>
-                            <label class="flex-wrap">@lang('site.totalUsers') : &nbsp{{ $users->total() }}</label>
+                            <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'المستخدمين']) : &nbsp{{
+                                $users->total() }}</label>
                         </div>
 
                     </div>
@@ -115,7 +116,7 @@
                     @if ($selectedRows)
                     <span class="mb-2 text-success">
                         <i class="fa fa-user" aria-hidden="true"></i>
-                        @lang('site.selected')
+                        selected
                         <span class="text-dark font-weight-bold">{{ count($selectedRows) }}</span> {{
                         Str::plural('user', count($selectedRows)) }}
                         <a class="ml-2 text-gray" href="" wire:click="resetSelectedRows" data-toggle="tooltip"
@@ -249,9 +250,9 @@
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
                             @if ($showEditModal)
-                            <span>@lang('site.updateUser')</span>
+                            <span>@lang('site.updateRecord', ['name' => 'مستخدم'])</span>
                             @else
-                            <span>@lang('site.addUser')</span>
+                            <span>@lang('site.addRecord', ['name' => 'مستخدم'])</span>
                             @endif
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -467,7 +468,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">
-                    <h5>@lang('site.delete')</h5>
+                    <h5>@lang('site.deleteRecord', ['name' => 'مستخدم'])</h5>
                 </div>
 
                 <div class="modal-body">

@@ -241,7 +241,7 @@
                                                     </tr>
                                                 @empty
                                                 <tr>
-                                                    <td colspan="2" class="text-center">No Users found</td>
+                                                    <td colspan="2" class="text-center">@lang('site.noDataFound')</td>
                                                 </tr>
                                                 @endforelse
                                             </tbody>

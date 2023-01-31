@@ -38,21 +38,21 @@
                         <button wire:click.prevent='addNewOffice' class="ml-1 btn btn-sm btn-primary">
                             <i class="mr-2 fa fa-plus-circle"
                                 aria-hidden="true">
-                                <span>Add New Office</span>
+                                <span>@lang('site.addRecord', ['name' => 'مكتب / ادارة'])</span>
                             </i>
                         </button>
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm">Action</button>
+                            <button type="button" class="btn btn-primary btn-sm">@lang('site.action')</button>
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <div class="dropdown-menu" role="menu" style="">
                                 {{-- @if ($selectedRows) --}}
-                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}" wire:click.prevent="setAllAsActive" href="#">Set as Acive</a>
-                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}" wire:click.prevent="setAllAsInActive" href="#">Set as InActive</a>
+                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}" wire:click.prevent="setAllAsActive" href="#">@lang('site.setActive')</a>
+                                <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}" wire:click.prevent="setAllAsInActive" href="#">@lang('site.setInActive')</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">Delete Selected</a>
+                                <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">@lang('site.deleteSelected')</a>
                                 {{-- @endif --}}
                             </div>
                         </div>
@@ -71,7 +71,7 @@
                     <div class="form-group d-flex justify-content-between align-items-center">
                         {{-- search --}}
                         <div class="input-group" style="width: 200px;">
-                            <input type="search" wire:model="searchTerm" class="form-control" placeholder="Search for..." value="Lorem ipsum">
+                            <input dir="rtl" type="search" wire:model="searchTerm" class="form-control" placeholder="@lang('site.searchFor')..." value="">
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-default">
                                     <i class="fa fa-search"></i>
@@ -85,7 +85,7 @@
                             <label class="custom-control-label" for="customSwitch1">InActive Offices</label>
                         </div> --}}
 
-                        <label class="flex-wrap">Total Offices : &nbsp{{ $offices->total() }}</label>
+                        <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'المكاتب / الإدارات']) : &nbsp{{ $offices->total() }}</label>
 
                     </div>
 
@@ -110,7 +110,7 @@
                                     </th>
                                     <th class="align-middle">#</th>
                                     <th class="align-middle">
-                                        @lang('site.name')
+                                        @lang('site.office')
                                         <span wire:click="sortBy('title')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'title' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                             <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'title' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
@@ -119,16 +119,16 @@
                                     <th class="align-middle">
                                         @lang('site.director')
                                     </th>
-                                    <th class="align-middle" scope="col">director signature</th>
-                                    <th class="align-middle" scope="col">assistant signature</th>
+                                    <th class="align-middle" scope="col">@lang('site.directorSignature')</th>
+                                    <th class="align-middle" scope="col">@lang('site.assistantSignature')</th>
                                     <th class="align-middle">
-                                        Status
+                                        @lang('site.status')
                                         <span wire:click="sortBy('status')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                             <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                         </span>
                                     </th class="align-middle">
-                                    <th colspan="2">actions</th>
+                                    <th colspan="2">@lang('site.action')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -174,7 +174,7 @@
 
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center">No Offices found</td>
+                                        <td colspan="8" class="text-center">@lang('site.noDataFound')</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -201,9 +201,9 @@
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
                             @if ($showEditModal)
-                                <span>Edit Office</span>
+                                <span>@lang('site.updateRecord', ['name' => 'مكتب / إدارة'])</span>
                             @else
-                                <span>Add New Office</span>
+                                <span>@lang('site.addRecord', ['name' => 'مكتب / إدارة'])</span>
                             @endif
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -215,8 +215,8 @@
                             <div class="col-12">
                                 <!-- Modal Office Name -->
                                 <div class="form-group">
-                                    <label for="title">@lang('site.name')</label>
-                                    <input type="text" wire:model.defer="data.name" class="form-control @error('title') is-invalid @enderror" id="title" aria-describedby="titleHelp" placeholder="Enter title">
+                                    <label for="title">@lang('site.office')</label>
+                                    <input type="text" wire:model.defer="data.name" class="form-control @error('title') is-invalid @enderror" id="title" aria-describedby="titleHelp" dir="rtl" placeholder="@lang('site.enterFieldName', ['name' => 'اسم المكتب / الإدارة'])">
                                     @error('title')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -226,8 +226,8 @@
 
                                 <!-- Modal director -->
                                 <div class="form-group">
-                                    <label for="director">@lang('director')</label>
-                                    <input type="text" wire:model.defer="data.director" class="form-control @error('director') is-invalid @enderror" id="director" aria-describedby="directorHelp" placeholder="Enter director name">
+                                    <label for="director">@lang('site.director')</label>
+                                    <input type="text" wire:model.defer="data.director" class="form-control @error('director') is-invalid @enderror" id="director" aria-describedby="directorHelp" dir="rtl" placeholder="@lang('site.enterFieldName', ['name' => 'اسم المدير'])">
                                     @error('director')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -299,12 +299,12 @@
                     </div>
 
                     <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> @lang('site.cancel')</button>
                         <button type="submit" class="btn btn-primary"><i class="mr-1 fa fa-save"></i>
                             @if ($showEditModal)
-                                <span>Save Changes</span>
+                                <span>@lang('site.saveChanges')</span>
                             @else
-                            <span>Save</span>
+                            <span>@lang('site.save')</span>
                             @endif
                         </button>
                     </div>
@@ -319,16 +319,16 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">
-                    <h5>Delete Office</h5>
+                    <h5>@lang('site.deleteRecord', ['name' => 'مكتب / إدارة'])</h5>
                 </div>
 
                 <div class="modal-body">
-                    <h4>Are you sure you want to delete this office?</h4>
+                    <h4>@lang('site.deleteMessage')</h4>
                 </div>
 
                 <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Cancel</button>
-                    <button type="button" wire:click.prevent="deleteOffice" class="btn btn-danger"><i class="mr-1 fa fa-trash"></i>Delete Office</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> @lang('site.cancel')</button>
+                    <button type="button" wire:click.prevent="deleteOffice" class="btn btn-danger"><i class="mr-1 fa fa-trash"></i>@lang('site.delete')</button>
                 </div>
             </div>
         </div>

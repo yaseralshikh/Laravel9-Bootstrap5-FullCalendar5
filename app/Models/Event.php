@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Lang;
 
 class Event extends Model
 {
@@ -25,7 +26,7 @@ class Event extends Model
 
     public function status(): string
     {
-        return $this->status ? 'Active' : 'Inactive';
+        return $this->status ? __('site.active') : __('site.inActive');
     }
 
     public function user(): BelongsTo

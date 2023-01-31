@@ -15,13 +15,13 @@
         <div class="container-fluid">
             <div class="mb-2 row">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Levels</h1>
+                    <h1 class="m-0">@lang('site.levels')</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">@lang('site.dashboard')</a>
                         </li>
-                        <li class="breadcrumb-item active">Levels</li>
+                        <li class="breadcrumb-item active">@lang('site.levels')</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -38,12 +38,12 @@
                     <h3 class="card-title">
                         <button wire:click.prevent='addNewLevel' class="ml-1 btn btn-sm btn-primary">
                             <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
-                                <span>Add New Level</span>
+                                <span>@lang('site.addRecord', ['name' => 'مرحلة دراسية'])</span>
                             </i>
                         </button>
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm">Action</button>
+                            <button type="button" class="btn btn-primary btn-sm">@lang('site.action')</button>
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon"
                                 data-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
@@ -53,15 +53,15 @@
                                     aria-disabled="true">Export to Excel</a> --}}
                                 {{-- <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a>
                                 --}}
-                                <div class="dropdown-divider"></div>
+                                {{-- <div class="dropdown-divider"></div> --}}
                                 {{-- @if ($selectedRows) --}}
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
-                                    wire:click.prevent="setAllAsActive" href="#">Set as Acive</a>
+                                    wire:click.prevent="setAllAsActive" href="#">@lang('site.setActive')</a>
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
-                                    wire:click.prevent="setAllAsInActive" href="#">Set as InActive</a>
+                                    wire:click.prevent="setAllAsInActive" href="#">@lang('site.setInActive')</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm"
-                                    wire:click.prevent="deleteSelectedRows" href="#">Delete Selected</a>
+                                    wire:click.prevent="deleteSelectedRows" href="#">@lang('site.deleteSelected')</a>
                                 {{-- @endif --}}
                             </div>
                         </div>
@@ -81,8 +81,8 @@
                         <div class="form-group ">
                             {{-- search --}}
                             <div class="input-group" style="width: 200px;">
-                                <input type="search" wire:model="searchTerm" class="form-control"
-                                    placeholder="Search for..." value="Lorem ipsum">
+                                <input dir="rtl" type="search" wire:model="searchTerm" class="form-control"
+                                    placeholder="@lang('site.searchFor')..." value="">
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-default">
                                         <i class="fa fa-search"></i>
@@ -91,7 +91,8 @@
                             </div>
                         </div>
 
-                        <label class="flex-wrap">Total Levels : &nbsp{{ $levels->total() }}</label>
+                        <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'المراحل']) : &nbsp{{
+                            $levels->total() }}</label>
 
                     </div>
 
@@ -120,7 +121,7 @@
                                     </th>
                                     <th>#</th>
                                     <th>
-                                        Level Title
+                                        @lang('site.level')
                                         <span wire:click="sortBy('name')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up"
@@ -130,7 +131,7 @@
                                         </span>
                                     </th>
                                     <th>
-                                        Status
+                                        @lang('site.status')
                                         <span wire:click="sortBy('status')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up"
@@ -139,7 +140,7 @@
                                                 style="color : {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                         </span>
                                     </th>
-                                    <th colspan="2">actions</th>
+                                    <th colspan="2">@lang('site.action')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -183,7 +184,7 @@
 
                                 @empty
                                 <tr>
-                                    <td colspan="8" class="text-center">No Levels found</td>
+                                    <td colspan="8" class="text-center">@lang('site.noDataFound')</td>
                                 </tr>
                                 @endforelse
                             </tbody>
@@ -218,9 +219,9 @@
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
                             @if ($showEditModal)
-                            <span>Edit Level</span>
+                            <span>@lang('site.updateRecord', ['name' => 'مرحلة'])</span>
                             @else
-                            <span>Add New Level</span>
+                            <span>@lang('site.addRecord', ['name' => 'مرحلة'])</span>
                             @endif
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -232,12 +233,11 @@
                             <div class="col-12">
 
                                 <!-- Modal Level Full Name -->
-
-                                <div class="form-group">
-                                    <label for="name">Level title</label>
+                                <div dir="rtl" class="form-group">
                                     <input type="text" tabindex="1" wire:model.defer="data.name"
                                         class="form-control @error('name') is-invalid @enderror" id="name"
-                                        aria-describedby="nameHelp" placeholder="Enter full name">
+                                        aria-describedby="nameHelp"
+                                        placeholder="@lang('site.enterFieldName', ['name' => 'اسم المرحلة'])">
                                     @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -250,12 +250,12 @@
 
                     <div class="modal-footer bg-light">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                class="mr-1 fa fa-times"></i> Cancel</button>
+                                class="mr-1 fa fa-times"></i> @lang('site.cancel')</button>
                         <button type="submit" class="btn btn-primary"><i class="mr-1 fa fa-save"></i>
                             @if ($showEditModal)
-                            <span>Save Changes</span>
+                            <span>@lang('site.saveChanges')</span>
                             @else
-                            <span>Save</span>
+                            <span>@lang('site.save')</span>
                             @endif
                         </button>
                     </div>
@@ -271,18 +271,18 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">
-                    <h5>Delete Level</h5>
+                    <h5>@lang('site.deleteRecord', ['name' => 'مرحلة'])</h5>
                 </div>
 
                 <div class="modal-body">
-                    <h4>Are you sure you want to delete this level?</h4>
+                    <h4>@lang('site.deleteMessage')</h4>
                 </div>
 
                 <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                            class="mr-1 fa fa-times"></i> Cancel</button>
+                            class="mr-1 fa fa-times"></i> @lang('site.cancel')</button>
                     <button type="button" wire:click.prevent="deleteLevel" class="btn btn-danger"><i
-                            class="mr-1 fa fa-trash"></i>Delete Level</button>
+                            class="mr-1 fa fa-trash"></i>@lang('site.delete')</button>
                 </div>
             </div>
         </div>
