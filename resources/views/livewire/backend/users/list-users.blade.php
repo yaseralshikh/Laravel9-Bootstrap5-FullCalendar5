@@ -98,7 +98,7 @@
                         <div>
                             <select dir="rtl" name="office_id" wire:model="byOffice"
                                 class="form-control form-control-sm">
-                                <option value="" selected>@lang('site.choise', ['name' => 'التخصص'])</option>
+                                <option value="" selected>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
                                 @foreach ($offices as $office)
                                 <option value="{{ $office->id }}">{{ $office->name }}</option>
                                 @endforeach

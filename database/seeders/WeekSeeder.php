@@ -83,12 +83,13 @@ class WeekSeeder extends Seeder
             ],
         ];
 
-        foreach ($weeks as $week) {
+        foreach ($weeks as $index => $week) {
             Week::create([
                 'title'         => $week['title'],
                 'start'         => $week['start'] ,
                 'end'           => $week['end'] ,
                 'semester_id'   => 2,
+                'active'        => $index == 9 ? 1 : 0 ,
                 'status'        => 1
             ]);
         }

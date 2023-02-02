@@ -94,13 +94,24 @@
                         <div>
                             <select dir="rtl" name="office_id" wire:model="byOffice"
                                 class="form-control form-control-sm">
-                                <option value="" selected>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
+                                <option value="" hidden>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
                                 @foreach ($offices as $office)
                                 <option value="{{ $office->id }}">{{ $office->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         @endrole
+
+                        {{-- offices Filter --}}
+                        <div>
+                            <select dir="rtl" name="level_id" wire:model="byLevel"
+                                class="form-control form-control-sm">
+                                <option value="" selected>@lang('site.choise', ['name' => 'المرحلة'])</option>
+                                @foreach ($levels as $level)
+                                <option value="{{ $level->id }}">{{ $level->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <div>
                             <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'المهام']) : &nbsp{{ $tasks->total() }}</label>

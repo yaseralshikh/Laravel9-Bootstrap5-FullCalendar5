@@ -167,6 +167,20 @@
                         </p>
                     </a>
                 </li>
+
+                <li class="nav-header text-secondary">
+                    <h6>@lang('site.logViewerSection')</h6>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.log-viewer') }}"
+                        class="nav-link {{ request()->is('admin/log-viewer') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-graduation-cap"></i>
+                        <p>
+                            @lang('site.logViewer')
+                        </p>
+                    </a>
+                </li>
                 @endrole
             </ul>
         </nav>

@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -26,6 +27,16 @@ class Handler extends ExceptionHandler
         'password',
         'password_confirmation',
     ];
+
+    /**
+     * Report the exception.
+     *
+     * @return bool|null
+     */
+    public function report(Throwable $e)
+    {
+        Log::channel('slack')->critical($e);
+    }
 
     /**
      * Register the exception handling callbacks for the application.

@@ -33,12 +33,13 @@ class SemesterSeeder extends Seeder
             ],
         ];
 
-        foreach ($semesters as $semester) {
+        foreach ($semesters as $index => $semester) {
             Semester::create([
                 'title'         => $semester['title'],
                 'start'         => $semester['start'] ,
                 'end'           => $semester['end'] ,
                 'school_year'   => 1444,
+                'active'        => $index == 1 ? 1 : 0 ,
                 'status'        => 1
             ]);
         }

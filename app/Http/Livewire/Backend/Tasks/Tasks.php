@@ -24,6 +24,7 @@ class Tasks extends Component
     protected $queryString = ['searchTerm' => ['except' => '']];
 
     public $byOffice = null; //filter by office_id
+    public $byLevel = null; //filter by Level_id
 
     public $sortColumnName = 'name';
     public $sortDirection = 'asc';
@@ -280,8 +281,13 @@ class Tasks extends Component
 	{
         $searchString = $this->searchTerm;
         $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+        $byLevel = $this->byLevel;
 
         $tasks = Task::where('office_id', $byOffice)
+            ->when($byLevel, function ($query) use($byLevel) {
+                $query->where('level_id', $byLevel);
+            })
+            //->where('level_id', $byLevel)
             ->search(trim(($searchString)))
             ->orderBy('level_id','ASC')
             ->orderBy($this->sortColumnName, $this->sortDirection)
