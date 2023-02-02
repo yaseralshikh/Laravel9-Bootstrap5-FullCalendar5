@@ -44,7 +44,7 @@ class Semesters extends Component
             Semester::whereNotIn('id' ,[$semesterId])->update(['active' => 0]);
         }
 
-        $this->alert('success', 'Semester active updated successfully.', [
+        $this->alert('success', __('site.semesterActiveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -87,7 +87,7 @@ class Semesters extends Component
 	{
 		Semester::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
-        $this->alert('success', 'Semesters set As Active successfully.', [
+        $this->alert('success', __('site.activeSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -105,7 +105,7 @@ class Semesters extends Component
 	{
 		Semester::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
-        $this->alert('success', 'Semesters set As Inactive successfully.', [
+        $this->alert('success', __('site.inActiveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -124,7 +124,7 @@ class Semesters extends Component
         // delete selected Semesters from database
         Semester::whereIn('id', $this->selectedRows)->delete();
 
-        $this->alert('success', 'All selected Semesters got deleted.', [
+        $this->alert('success', __('site.deleteSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -187,7 +187,7 @@ class Semesters extends Component
 
         $this->dispatchBrowserEvent('hide-form');
 
-        $this->alert('success', 'Semester Added Successfully.', [
+        $this->alert('success', __('site.saveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -230,7 +230,7 @@ class Semesters extends Component
 
             $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', 'Semester updated Successfully.', [
+            $this->alert('success', __('site.updateSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -272,7 +272,7 @@ class Semesters extends Component
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
-            $this->alert('success', 'Semester Deleted Successfully.', [
+            $this->alert('success', __('site.deleteSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,

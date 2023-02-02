@@ -61,7 +61,7 @@ class ListUsers extends Component
 
         $user->roles()->sync($role);
 
-        $this->alert('success', 'User role updated.', [
+        $this->alert('success', __('site.updateRoleSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  1500,
             'toast'  =>  true,
@@ -102,7 +102,7 @@ class ListUsers extends Component
 	{
 		User::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
-        $this->alert('success', 'Users set As Active successfully.', [
+        $this->alert('success', __('site.activeSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -120,7 +120,7 @@ class ListUsers extends Component
 	{
 		User::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
-        $this->alert('success', 'Users set As Inactive successfully.', [
+        $this->alert('success', __('site.inActiveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -143,7 +143,7 @@ class ListUsers extends Component
         // delete selected users from database
 		User::whereIn('id', $this->selectedRows)->delete();
 
-        $this->alert('success', 'All selected users got deleted.', [
+        $this->alert('success', __('site.deleteSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -225,7 +225,7 @@ class ListUsers extends Component
 
         $this->dispatchBrowserEvent('hide-form');
 
-        $this->alert('success', 'User Added Successfully.', [
+        $this->alert('success', __('site.saveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -273,7 +273,7 @@ class ListUsers extends Component
 
             $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', 'User updated Successfully.', [
+            $this->alert('success', __('site.updateSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -342,7 +342,7 @@ class ListUsers extends Component
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
-            $this->alert('success', 'User Deleted Successfully.', [
+            $this->alert('success', __('site.deleteSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -419,7 +419,7 @@ class ListUsers extends Component
 
             // end method
 
-            $this->alert('success', 'Users Added Successfully.', [
+            $this->alert('success', __('site.userAddedSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,

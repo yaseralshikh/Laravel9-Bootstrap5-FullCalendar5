@@ -68,9 +68,9 @@
                                 <div class="dropdown-divider"></div>
                                 {{-- @if ($selectedRows) --}}
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
-                                    wire:click.prevent="setAllAsActive" href="#">@lang('site.eventsAcive')</a>
+                                    wire:click.prevent="setAllAsActive" href="#">@lang('site.eventsActive')</a>
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
-                                    wire:click.prevent="setAllAsInActive" href="#">@lang('site.eventsInAcive')</a>
+                                    wire:click.prevent="setAllAsInActive" href="#">@lang('site.eventsInActive')</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item {{ $selectedRows ? 'text-danger' : 'disabled-link' }}  delete-confirm"
                                     wire:click.prevent="deleteSelectedRows" href="#">@lang('site.deleteSelected')</a>
@@ -472,7 +472,14 @@
                                         class="form-control  @error('title') is-invalid @enderror" id="title">
                                         <option value="" selected>@lang('site.choise', ['name' => 'المهمة'])</option>
                                         @foreach ($tasks as $task)
-                                            <option value="{{ $task->name }}">{{ $task->name }}</option>
+                                            <option value="{{ $task->name }}" style="
+                                                {{ $task->level_id == 1 ? 'background:#FBEFF2;' : '' }}
+                                                {{ $task->level_id == 2 ? 'background:#E6F8E0;' : '' }}
+                                                {{ $task->level_id == 3 ? 'background:#F7F8E0;' : '' }}
+                                                {{ $task->level_id == 4 ? 'background:#F8ECE0;' : '' }}
+                                                {{ $task->level_id == 5 ? 'background:#E0F2F7;' : '' }}">
+                                                {{ $task->name }}
+                                            </option>
                                         @endforeach
                                     </select>
 

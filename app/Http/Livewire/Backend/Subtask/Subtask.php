@@ -68,7 +68,7 @@ class Subtask extends Component
 	{
 		ModelsSubtask::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
-        $this->alert('success', 'Subtasks set As Active successfully.', [
+        $this->alert('success', __('site.activeSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -86,7 +86,7 @@ class Subtask extends Component
 	{
 		ModelsSubtask::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
-        $this->alert('success', 'Subtasks set As Inactive successfully.', [
+        $this->alert('success', __('site.inActiveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -105,7 +105,7 @@ class Subtask extends Component
         // delete selected Subtasks from database
         ModelsSubtask::whereIn('id', $this->selectedRows)->delete();
 
-        $this->alert('success', 'All selected Subtasks got deleted.', [
+        $this->alert('success', __('site.deleteSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -173,7 +173,7 @@ class Subtask extends Component
 
         $this->dispatchBrowserEvent('hide-form');
 
-        $this->alert('success', 'Subtask Added Successfully.', [
+        $this->alert('success', __('site.saveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -213,7 +213,7 @@ class Subtask extends Component
 
             $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', 'Subtask updated Successfully.', [
+            $this->alert('success', __('site.updateSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -255,7 +255,7 @@ class Subtask extends Component
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
-            $this->alert('success', 'Subtask Deleted Successfully.', [
+            $this->alert('success', __('site.deleteSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -282,7 +282,7 @@ class Subtask extends Component
             ModelsSubtask::find($item['value'])->update(['position' => $item['order']]);
         }
 
-        $this->alert('success', 'Subtask position updated Successfully.', [
+        $this->alert('success', __('site.updateSubtaskPositionSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,

@@ -46,7 +46,7 @@ class Weeks extends Component
             Week::whereNotIn('id' ,[$weekId])->update(['active' => 0]);
         }
 
-        $this->alert('success', 'Week active updated successfully.', [
+        $this->alert('success', __('site.weekActiveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -89,7 +89,7 @@ class Weeks extends Component
 	{
 		Week::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
-        $this->alert('success', 'Weeks set As Active successfully.', [
+        $this->alert('success', __('site.activeSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -107,7 +107,7 @@ class Weeks extends Component
 	{
 		Week::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
-        $this->alert('success', 'Weeks set As Inactive successfully.', [
+        $this->alert('success', __('site.inActiveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -126,7 +126,7 @@ class Weeks extends Component
         // delete selected users from database
 		Week::whereIn('id', $this->selectedRows)->delete();
 
-        $this->alert('success', 'All selected weeks got deleted.', [
+        $this->alert('success', __('site.deleteSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -190,7 +190,7 @@ class Weeks extends Component
 
         $this->dispatchBrowserEvent('hide-form');
 
-        $this->alert('success', 'Week Added Successfully.', [
+        $this->alert('success', __('site.saveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -231,7 +231,7 @@ class Weeks extends Component
 
             $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', 'Week updated Successfully.', [
+            $this->alert('success', __('site.updateSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -273,7 +273,7 @@ class Weeks extends Component
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
-            $this->alert('success', 'Week Deleted Successfully.', [
+            $this->alert('success', __('site.deleteSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,

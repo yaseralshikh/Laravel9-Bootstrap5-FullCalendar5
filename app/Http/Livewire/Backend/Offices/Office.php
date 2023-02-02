@@ -73,7 +73,7 @@ class Office extends Component
 	{
 		ModelsOffice::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
-        $this->alert('success', 'Offices set As Active successfully.', [
+        $this->alert('success', __('site.activeSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -91,7 +91,7 @@ class Office extends Component
 	{
 		ModelsOffice::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
-        $this->alert('success', 'Offices set As Inactive successfully.', [
+        $this->alert('success', __('site.inActiveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -127,7 +127,7 @@ class Office extends Component
             // delete selected Offices from database
             ModelsOffice::whereIn('id', $this->selectedRows)->delete();
 
-            $this->alert('success', 'All selected Offices got deleted.', [
+            $this->alert('success', __('site.deleteSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -197,7 +197,7 @@ class Office extends Component
 
         $this->dispatchBrowserEvent('hide-form');
 
-        $this->alert('success', 'Office Added Successfully.', [
+        $this->alert('success', __('site.saveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -254,7 +254,7 @@ class Office extends Component
 
             $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', 'Office updated Successfully.', [
+            $this->alert('success', __('site.updateSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -265,7 +265,7 @@ class Office extends Component
 
         } catch (\Throwable $th) {
             $message = $this->alert('error', $th->getMessage(), [
-                'position'  =>  'top-end',
+                'position'  =>  'center',
                 'timer'  =>  3000,
                 'toast'  =>  true,
                 'text'  =>  null,
@@ -291,7 +291,7 @@ class Office extends Component
 
                 $this->director_signature_image = null;
 
-                $this->alert('success', 'director signature deleted Successfully.', [
+                $this->alert('success', __('site.deleteSuccessfully'), [
                     'position'  =>  'center',
                     'timer'  =>  3000,
                     'toast'  =>  true,
@@ -329,7 +329,7 @@ class Office extends Component
 
                 $this->assistant_signature_image = null;
 
-                $this->alert('success', 'assistant signature deleted Successfully.', [
+                $this->alert('success', __('site.deleteSuccessfully'), [
                     'position'  =>  'center',
                     'timer'  =>  3000,
                     'toast'  =>  true,
@@ -383,7 +383,7 @@ class Office extends Component
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
-            $this->alert('success', 'Office Deleted Successfully.', [
+            $this->alert('success', __('site.deleteSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,

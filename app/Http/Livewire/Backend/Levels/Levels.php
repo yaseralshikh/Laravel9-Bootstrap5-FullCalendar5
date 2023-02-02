@@ -65,7 +65,7 @@ class Levels extends Component
 	{
 		Level::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
-        $this->alert('success', 'Levels set As Active successfully.', [
+        $this->alert('success', __('site.activeSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -83,7 +83,7 @@ class Levels extends Component
 	{
 		Level::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
-        $this->alert('success', 'Levels set As Inactive successfully.', [
+        $this->alert('success', __('site.inActiveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -102,7 +102,7 @@ class Levels extends Component
         // delete selected Levels from database
         Level::whereIn('id', $this->selectedRows)->delete();
 
-        $this->alert('success', 'All selected Levels got deleted.', [
+        $this->alert('success', __('site.deleteSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -163,7 +163,7 @@ class Levels extends Component
 
         $this->dispatchBrowserEvent('hide-form');
 
-        $this->alert('success', 'Level Added Successfully.', [
+        $this->alert('success', __('site.saveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -201,7 +201,7 @@ class Levels extends Component
 
             $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', 'Level updated Successfully.', [
+            $this->alert('success', __('site.updateSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -243,7 +243,7 @@ class Levels extends Component
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
-            $this->alert('success', 'Level Deleted Successfully.', [
+            $this->alert('success', __('site.deleteSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,

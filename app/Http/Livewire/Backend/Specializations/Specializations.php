@@ -65,7 +65,7 @@ class Specializations extends Component
 	{
 		Specialization::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
-        $this->alert('success', 'Specializations set As Active successfully.', [
+        $this->alert('success', __('site.activeSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -83,7 +83,7 @@ class Specializations extends Component
 	{
 		Specialization::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
-        $this->alert('success', 'Specializations set As Inactive successfully.', [
+        $this->alert('success', __('site.inActiveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -102,7 +102,7 @@ class Specializations extends Component
         // delete selected Specializations from database
         Specialization::whereIn('id', $this->selectedRows)->delete();
 
-        $this->alert('success', 'All selected Specializations got deleted.', [
+        $this->alert('success', __('site.deleteSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -163,7 +163,7 @@ class Specializations extends Component
 
         $this->dispatchBrowserEvent('hide-form');
 
-        $this->alert('success', 'Specialization Added Successfully.', [
+        $this->alert('success', __('site.saveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -201,7 +201,7 @@ class Specializations extends Component
 
             $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', 'Specialization updated Successfully.', [
+            $this->alert('success', __('site.updateSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -243,7 +243,7 @@ class Specializations extends Component
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
-            $this->alert('success', 'Specialization Deleted Successfully.', [
+            $this->alert('success', __('site.deleteSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,

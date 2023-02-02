@@ -94,7 +94,7 @@ class ListEvents extends Component
 	{
 		Event::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
-        $this->alert('success', 'Events set As Active successfully.', [
+        $this->alert('success', __('site.eventActiveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -112,7 +112,7 @@ class ListEvents extends Component
 	{
 		Event::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
-        $this->alert('success', 'Events set As Inactive successfully.', [
+        $this->alert('success', __('site.eventInActiveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -131,7 +131,7 @@ class ListEvents extends Component
         // delete selected events from database
 		Event::whereIn('id', $this->selectedRows)->delete();
 
-        $this->alert('success', 'All selected events got deleted.', [
+        $this->alert('success', __('site.deleteSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -234,7 +234,7 @@ class ListEvents extends Component
 
             $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', 'Event Added Successfully.', [
+            $this->alert('success', __('site.saveSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -312,7 +312,7 @@ class ListEvents extends Component
 
             $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', 'Event updated Successfully.', [
+            $this->alert('success', __('site.updateSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -354,7 +354,7 @@ class ListEvents extends Component
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
-            $this->alert('success', 'Event Deleted Successfully.', [
+            $this->alert('success', __('site.deleteSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -393,7 +393,7 @@ class ListEvents extends Component
                     $byOffice),
                     'events.xlsx');
             } else {
-                $this->alert('error', 'Select Week or office befor that !', [
+                $this->alert('error', __('site.selectWeek'), [
                     'position'  =>  'center',
                     'timer'  =>  2000,
                     'toast'  =>  true,
@@ -403,7 +403,7 @@ class ListEvents extends Component
                 ]);
             }
         } else {
-            $this->alert('error', 'Select Status befor that !', [
+            $this->alert('error', __('site.selectStatus'), [
                 'position'  =>  'center',
                 'timer'  =>  2000,
                 'toast'  =>  true,
@@ -467,7 +467,7 @@ class ListEvents extends Component
                 $this->items = [];
 
             } else {
-                $this->alert('success', 'All User has Events', [
+                $this->alert('success', __('site.allUsersHasEvents'), [
                     'position'  =>  'center',
                     'timer'  =>  3000,
                     'toast'  =>  true,
@@ -478,7 +478,7 @@ class ListEvents extends Component
             }
 
         } else {
-            $this->alert('error', 'Select Week or office befor that !', [
+            $this->alert('error', __('site.selectWeek'), [
                 'position'  =>  'center',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -514,7 +514,7 @@ class ListEvents extends Component
                     return $pdf->stream('events');
                 },'events.pdf');
             } else {
-                $this->alert('error', 'Thay are no events to do that !', [
+                $this->alert('error', __('site.noDataForExport'), [
                     'position'  =>  'center',
                     'timer'  =>  3000,
                     'toast'  =>  true,
@@ -525,7 +525,7 @@ class ListEvents extends Component
             }
 
         } else {
-            $this->alert('error', 'Select Week befor that !', [
+            $this->alert('error', __('site.selectWeek'), [
                 'position'  =>  'center',
                 'timer'  =>  3000,
                 'toast'  =>  true,

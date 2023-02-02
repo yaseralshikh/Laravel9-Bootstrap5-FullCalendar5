@@ -53,7 +53,7 @@
                                     aria-disabled="true">Export to Excel</a> --}}
                                 {{-- <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a>
                                 --}}
-                                <div class="dropdown-divider"></div>
+                                {{-- <div class="dropdown-divider"></div> --}}
                                 {{-- @if ($selectedRows) --}}
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
                                     wire:click.prevent="setAllAsActive" href="#">@lang('site.setActive')</a>

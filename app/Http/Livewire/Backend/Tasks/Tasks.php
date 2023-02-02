@@ -69,7 +69,7 @@ class Tasks extends Component
 	{
 		Task::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
-        $this->alert('success', 'Tasks set As Active successfully.', [
+        $this->alert('success', __('site.activeSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -87,7 +87,7 @@ class Tasks extends Component
 	{
 		Task::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
-        $this->alert('success', 'Tasks set As Inactive successfully.', [
+        $this->alert('success', __('site.inActiveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -106,7 +106,7 @@ class Tasks extends Component
         // delete selected users from database
 		Task::whereIn('id', $this->selectedRows)->delete();
 
-        $this->alert('success', 'All selected tasks got deleted.', [
+        $this->alert('success', __('site.deleteSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -173,7 +173,7 @@ class Tasks extends Component
 
         $this->dispatchBrowserEvent('hide-form');
 
-        $this->alert('success', 'Task Added Successfully.', [
+        $this->alert('success', __('site.saveSuccessfully'), [
             'position'  =>  'top-end',
             'timer'  =>  3000,
             'toast'  =>  true,
@@ -213,7 +213,7 @@ class Tasks extends Component
 
             $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', 'Task updated Successfully.', [
+            $this->alert('success', __('site.updateSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
@@ -255,7 +255,7 @@ class Tasks extends Component
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
-            $this->alert('success', 'Task Deleted Successfully.', [
+            $this->alert('success', __('site.deleteSuccessfully'), [
                 'position'  =>  'top-end',
                 'timer'  =>  3000,
                 'toast'  =>  true,
