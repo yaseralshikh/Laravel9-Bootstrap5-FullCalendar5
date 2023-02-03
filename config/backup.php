@@ -175,12 +175,12 @@ return [
         ],
 
         'slack' => [
-            'webhook_url' => 'https://hooks.slack.com/services/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',
+            'webhook_url' => 'https://hooks.slack.com/services/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',
 
             /*
              * If this is set to null the default channel of the webhook will be used.
              */
-            'channel' => 'SupervisorWeeklyPlan',
+            'channel' => '#supervisor-weekly-plan',
 
             'username' => 'yaser95',
 

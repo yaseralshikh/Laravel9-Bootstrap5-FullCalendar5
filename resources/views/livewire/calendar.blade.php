@@ -45,7 +45,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="createModalLabel">@lang('site.addEvent')</h1>
+                    <h1 class="modal-title fs-5" id="createModalLabel">@lang('site.addRecord', ['name' => 'خطة'])</h1>
                     {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     --}}
                 </div>
@@ -161,7 +161,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="editModalLabel">@lang('site.updateEvent')</h1>
+                    <h1 class="modal-title fs-5" id="editModalLabel">@lang('site.updateRecord', ['name' => 'خطة'])</h1>
                     {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     --}}
                 </div>
@@ -246,10 +246,10 @@
                             <div>
                                 <button type="button" class="btn btn-secondary" wire:click="resetErrorMsg"
                                     data-bs-dismiss="modal">@lang('site.cancel')</button>
-                                <button class="btn btn-primary">@lang('site.updateEvent')</button>
+                                <button class="btn btn-primary">@lang('site.update')</button>
                             </div>
                             <button class="btn btn-danger"
-                                wire:click.prevent='delete'>@lang('site.deleteEvent')</button>
+                                wire:click.prevent='delete'>@lang('site.delete')</button>
                         </div>
                     </form>
                 </div>

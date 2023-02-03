@@ -62,3 +62,11 @@ https://github.com/mccarlosen/laravel-mpdf
 to fix pdf problem :
 
 composer require psr/log ^2.0
+
+
+------------------------------
+storage  2 steps :
+
+rm /home/u660868491/domains/sweeklyplan.com/public_html/storage/public
+
+ln -s /home/u660868491/domains/sweeklyplan.com/supervisor_weekly_plan/storage/app/public /home/u660868491/domains/sweeklyplan.com/public_html/storage

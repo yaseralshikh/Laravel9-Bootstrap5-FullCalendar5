@@ -1,8 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Livewire\Backend\Dashboard;
+use App\Http\Livewire\Backend\LogViewer;
 use App\Http\Livewire\Backend\Tasks\Tasks;
 use App\Http\Livewire\Backend\Weeks\Weeks;
 use App\Http\Livewire\Backend\Levels\Levels;
@@ -10,7 +12,6 @@ use App\Http\Livewire\Backend\Offices\Office;
 use App\Http\Livewire\Backend\Subtask\Subtask;
 use App\Http\Livewire\Backend\Users\ListUsers;
 use App\Http\Livewire\Backend\Events\ListEvents;
-use App\Http\Livewire\Backend\LogViewer;
 use App\Http\Livewire\Backend\Semesters\Semesters;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 use App\Http\Livewire\Backend\Specializations\Specializations;
