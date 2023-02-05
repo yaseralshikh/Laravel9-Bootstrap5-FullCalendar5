@@ -328,7 +328,8 @@
                     // },
                     xAxis: {
                         categories:  title,
-                        crosshair: true
+                        crosshair: true,
+                        useHTML: true,
                     },
                     yAxis: {
                         min: 0,
@@ -348,7 +349,8 @@
                         column: {
                             pointPadding: 0.2,
                             borderWidth: 0
-                        }
+                        },
+                        useHTML: true,
                     },
                     series: [{
                         name: 'زيارات المشرفين',

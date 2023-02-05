@@ -175,14 +175,14 @@ return [
         ],
 
         'slack' => [
-            'webhook_url' => 'https://hooks.slack.com/services/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',
+            'webhook_url' => '',
 
             /*
              * If this is set to null the default channel of the webhook will be used.
              */
-            'channel' => '#supervisor-weekly-plan',
+            'channel' => '',
 
-            'username' => 'yaser95',
+            'username' => '',
 
             'icon' => null,
 
