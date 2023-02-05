@@ -145,7 +145,7 @@ return [
     'userAddedSuccessfully' => 'تم اضافة المستخدمين بنجاح',
     'logViewerSection' => 'قسم مشاكل الموقع',
     'logViewer' => 'مشاكل الموقع',
-    '' => '',
+    'count' => 'المجموع',
     '' => '',
     '' => '',
 ];

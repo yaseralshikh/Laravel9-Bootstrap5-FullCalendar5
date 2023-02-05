@@ -175,7 +175,7 @@ return [
         ],
 
         'slack' => [
-            'webhook_url' => 'https://hooks.slack.com/services/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',
+            'webhook_url' => 'https://hooks.slack.com/services/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',
 
             /*
              * If this is set to null the default channel of the webhook will be used.
@@ -219,15 +219,15 @@ return [
         ],
 
         /*
-        [
-            'name' => 'name of the second app',
-            'disks' => ['local', 's3'],
-            'health_checks' => [
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 5000,
-            ],
-        ],
-        */
+    [
+    'name' => 'name of the second app',
+    'disks' => ['local', 's3'],
+    'health_checks' => [
+    \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,
+    \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 5000,
+    ],
+    ],
+     */
     ],
 
     'cleanup' => [

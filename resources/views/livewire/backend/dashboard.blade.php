@@ -170,24 +170,66 @@
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
                                 </button>
-                                {{-- <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                    <i class="fas fa-times"></i>
-                                </button> --}}
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <div class="shadow rounded p-4 border" style="height: 32rem;">
-                                    <livewire:livewire-column-chart
-                                        key="{{ $columnChartModel->reactiveKey() }}"
-                                        :column-chart-model="$columnChartModel"
-                                    />
+                                <div class="shadow rounded p-4 border" style="height: 28rem;">
+
+                                    <div id="highchart"></div>
+
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- /.card -->
                 </section>
+
+                {{-- <section class="col-lg-12 connectedSortable">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="far fa-chart-bar"></i>
+                                @lang('site.barChart')
+                            </h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body" dir="rtl">
+                            <div class="table-responsive">
+                                <div class="shadow rounded p-4 border">
+                                    <div class="table-responsive">
+                                        <table id="example2"  class="table text-center table-bordered table-hover dataTable dtr-inline" aria-describedby="example2_info">
+                                            <thead class="bg-light">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>@lang('site.name')</th>
+                                                    <th>@lang('site.count')</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse ($chartData as $key => $value)
+                                                    <tr>
+                                                        <td class="bg-light">{{ $loop->iteration }}</td>
+                                                        <td>{{ $key }}</td>
+                                                        <td>{{ $value }}</td>
+                                                    </tr>
+                                                @empty
+                                                <tr>
+                                                    <td colspan="3" class="text-center">@lang('site.noDataFound')</td>
+                                                </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section> --}}
 
                 <!-- users Events plan -->
 
@@ -203,14 +245,14 @@
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
                                 </button>
-                                {{-- <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
                                     <i class="fas fa-times"></i>
-                                </button> --}}
+                                </button>
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive" dir="rtl">
-                                <div class="shadow rounded p-4 border" style="height: 32rem;">
+                                <div class="shadow rounded p-4 border">
                                     <div class="table-responsive">
                                         <table id="example2"  class="table text-center table-bordered table-hover dataTable dtr-inline" aria-describedby="example2_info">
                                             <thead class="bg-light">
@@ -241,7 +283,7 @@
                                                     </tr>
                                                 @empty
                                                 <tr>
-                                                    <td colspan="2" class="text-center">@lang('site.noDataFound')</td>
+                                                    <td colspan="10" class="text-center">@lang('site.noDataFound')</td>
                                                 </tr>
                                                 @endforelse
                                             </tbody>
@@ -260,32 +302,62 @@
     <!-- /.content -->
 
     @section('script')
-        <!-- jQuery UI 1.11.4 -->
-        <script src="{{ asset('backend/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
-        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+        <script src="https://code.highcharts.com/highcharts.js"></script>
         <script>
-            $.widget.bridge('uibutton', $.ui.button)
-        </script>
-        <!-- ChartJS -->
-        <script src="{{ asset('backend/plugins/chart.js/Chart.min.js') }}"></script>
-        <!-- Sparkline -->
-        <script src="{{ asset('backend/plugins/sparklines/sparkline.js') }}"></script>
-        <!-- JQVMap -->
-        <script src="{{ asset('backend/plugins/jqvmap/jquery.vmap.min.js') }}"></script>
-        <script src="{{ asset('backend/plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
-        <!-- jQuery Knob Chart -->
-        <script src="{{ asset('backend/plugins/jquery-knob/jquery.knob.min.js') }}"></script>
-        <!-- daterangepicker -->
-        <script src="{{ asset('backend/plugins/moment/moment.min.js') }}"></script>
-        <script src="{{ asset('backend/plugins/daterangepicker/daterangepicker.js') }}"></script>
-        <!-- Tempusdominus Bootstrap 4 -->
-        <script src="{{ asset('backend/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-        <!-- Summernote -->
-        <script src="{{ asset('backend/plugins/summernote/summernote-bs4.min.js') }}"></script>
-        <!-- overlayScrollbars -->
-        <script src="{{ asset('backend/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
-        <script src="{{ asset('backend/js/pages/dashboard.js') }}"></script>
+            $(function(){
 
+                const data = <?php echo json_encode($chartData); ?>;
+
+                const title=[];
+                const count=[];
+
+                for (const [key, value] of Object.entries(data)) {
+                    title.push(key);
+                    count.push(value);
+                }
+
+                $("#highchart").highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'المهام المنفذة خلال الفصل الدراسي'
+                    },
+                    // subtitle: {
+                    //     text: 'Source: WorldClimate.com'
+                    // },
+                    xAxis: {
+                        categories:  title,
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'عدد المهام'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y: 1f}</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: 'زيارات المشرفين',
+                        data: count
+
+                    }]
+                });
+            });
+        </script>
     @endsection
 </div>
 

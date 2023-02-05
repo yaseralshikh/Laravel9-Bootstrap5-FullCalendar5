@@ -2,16 +2,21 @@
 
 namespace App\Http\Livewire\Backend;
 
-use Livewire\Component;
-use App\Models\Event;
-use App\Models\Semester;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Week;
+use App\Models\Event;
+use Livewire\Component;
+use App\Models\Semester;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Asantibanez\LivewireCharts\Facades\LivewireCharts;
 
 class Dashboard extends Component
 {
+    //public $chartEventsTitle = [];
+    public $chartData = [];
+
     // for chart
     public $items = [];
     public $types;
@@ -40,43 +45,62 @@ class Dashboard extends Component
 
     public function render()
     {
-        $events = Event::where('status', 1)->whereNotIn('title', ['إجازة'])->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->get();
-
-        if ($events) {
-            foreach ($events as $event) {
-                $this->items[] = $event->title;
-            }
-
-            $this->types =$this->items;
-
-            foreach ($this->items as $value) {
-                $this->colors += [
-                    $value => $this->randomHex(),
-                ];
-            }
-
-            $events = Event::whereIn('title', $this->types)->whereStatus(1)->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->get();
-            $columnChartModel = $events->groupBy('title')
-            ->reduce(function ($columnChartModel, $data) {
-                $type = $data->first()->title;
-                $value = $data->count('title');
-
-                return $columnChartModel->addColumn($type, $value, $this->colors[$type]);
-            }, LivewireCharts::columnChartModel()
-                ->setTitle('احصائية خطط الزيارات خلال الفصل الدراسي')
-                ->setAnimated($this->firstRun)
-                ->withOnColumnClickEventName('onColumnClick')
-                ->setLegendVisibility(false)
-                ->setDataLabelsEnabled($this->showDataLabels)
-                ->setOpacity(0.60)
-                //->setColors(['#b01a1b', '#d41b2c', '#ec3c3b', '#f66665'])
-                ->setColumnWidth(70)
-                ->withGrid()
-            );
-
-            $this->firstRun = false;
-        }
         // chart
+        //$events = Event::where('status', 1)->whereNotIn('title', ['إجازة'])->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->pluck('title');
+
+        // if ($events) {
+
+        //     foreach ($events as $value) {
+        //         $this->colors += [
+        //             $value => $this->randomHex(),
+        //         ];
+        //     }
+
+        //     $events = Event::whereIn('title', $events)->whereStatus(1)->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->get();
+        //     $columnChartModel = $events->groupBy('title')
+        //     ->reduce(function ($columnChartModel, $data) {
+        //         $type = $data->first()->title;
+        //         $value = $data->count('title');
+
+        //         return $columnChartModel->addColumn($type, $value, $this->colors[$type]);
+        //     }, LivewireCharts::columnChartModel()
+        //         ->setTitle('احصائية خطط الزيارات خلال الفصل الدراسي')
+        //         ->setAnimated($this->firstRun)
+        //         ->withOnColumnClickEventName('onColumnClick')
+        //         ->setLegendVisibility(false)
+        //         ->setDataLabelsEnabled($this->showDataLabels)
+        //         ->setOpacity(0.60)
+        //         //->setColors(['#b01a1b', '#d41b2c', '#ec3c3b', '#f66665'])
+        //         ->setColumnWidth(70)
+        //         ->withGrid()
+        //     );
+
+        //     $this->firstRun = false;
+        // }
+        // End of chart
+
+        // New Chart
+        //$chartEventsTitle = Event::whereStatus(1)->whereNotIn('title', ['إجازة'])->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->select('title')->pluck('title');
+        $this->chartData = Event::whereStatus(1)->groupBy('title')
+            ->selectRaw('count(*) as count, title')
+            ->pluck('count','title')->toArray();
+
+        $chartData = json_encode($this->chartData);
+
+
+        // foreach($chartEventCount as $title => $count){
+        //     $this->title_event[] = $title;
+        //     $this->count_event[] = $count;
+        // }
+
+
+        // $title_event = $this->title_event;
+        // $count_event = $this->count_event;
+
+        //dd($title_event,$count_event);
+
+
+        // End of Chart
 
         $users = User::query()
         ->where('office_id', auth()->user()->office_id)
@@ -94,7 +118,11 @@ class Dashboard extends Component
         $schoolsCount = Task::where('office_id', auth()->user()->office_id)->whereStatus(1)->whereNotIn('level_id',[4,5])->count();
 
         return view('livewire.backend.dashboard',[
-            'columnChartModel' => $columnChartModel,
+            //'columnChartModel' => $columnChartModel,
+            //'chartEventsTitle' => $chartEventsTitle,
+            'chartData'  => $chartData,
+            // 'title_event'  => $title_event,
+            // 'count_event'  => $count_event,
             'usersCount' => $usersCount,
             'schoolsCount' => $schoolsCount,
             'users' => $users,
