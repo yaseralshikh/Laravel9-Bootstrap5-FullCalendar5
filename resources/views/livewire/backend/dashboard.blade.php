@@ -8,7 +8,8 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        {{-- <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">@lang('site.home')</a></li> --}}
+                        {{-- <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">@lang('site.home')</a>
+                        </li> --}}
                         <li class="breadcrumb-item active">@lang('site.dashboard')</li>
                     </ol>
                 </div><!-- /.col -->
@@ -33,7 +34,8 @@
                         <div class="icon">
                             <i class="ion ion-university"></i>
                         </div>
-                        <a href="{{ route('admin.tasks') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{ route('admin.tasks') }}" class="small-box-footer">@lang('site.moreInfo') <i
+                                class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
@@ -48,7 +50,8 @@
                         <div class="icon">
                             <i class="ion ion-person-add"></i>
                         </div>
-                        <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i
+                                class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
@@ -59,9 +62,11 @@
                             <div class="d-sm-inline-flex">
                                 <h3>{{ $eventsCount }}</h3>
                                 {{-- <div class="form-group pt-1 pl-4">
-                                    <select wire:change="getEventsCount($event.target.value)" id="semesterID" class="form-control form-control-sm">
+                                    <select wire:change="getEventsCount($event.target.value)" id="semesterID"
+                                        class="form-control form-control-sm">
                                         @foreach ($semesters as $semester)
-                                            <option value="{{ $semester->id }}" {{ $semester->active ? 'selected' : '' }}>{{ $semester->title . ' ' . $semester->school_year }}</option>
+                                        <option value="{{ $semester->id }}" {{ $semester->active ? 'selected' : '' }}>{{
+                                            $semester->title . ' ' . $semester->school_year }}</option>
                                         @endforeach
                                     </select>
                                 </div> --}}
@@ -71,7 +76,8 @@
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a href="{{ route('admin.events') }}" class="small-box-footer text-dark">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{ route('admin.events') }}" class="small-box-footer text-dark">@lang('site.moreInfo')
+                            <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
@@ -86,7 +92,8 @@
                         <div class="icon">
                             <i class="ion ion-calendar"></i>
                         </div>
-                        <a href="{{ route('admin.weeks') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{ route('admin.weeks') }}" class="small-box-footer">@lang('site.moreInfo') <i
+                                class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
@@ -102,7 +109,8 @@
                             <i class="ion ion-model-s"></i>
                         </div>
                         <span class="small-box-footer"></span>
-                        {{-- <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a> --}}
+                        {{-- <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i
+                                class="fas fa-arrow-circle-right"></i></a> --}}
                     </div>
                 </div>
                 <!-- ./col -->
@@ -118,7 +126,8 @@
                             <i class="ion ion-home"></i>
                         </div>
                         <span class="small-box-footer"></span>
-                        {{-- <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a> --}}
+                        {{-- <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i
+                                class="fas fa-arrow-circle-right"></i></a> --}}
                     </div>
                 </div>
                 <!-- ./col -->
@@ -134,7 +143,8 @@
                             <i class="ion ion-person-stalker"></i>
                         </div>
                         <span class="small-box-footer"></span>
-                        {{-- <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a> --}}
+                        {{-- <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i
+                                class="fas fa-arrow-circle-right"></i></a> --}}
                     </div>
                 </div>
                 <!-- ./col -->
@@ -150,7 +160,8 @@
                             <i class="ion ion-plane"></i>
                         </div>
                         <span class="small-box-footer"></span>
-                        {{-- <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i class="fas fa-arrow-circle-right"></i></a> --}}
+                        {{-- <a href="{{ route('admin.users') }}" class="small-box-footer">@lang('site.moreInfo') <i
+                                class="fas fa-arrow-circle-right"></i></a> --}}
                     </div>
                 </div>
                 <!-- ./col -->
@@ -202,7 +213,9 @@
                             <div class="table-responsive">
                                 <div class="shadow rounded p-4 border">
                                     <div class="table-responsive">
-                                        <table id="example2"  class="table text-center table-bordered table-hover dataTable dtr-inline" aria-describedby="example2_info">
+                                        <table id="example2"
+                                            class="table text-center table-bordered table-hover dataTable dtr-inline"
+                                            aria-describedby="example2_info">
                                             <thead class="bg-light">
                                                 <tr>
                                                     <th>#</th>
@@ -212,11 +225,11 @@
                                             </thead>
                                             <tbody>
                                                 @forelse ($chartData as $key => $value)
-                                                    <tr>
-                                                        <td class="bg-light">{{ $loop->iteration }}</td>
-                                                        <td>{{ $key }}</td>
-                                                        <td>{{ $value }}</td>
-                                                    </tr>
+                                                <tr>
+                                                    <td class="bg-light">{{ $loop->iteration }}</td>
+                                                    <td>{{ $key }}</td>
+                                                    <td>{{ $value }}</td>
+                                                </tr>
                                                 @empty
                                                 <tr>
                                                     <td colspan="3" class="text-center">@lang('site.noDataFound')</td>
@@ -254,7 +267,9 @@
                             <div class="table-responsive" dir="rtl">
                                 <div class="shadow rounded p-4 border">
                                     <div class="table-responsive">
-                                        <table id="example2"  class="table text-center table-bordered table-hover dataTable dtr-inline" aria-describedby="example2_info">
+                                        <table id="example2"
+                                            class="table text-center table-bordered table-hover dataTable dtr-inline"
+                                            aria-describedby="example2_info">
                                             <thead class="bg-light">
                                                 <tr>
                                                     <th>#</th>
@@ -270,17 +285,19 @@
                                             </thead>
                                             <tbody>
                                                 @forelse ($users as $user)
-                                                    <tr>
-                                                        <td class="bg-light">{{ $loop->iteration }}</td>
-                                                        <td>{{ $user->name }}</td>
-                                                        <td>{{ $user->specialization->name }}</td>
-                                                        <td>{{ $user->type }}</td>
-                                                        <td>{{ $user->events->whereNotIn('title',['يوم مكتبي','برنامج تدريبي','إجازة'])->count() }}</td>
-                                                        <td>{{ $user->events->where('title', 'يوم مكتبي')->count() }}</td>
-                                                        <td>{{ $user->events->where('title', 'برنامج تدريبي')->count() }}</td>
-                                                        <td>{{ $user->events->where('title', 'إجازة')->count() }}</td>
-                                                        <td class="bg-light">{{ $user->events->count() }}</td>
-                                                    </tr>
+                                                <tr>
+                                                    <td class="bg-light">{{ $loop->iteration }}</td>
+                                                    <td>{{ $user->name }}</td>
+                                                    <td>{{ $user->specialization->name }}</td>
+                                                    <td>{{ $user->type }}</td>
+                                                    <td>{{ $user->events->whereNotIn('title',['يوم مكتبي','برنامج
+                                                        تدريبي','إجازة'])->count() }}</td>
+                                                    <td>{{ $user->events->where('title', 'يوم مكتبي')->count() }}</td>
+                                                    <td>{{ $user->events->where('title', 'برنامج تدريبي')->count() }}
+                                                    </td>
+                                                    <td>{{ $user->events->where('title', 'إجازة')->count() }}</td>
+                                                    <td class="bg-light">{{ $user->events->count() }}</td>
+                                                </tr>
                                                 @empty
                                                 <tr>
                                                     <td colspan="10" class="text-center">@lang('site.noDataFound')</td>
@@ -302,9 +319,9 @@
     <!-- /.content -->
 
     @section('script')
-        <script src="https://code.highcharts.com/highcharts.js"></script>
-        <script>
-            $(function(){
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script>
+        $(function(){
 
                 const data = <?php echo json_encode($chartData); ?>;
 
@@ -321,7 +338,9 @@
                         type: 'column'
                     },
                     title: {
-                        text: 'المهام المنفذة خلال الفصل الدراسي'
+                        text: 'المهام المنفذة خلال الفصل الدراسي',
+                        format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
+                        useHTML: true,
                     },
                     // subtitle: {
                     //     text: 'Source: WorldClimate.com'
@@ -335,7 +354,9 @@
                         min: 0,
                         title: {
                             text: 'عدد المهام'
-                        }
+                        },
+                        format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
+                        useHTML: true,
                     },
                     tooltip: {
                         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
@@ -343,23 +364,39 @@
                             '<td style="padding:0"><b>{point.y: 1f}</b></td></tr>',
                         footerFormat: '</table>',
                         shared: true,
-                        useHTML: true
+                        format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
+                        useHTML: true,
                     },
                     plotOptions: {
                         column: {
                             pointPadding: 0.2,
                             borderWidth: 0
                         },
+                        format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                         useHTML: true,
                     },
                     series: [{
-                        name: 'زيارات المشرفين',
-                        data: count
-
-                    }]
+                        name: 'خطط المشرفين',
+                        data: count,
+                        format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
+                        useHTML: true,
+                    }],
+                    responsive: {
+                        rules: [{
+                            condition: {
+                                maxWidth: 500
+                            },
+                            chartOptions: {
+                                legend: {
+                                    layout: 'horizontal',
+                                    align: 'center',
+                                    verticalAlign: 'bottom'
+                                }
+                            }
+                        }]
+                    }
                 });
             });
-        </script>
+    </script>
     @endsection
 </div>
-

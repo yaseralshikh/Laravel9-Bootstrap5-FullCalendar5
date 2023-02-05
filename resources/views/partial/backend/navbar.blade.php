@@ -7,9 +7,9 @@
         <li class="nav-item d-none d-sm-inline-block">
             <a href="{{ route('home') }}" class="nav-link">@lang('site.home')</a>
         </li>
-        <li class="nav-item d-none d-sm-inline-block">
+        {{-- <li class="nav-item d-none d-sm-inline-block">
             <a href="#" class="nav-link">@lang('site.contact')</a>
-        </li>
+        </li> --}}
     </ul>
 
     <!-- Right navbar links -->
@@ -126,6 +126,9 @@
                 <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
             </div>
         </li> --}}
+        <li class="nav-item">
+            <h5 class="nav-link disabled" style="text-decoration: none;">{{ auth()->user()->office->name }}</h5>
+        </li>
         <li class="nav-item">
             <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                 <i class="fas fa-expand-arrows-alt"></i>
