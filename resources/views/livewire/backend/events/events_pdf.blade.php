@@ -161,13 +161,13 @@
                     <span style="text-align: justify;font-size: 13px;font-weight: bold;">المهام :</span>
 
                     @foreach ($subtasks->where('section', 'مهمة فرعية') as $subtask)
-                    <li>{{ $subtask->title }}</li>
+                        <li>{{ $subtask->title }}</li>
                     @endforeach
 
                     @if ($office->assistant_signature_path)
-                    <img src="{{ $office->assistant_url }}" style="" width="75px" alt="">
+                        <img src="{{ $office->assistant_url }}" style="" width="75px" alt="">
                     @else
-                    <br>
+                        <br>
                     @endif
                 </ol>
             </div>
@@ -188,9 +188,9 @@
                             <h3>{{ $office->name }}</h3>
 
                             @if ($office->director_signature_path)
-                            <img src="{{ $office->director_url }}" style="" width="130px" alt="">
+                                <img src="{{ $office->director_url }}" style="" width="130px" alt="">
                             @else
-                            <br>
+                                <br>
                             @endif
 
                             <h3>{{ $office->director }}</h3>

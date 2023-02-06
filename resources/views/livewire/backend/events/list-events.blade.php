@@ -146,6 +146,17 @@
                             </select>
                         </div>
 
+                        {{-- Education type Filter --}}
+                        <div>
+                            <select dir="rtl" name="edu_type" wire:model="byEduType" class="form-control form-control-sm mr-5">
+                                <option value="" selected>@lang('site.choise', [ 'name' => 'المرجع الإداري'])</option>
+                                <option value="">@lang('site.all')</option>
+                                @foreach ($educationTypes as $eduType)
+                                    <option class="bg-light" value="{{ $eduType['title'] }}">{{ $eduType['title'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         {{-- Semester Filter --}}
                         {{-- <div>
                             <select dir="rtl" name="semester_id" wire:model="bySemester"
@@ -223,23 +234,12 @@
                                     </th>
                                     <th>
                                         @lang('site.specialization')
-                                        {{-- <span wire:click="sortBy('specialization')" class="text-sm float-sm-right"
-                                            style="cursor: pointer;font-size:10px;">
-                                            <i class="mr-1 fa fa-arrow-up"
-                                                style="color:{{ $sortColumnName === 'specialization' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                            <i class="fa fa-arrow-down"
-                                                style="color : {{ $sortColumnName === 'specialization' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                        </span> --}}
+                                    </th>
+                                    <th>
+                                        @lang('site.eduType')
                                     </th>
                                     <th>
                                         @lang('site.task')
-                                        {{-- <span wire:click="sortBy('title')" class="text-sm float-sm-right"
-                                            style="cursor: pointer;font-size:10px;">
-                                            <i class="mr-1 fa fa-arrow-up"
-                                                style="color:{{ $sortColumnName === 'title' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                            <i class="fa fa-arrow-down"
-                                                style="color : {{ $sortColumnName === 'title' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                        </span> --}}
                                     </th>
                                     <th>
                                         @lang('site.date')
@@ -251,39 +251,12 @@
                                                 style="color : {{ $sortColumnName === 'title' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                         </span>
                                     </th>
-                                    {{-- <th>
-                                        days
-                                    </th> --}}
                                     <th>
                                         @lang('site.schoolWeek')
-                                        <span wire:click="sortBy('week_id')" class="text-sm float-sm-right"
-                                            style="cursor: pointer;font-size:10px;">
-                                            <i class="mr-1 fa fa-arrow-up"
-                                                style="color:{{ $sortColumnName === 'week_id' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                            <i class="fa fa-arrow-down"
-                                                style="color : {{ $sortColumnName === 'week_id' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                        </span>
                                     </th>
                                     <th>
                                         @lang('site.status')
-                                        {{-- <span wire:click="sortBy('status')" class="text-sm float-sm-right"
-                                            style="cursor: pointer;font-size:10px;">
-                                            <i class="mr-1 fa fa-arrow-up"
-                                                style="color:{{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                            <i class="fa fa-arrow-down"
-                                                style="color : {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                        </span> --}}
                                     </th>
-                                    {{-- <th>
-                                        Created At
-                                        <span wire:click="sortBy('created_at')" class="text-sm float-sm-right"
-                                            style="cursor: pointer;font-size:10px;">
-                                            <i class="mr-1 fa fa-arrow-up"
-                                                style="color:{{ $sortColumnName === 'created_at' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                            <i class="fa fa-arrow-down"
-                                                style="color : {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                        </span>
-                                    </th> --}}
                                     <th colspan="2">@lang('site.action')</th>
                                 </tr>
                             </thead>
@@ -300,6 +273,7 @@
                                     <td class="align-middle">{{ $loop->iteration }}</td>
                                     <td class="dtr-control align-middle">{{ $event->user->name }}</td>
                                     <td class="align-middle">{{ $event->user->specialization->name }}</td>
+                                    <td class="align-middle">{{ $event->user->edu_type }}</td>
                                     <td class="align-middle" style="color: {{ $event->color }};">{{ $event->title }}
                                     </td>
                                     <td class="align-middle">{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start)

@@ -109,6 +109,17 @@
                         </div>
                         @endrole
 
+                        {{-- Education type Filter --}}
+                        <div>
+                            <select dir="rtl" name="edu_type" wire:model="byEduType" class="form-control form-control-sm mr-5">
+                                <option value="" hidden selected>@lang('site.choise', [ 'name' => 'المرجع الإداري'])</option>
+                                {{-- <option value="">@lang('site.all')</option> --}}
+                                @foreach ($educationTypes as $eduType)
+                                    <option class="bg-light" value="{{ $eduType['title'] }}">{{ $eduType['title'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div>
                             <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'المهام الفرعية']) : &nbsp{{ $subtasks->total() }}</label>
                         </div>
@@ -143,6 +154,16 @@
                                     <th>@lang('site.subTask')</th>
                                     <th>@lang('site.section')</th>
                                     <th>
+                                        @lang('site.eduType')
+                                        <span wire:click="sortBy('edu_type')" class="text-sm float-sm-right"
+                                            style="cursor: pointer;font-size:10px;">
+                                            <i class="mr-1 fa fa-arrow-up"
+                                                style="color:{{ $sortColumnName === 'edu_type' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                            <i class="fa fa-arrow-down"
+                                                style="color : {{ $sortColumnName === 'edu_type' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                        </span>
+                                    </th>
+                                    <th>
                                         @lang('site.status')
                                         <span wire:click="sortBy('status')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
@@ -169,12 +190,15 @@
                                     </td>
                                     <td>{{ $loop->iteration }}</td>
                                     <td dir="rtl" class="text-justify">{{ $subtask->title }}</td>
-                                    <td dir="rtl" class="text-justify">
+                                    <td dir="rtl" class="text-justify text-center">
                                         {{ $subtask->section }}
+                                    </td>
+                                    <td dir="rtl" class="text-justify text-center">
+                                        {{ $subtask->edu_type }}
                                     </td>
                                     <td>
                                         <span
-                                            class="font-weight-bold badge text-white {{ $subtask->status == 1 ? 'bg-success' : 'bg-secondary' }}">
+                                            class="font-weight-bold badge text-center text-white {{ $subtask->status == 1 ? 'bg-success' : 'bg-secondary' }}">
                                             {{ $subtask->status() }}
                                         </span>
                                     </td>
@@ -285,7 +309,7 @@
                                     @enderror
                                 </div>
 
-                                <!-- Modal Subtask Title -->
+                                <!-- Modal Subtask section -->
 
                                 <div class="form-group">
                                     <label for="section">@lang('site.section')</label>
@@ -303,6 +327,25 @@
                                     </div>
                                     @enderror
                                 </div>
+
+                                <!-- Modal Subtask edu_type -->
+
+                                <div class="form-group">
+                                    <label for="edu_type">@lang('site.eduType')</label>
+                                    <select id="edu_type" class="form-control @error('edu_type') is-invalid @enderror"
+                                        wire:model.defer="data.edu_type">
+                                        <option hidden selected>@lang('site.choise', ['name' => 'المرجع الإداري'])</option>
+                                        @foreach ($educationTypes as $eduType)
+                                            <option class="bg-light" value="{{ $eduType['title'] }}">{{ $eduType['title'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('edu_type')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
                             </div>
                         </div>
                     </div>

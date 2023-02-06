@@ -110,6 +110,23 @@
                                 </span>
                             @enderror
                         </div>
+                        <!-- Education Type -->
+                        <div class="input-group mb-3">
+                            <select name="edu_type" class="custom-select @error('edu_type') is-invalid @enderror" id="inputGroupSelect02">
+                                <option disabled selected>@lang('site.eduType')</option>
+                                @foreach ($educationTypes as $eduType)
+                                    <option value="{{ $eduType['title'] }}">{{ $eduType['title'] }}</option>
+                                @endforeach
+                            </select>
+                            <div class="input-group-append">
+                                <label class="input-group-text" for="inputGroupSelect02"><i class="fa fa-briefcase" aria-hidden="true"></i></label>
+                            </div>
+                            @error('edu_type')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
                         <!-- Password -->
                         <div class="input-group mb-3">
                             <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="@lang('site.password')" required autocomplete="new-password">

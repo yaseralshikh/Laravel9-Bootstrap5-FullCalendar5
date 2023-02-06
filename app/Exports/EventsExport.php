@@ -21,13 +21,15 @@ class EventsExport implements FromCollection, WithHeadings, WithMapping, ShouldA
     protected $search;
     protected $selected_rows;
     protected $byWeek;
+    protected $byEduType;
     protected $byStatus;
     protected $byOffice;
 
-    function __construct($search,$selectedRows,$byWeek,$byStatus,$byOffice) {
+    function __construct($search,$selectedRows,$byWeek,$byEduType,$byStatus,$byOffice) {
         $this->search = $search;
         $this->selected_rows = $selectedRows;
         $this->byWeek = $byWeek;
+        $this->byEduType = $byEduType;
         $this->byStatus = $byStatus;
         $this->byOffice = $byOffice;
     }
@@ -35,12 +37,17 @@ class EventsExport implements FromCollection, WithHeadings, WithMapping, ShouldA
     public function collection()
     {
         $week =$this->byWeek;
+        $byEduType =$this->byEduType;
         $office =$this->byOffice ? $this->byOffice : auth()->user()->office_id;
 
         if ($this->selected_rows) {
             return Event::whereIn('id', $this->selected_rows)
                 ->where('status', $this->byStatus)->where('office_id', $office)->when($week, function($query) use ($week){
                     $query->where('week_id', $week);
+                })->when($byEduType, function ($query) use($byEduType) {
+                    $query->whereHas('user', function ($q) use($byEduType) {
+                        $q->where('edu_type', $byEduType);
+                    });
                 })
                 ->search(trim(($this->search)))
                 //->latest('created_at')
@@ -49,6 +56,10 @@ class EventsExport implements FromCollection, WithHeadings, WithMapping, ShouldA
             return Event::query()
             ->where('status', $this->byStatus)->where('office_id', $office)->when($this->byWeek, function($query) use ($week){
                 $query->where('week_id', $week);
+            })->when($byEduType, function ($query) use($byEduType) {
+                $query->whereHas('user', function ($q) use($byEduType) {
+                    $q->where('edu_type', $byEduType);
+                });
             })
             ->search(trim(($this->search)))
             //->latest('created_at')

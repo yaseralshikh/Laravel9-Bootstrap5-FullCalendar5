@@ -27,6 +27,7 @@ class User extends Authenticatable
         'specialization_id',
         'office_id',
         'type',
+        'edu_type',
         'password',
         'status',
     ];

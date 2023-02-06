@@ -148,6 +148,26 @@
                                         </span>
                                     </th>
                                     <th>@lang('site.specialization')</th>
+                                    <th>
+                                        @lang('site.jobType')
+                                        <span wire:click="sortBy('type')" class="text-sm float-sm-right"
+                                            style="cursor: pointer;font-size:10px;">
+                                            <i class="mr-1 fa fa-arrow-up"
+                                                style="color:{{ $sortColumnName === 'type' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                            <i class="fa fa-arrow-down"
+                                                style="color : {{ $sortColumnName === 'type' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                        </span>
+                                    </th>
+                                    <th>
+                                        @lang('site.eduType')
+                                        <span wire:click="sortBy('edu_type')" class="text-sm float-sm-right"
+                                            style="cursor: pointer;font-size:10px;">
+                                            <i class="mr-1 fa fa-arrow-up"
+                                                style="color:{{ $sortColumnName === 'edu_type' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                            <i class="fa fa-arrow-down"
+                                                style="color : {{ $sortColumnName === 'edu_type' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                        </span>
+                                    </th>
                                     <th class=" align-middle">@lang('site.role')</th>
                                     <th>
                                         @lang('site.status')
@@ -175,6 +195,8 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td tabindex="0">{{ $user->name }}</td>
                                     <td>{{ $user->specialization->name }}</td>
+                                    <td>{{ $user->type }}</td>
+                                    <td>{{ $user->edu_type }}</td>
                                     <td class="align-middle">
                                         <select class="form-control form-control-sm"
                                             wire:change='updateUserRole({{ $user }}, $event.target.value)'>
@@ -345,13 +367,31 @@
                                     <label for="type">@lang('site.type')</label>
                                     <select id="type" class="form-control @error('type') is-invalid @enderror"
                                         wire:model.defer="data.type">
-                                        <option hidden>@lang('site.choise', ['name' => 'العمل الحالي'])</option>
+                                        <option hidden selected>@lang('site.choise', ['name' => 'العمل الحالي'])</option>
                                         @foreach ($types as $type)
                                         <option class="bg-light" value="{{ $type['title'] }}">{{ $type['title'] }}
                                         </option>
                                         @endforeach
                                     </select>
                                     @error('type')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Modal Education Type -->
+
+                                <div class="form-group">
+                                    <label for="edu_type">@lang('site.eduType')</label>
+                                    <select id="edu_type" class="form-control @error('edu_type') is-invalid @enderror"
+                                        wire:model.defer="data.edu_type">
+                                        <option hidden selected>@lang('site.choise', ['name' => 'المرجع الإداري'])</option>
+                                        @foreach ($educationTypes as $eduType)
+                                            <option class="bg-light" value="{{ $eduType['title'] }}">{{ $eduType['title'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('edu_type')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -441,6 +481,9 @@
                                 </li>
                                 <li class="list-group-item">
                                     <b class="float-right">@lang('site.type') : </b> <a>{{ $data['type'] ?? '' }}</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <b class="float-right">@lang('site.eduType') : </b> <a>{{ $data['edu_type'] ?? '' }}</a>
                                 </li>
                                 <li class="list-group-item">
                                     <b class="float-right">@lang('site.email') :</b> <a>{{ $data['email'] ?? '' }}</a>

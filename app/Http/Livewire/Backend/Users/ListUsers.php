@@ -210,6 +210,7 @@ class ListUsers extends Component
 			'office_id'             => 'nullable',
 			'specialization_id'     => 'required',
 			'type'                  => 'required',
+			'edu_type'              => 'required',
 			'password'              => 'required|confirmed',
             'status'                => 'required',
 		])->validate();
@@ -261,6 +262,7 @@ class ListUsers extends Component
                 'office_id'                 => 'nullable',
                 'specialization_id'         => 'required',
                 'type'                      => 'required',
+                'edu_type'                  => 'required',
                 'status'                    => 'required',
                 'password'                  => 'sometimes|confirmed',
             ])->validate();
@@ -312,6 +314,8 @@ class ListUsers extends Component
         $this->data['specialization'] = $user->specialization->name;
 
         $this->data['type'] = $user->type;
+
+        $this->data['edu_type'] = $user->edu_type;
 
         $this->data['created_at'] = $user->created_at;
 
@@ -511,11 +515,23 @@ class ListUsers extends Component
             ]
         ];
 
+        $educationTypes = [
+            [
+                'id'    => 1,
+                'title' => 'الشؤون التعليمية'
+            ],
+            [
+                'id'    => 2,
+                'title' => 'الشؤون المدرسية'
+            ]
+        ];
+        
         return view('livewire.backend.users.list-users',[
             'users' => $users,
             'specializations' => $specializations ,
             'offices' => $offices ,
             'types' => $types ,
+            'educationTypes' => $educationTypes ,
             'roles' => $roles ,
         ])->layout('layouts.admin');
     }

@@ -23,6 +23,7 @@ class Subtask extends Component
     protected $queryString = ['searchTerm' => ['except' => '']];
 
     public $byOffice = null; //filter by office_id
+    public $byEduType = Null; // filter bt edu_type
 
     public $sortColumnName = 'position';
     public $sortDirection = 'asc';
@@ -160,6 +161,7 @@ class Subtask extends Component
         $validatedData = Validator::make($this->data, [
 			'title'                  => 'required',
 			'section'                => 'required',
+			'edu_type'               => 'required',
             'office_id'              => 'nullable',
 		])->validate();
 
@@ -206,6 +208,7 @@ class Subtask extends Component
             $validatedData = Validator::make($this->data, [
                 'title'         => 'required',
                 'section'       => 'required',
+                'edu_type'      => 'required',
                 'office_id'     => 'required',
             ])->validate();
 
@@ -298,8 +301,12 @@ class Subtask extends Component
 	{
         $searchString = $this->searchTerm;
         $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
+        $byEduType = $this->byEduType;
 
         $subtasks = ModelsSubtask::where('office_id', $byOffice)
+            ->when($byEduType, function ($query) use($byEduType) {
+                    $query->where('edu_type', $byEduType);
+            })
             ->search(trim(($searchString)))
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate(30);
@@ -326,8 +333,20 @@ class Subtask extends Component
             ],
         ];
 
+        $educationTypes = [
+            [
+                'id'    => 1,
+                'title' => 'الشؤون التعليمية'
+            ],
+            [
+                'id'    => 2,
+                'title' => 'الشؤون المدرسية'
+            ]
+        ];
+
         return view('livewire.backend.subtask.subtask',[
             'subtasks' => $subtasks,
+            'educationTypes' => $educationTypes,
             'offices'  => $offices,
             'sections'  => $sections,
         ])->layout('layouts.admin');

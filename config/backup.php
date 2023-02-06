@@ -175,14 +175,14 @@ return [
         ],
 
         'slack' => [
-            'webhook_url' => '',
+            'webhook_url' => env('WEBHOOK_URL', 'Example'),
 
             /*
              * If this is set to null the default channel of the webhook will be used.
              */
-            'channel' => '',
+            'channel' => env('WEBHOOK_CHANNEL', 'Example'),
 
-            'username' => '',
+            'username' => env('WEBHOOK_USERNAME', 'Example'),
 
             'icon' => null,
 
