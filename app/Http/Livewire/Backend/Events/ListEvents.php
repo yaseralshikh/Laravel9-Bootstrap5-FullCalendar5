@@ -140,7 +140,7 @@ class ListEvents extends Component
             'showConfirmButton'  =>  false
         ]);
 
-		$this->reset();
+		$this->reset(['selectPageRows', 'selectedRows']);
     }
 
     // Sort By Column Name
@@ -376,6 +376,14 @@ class ListEvents extends Component
         }
     }
 
+    // Show Import Excel Form
+
+    public function importExcelForm()
+    {
+        $this->reset(['excelFile', 'importTypevalue']);
+        $this->dispatchBrowserEvent('show-import-excel-modal');
+    }
+
     // Export Excel File
     public function exportExcel()
     {
@@ -414,14 +422,6 @@ class ListEvents extends Component
                 'showConfirmButton'  =>  false
             ]);
         }
-    }
-
-    // Show Import Excel Form
-
-    public function importExcelForm()
-    {
-        $this->reset();
-		$this->dispatchBrowserEvent('show-import-excel-modal');
     }
 
     public function importType($value)
@@ -494,42 +494,55 @@ class ListEvents extends Component
 
     public function exportPDF()
     {
+        $selectedRows = $this->selectedRows;
         $byWeek = $this->byWeek;
         $byEduType = $this->byEduType;
         $byOffice = auth()->user()->office_id;
 
-        if ($byWeek && $byEduType) {
-            $users = User::where('status',true)->where('office_id',$byOffice)->where('edu_type',$byEduType)->orderBy('name', 'asc')->whereHas('events', function ($query) use ($byWeek) {
-                $query->where('week_id', $byWeek)->where('status', true);
-            })->with(['events' => function ($query) use ($byWeek) {
-                $query->where('week_id', $byWeek)->where('status', true)->whereNotIn('title', ['إجازة'])->orderBy('start', 'asc');
-            }])->get();
+        if($selectedRows){
+            if ($byWeek && $byEduType) {
+                $users = User::where('status',true)->where('office_id',$byOffice)->where('edu_type',$byEduType)->orderBy('name', 'asc')
+                ->whereHas('events', function ($query) use ($byWeek) {
+                    $query->where('week_id', $byWeek)->where('status', true);
+                })->with(['events' => function ($query) use ($byWeek,$selectedRows) {
+                    $query->whereIn('id', $selectedRows)->WhereNotNull('id')->where('week_id', $byWeek)->where('status', true)->whereNotIn('title', ['إجازة'])->orderBy('start', 'asc');
+                }])->get();
 
-            if ($users->count() != Null) {
-                $subtasks = Subtask::where('status',1)->where('office_id',$byOffice)->where('edu_type', $byEduType)->orderBy('position', 'asc')->get();
-                $office = Office::where('id',$byOffice)->first();
+                if ($users->count() != Null) {
+                    $subtasks = Subtask::where('status',1)->where('office_id',$byOffice)->where('edu_type', $byEduType)->orderBy('position', 'asc')->get();
+                    $office = Office::where('id',$byOffice)->first();
 
-                return response()->streamDownload(function() use($users, $subtasks, $office){
-                    $pdf = PDF::loadView('livewire.backend.events.events_pdf',[
-                        'users' => $users,
-                        'subtasks' => $subtasks,
-                        'office' => $office,
+                    return response()->streamDownload(function() use($users, $subtasks, $office){
+                        $pdf = PDF::loadView('livewire.backend.events.events_pdf',[
+                            'users' => $users,
+                            'subtasks' => $subtasks,
+                            'office' => $office,
+                        ]);
+                        return $pdf->stream('events');
+                    },'events.pdf');
+                } else {
+                    $this->alert('error', __('site.noDataForExport'), [
+                        'position'  =>  'center',
+                        'timer'  =>  3000,
+                        'toast'  =>  true,
+                        'text'  =>  null,
+                        'showCancelButton'  =>  false,
+                        'showConfirmButton'  =>  false
                     ]);
-                    return $pdf->stream('events');
-                },'events.pdf');
+                }
+
             } else {
-                $this->alert('error', __('site.noDataForExport'), [
+                $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.selectEduType'), [
                     'position'  =>  'center',
-                    'timer'  =>  3000,
+                    'timer'  =>  6000,
                     'toast'  =>  true,
                     'text'  =>  null,
                     'showCancelButton'  =>  false,
                     'showConfirmButton'  =>  false
                 ]);
             }
-
         } else {
-            $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.selectEduType'), [
+            $this->alert('error', __('site.selectRows'), [
                 'position'  =>  'center',
                 'timer'  =>  6000,
                 'toast'  =>  true,
@@ -584,25 +597,6 @@ class ListEvents extends Component
 
     public function render()
     {
-        //$byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
-
-        // $users = User::whereStatus(1)->where('office_id',$byOffice)->get();
-
-
-        // $userPlans = User::where('status', true)
-        // ->where(function ($query) {
-        //     $query->whereHas('events', function ($q) {
-        //         $q->where('week_id', $this->semesterActive());
-        //     });
-        // })->get();
-
-        // $weeks = empty($this->weeks) ? Week::whereStatus(1)->where('semester_id',$this->semesterActive())->get() : $this->weeks;
-        // // $tasks = Task::whereStatus(1)->where('office_id',$byOffice)->get();
-
-        // $tasks = empty($this->tasks) ? Task::whereStatus(1)->where('office_id',auth()->user()->office_id)->get() : $this->tasks;
-        // $users = empty($this->users) ? User::whereStatus(1)->where('office_id',auth()->user()->office_id)->get() : $this->users;
-        // $offices = Office::whereStatus(true)->get();
-        // $semesters = Semester::whereStatus(true)->get();
         $events = $this->events;
         $users = User::whereStatus(1)->where('office_id',auth()->user()->office_id)->get();
         $tasks = Task::whereStatus(1)->where('office_id' , auth()->user()->office_id)->get();
@@ -625,8 +619,6 @@ class ListEvents extends Component
             'weeks'   => $weeks,
             'educationTypes'   => $educationTypes,
             'tasks'   => $tasks,
-            //'offices' => $offices,
-            //'semesters' => $semesters,
         ])->layout('layouts.admin');
     }
 }
