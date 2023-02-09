@@ -10,6 +10,19 @@
                     <ol class="breadcrumb float-sm-right">
                         {{-- <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">@lang('site.home')</a>
                         </li> --}}
+
+                        {{-- Semester Filter --}}
+                        <div class="d-inline pr-3">
+                            <select dir="rtl" wire:model="bySemester" class="form-control form-control-sm mr-5">
+                                <option value="" hidden selected>@lang('site.choise', ['name' => 'ألفصل الدراسي'])</option>
+                                @foreach ($semesters as $semester)
+                                <option value="{{ $semester->id }}" style="{{
+                                    $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $semester->title
+                                    }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <li class="breadcrumb-item active">@lang('site.dashboard')</li>
                     </ol>
                 </div><!-- /.col -->
@@ -319,12 +332,15 @@
     <!-- /.content -->
 
     @section('script')
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script>
-        $(function(){
 
-                const data = <?php echo json_encode($chartData); ?>;
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
+        <script>
+            $(document).ready(function(){
+                //const data = <?php echo json_encode($chartData); ?>;
+                const data = @js($chartData);
+                console.log(data);
                 const title=[];
                 const count=[];
 
@@ -333,9 +349,10 @@
                     count.push(value);
                 }
 
-                $("#highchart").highcharts({
+                const chart = Highcharts.chart('highchart', {
                     chart: {
-                        type: 'column'
+                        type: 'column',
+                        renderTo: 'highchart',
                     },
                     title: {
                         text: 'المهام المنفذة خلال الفصل الدراسي',
@@ -394,9 +411,107 @@
                                 }
                             }
                         }]
+                    },
+                    navigation: {
+                        buttonOptions: {
+                            align: 'right'
+                        }
+                    }
+                });
+
+                document.addEventListener('refreshEventChart', function({detail}) {
+
+                    if (detail.refresh) {
+                        // highcharts.Chart#event:updatedData;
+
+                        // const data2 = <?php echo json_encode($chartData); ?>;
+
+                        //const data2 =[];
+
+                        const data2 = JSON.parse(detail.data);
+
+                        console.log(data2);
+
+                        const title=[];
+                        const count=[];
+
+                        for (const [key, value] of Object.entries(data2)) {
+                            title.push(key);
+                            count.push(value);
+                        }
+
+                        const chart = Highcharts.chart('highchart', {
+                            chart: {
+                                type: 'column',
+                                renderTo: 'highchart',
+                            },
+                            title: {
+                                text: 'المهام المنفذة خلال الفصل الدراسي',
+                                format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
+                                useHTML: true,
+                            },
+                            // subtitle: {
+                            //     text: 'Source: WorldClimate.com'
+                            // },
+                            xAxis: {
+                                categories:  title,
+                                crosshair: true,
+                                useHTML: true,
+                            },
+                            yAxis: {
+                                min: 0,
+                                title: {
+                                    text: 'عدد المهام'
+                                },
+                                format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
+                                useHTML: true,
+                            },
+                            tooltip: {
+                                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                                    '<td style="padding:0"><b>{point.y: 1f}</b></td></tr>',
+                                footerFormat: '</table>',
+                                shared: true,
+                                format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
+                                useHTML: true,
+                            },
+                            plotOptions: {
+                                column: {
+                                    pointPadding: 0.2,
+                                    borderWidth: 0
+                                },
+                                format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
+                                useHTML: true,
+                            },
+                            series: [{
+                                name: 'خطط المشرفين',
+                                data: count,
+                                format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
+                                useHTML: true,
+                            }],
+                            responsive: {
+                                rules: [{
+                                    condition: {
+                                        maxWidth: 500
+                                    },
+                                    chartOptions: {
+                                        legend: {
+                                            layout: 'horizontal',
+                                            align: 'center',
+                                            verticalAlign: 'bottom'
+                                        }
+                                    }
+                                }]
+                            },
+                            navigation: {
+                                buttonOptions: {
+                                    align: 'right'
+                                }
+                            }
+                        });
                     }
                 });
             });
-    </script>
+        </script>
     @endsection
 </div>

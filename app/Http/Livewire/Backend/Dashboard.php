@@ -14,7 +14,8 @@ use Asantibanez\LivewireCharts\Facades\LivewireCharts;
 
 class Dashboard extends Component
 {
-    //public $chartEventsTitle = [];
+    public $bySemester = null; // filter bt Semester
+
     public $chartData = [];
 
     // for chart
@@ -45,6 +46,8 @@ class Dashboard extends Component
 
     public function render()
     {
+        $semesters =  Semester::whereStatus(1)->get();
+        $bySemester = $this->bySemester ? $this->bySemester : $this->semesterActive();
         // chart
         //$events = Event::where('status', 1)->whereNotIn('title', ['إجازة'])->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->pluck('title');
 
@@ -81,12 +84,14 @@ class Dashboard extends Component
 
         // New Chart
         //$chartEventsTitle = Event::whereStatus(1)->whereNotIn('title', ['إجازة'])->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->select('title')->pluck('title');
-        $this->chartData = Event::whereStatus(1)->groupBy('title')
-            ->selectRaw('count(*) as count, title')
-            ->pluck('count','title')->toArray();
+
+        $this->chartData = Event::whereStatus(1)->where('semester_id', $bySemester)->groupBy('title')
+        ->selectRaw('count(*) as count, title')
+        ->pluck('count','title')->toArray();
 
         $chartData = json_encode($this->chartData);
 
+        $this->dispatchBrowserEvent('refreshEventChart', ['refresh' => true , 'data' => $chartData]);
 
         // foreach($chartEventCount as $title => $count){
         //     $this->title_event[] = $title;
@@ -104,22 +109,23 @@ class Dashboard extends Component
 
         $users = User::query()
         ->where('office_id', auth()->user()->office_id)
-        ->with(['events' => function ($query) {
-            $query->where('semester_id', $this->semesterActive())->whereStatus(true);
+        ->with(['events' => function ($query) use($bySemester) {
+            $query->where('semester_id', $bySemester)->whereStatus(true);
         }])->orderBy('name', 'asc')->get();
 
         $usersCount = User::where('office_id', auth()->user()->office_id)->whereStatus(1)->count();
-        $eventsCount = Event::whereStatus(1)->where('office_id', auth()->user()->office_id)->where('semester_id',$this->semesterActive())->count();
-        $weeksCount = Week::whereStatus(1)->where('semester_id',$this->semesterActive())->count();
-        $eventsSchoolCount = Event::whereStatus(1)->where('office_id', auth()->user()->office_id)->where('semester_id',$this->semesterActive())->whereNotIn('title',['يوم مكتبي','برنامج تدريبي','إجازة'])->count();
-        $eventsOfficeCount = Event::whereStatus(1)->where('office_id', auth()->user()->office_id)->where('semester_id',$this->semesterActive())->where('title','يوم مكتبي')->count();
-        $eventsTrainingCount = Event::whereStatus(1)->where('office_id', auth()->user()->office_id)->where('semester_id',$this->semesterActive())->where('title','برنامج تدريبي')->count();
-        $eventsVacationCount = Event::whereStatus(1)->where('office_id', auth()->user()->office_id)->where('semester_id',$this->semesterActive())->where('title','إجازة')->count();
+        $eventsCount = Event::whereStatus(1)->where('office_id', auth()->user()->office_id)->where('semester_id', $bySemester)->count();
+        $weeksCount = Week::whereStatus(1)->where('semester_id', $bySemester)->count();
+        $eventsSchoolCount = Event::whereStatus(1)->where('office_id', auth()->user()->office_id)->where('semester_id', $bySemester)->whereNotIn('title',['يوم مكتبي','برنامج تدريبي','إجازة'])->count();
+        $eventsOfficeCount = Event::whereStatus(1)->where('office_id', auth()->user()->office_id)->where('semester_id', $bySemester)->where('title','يوم مكتبي')->count();
+        $eventsTrainingCount = Event::whereStatus(1)->where('office_id', auth()->user()->office_id)->where('semester_id', $bySemester)->where('title','برنامج تدريبي')->count();
+        $eventsVacationCount = Event::whereStatus(1)->where('office_id', auth()->user()->office_id)->where('semester_id', $bySemester)->where('title','إجازة')->count();
         $schoolsCount = Task::where('office_id', auth()->user()->office_id)->whereStatus(1)->whereNotIn('level_id',[4,5])->count();
 
         return view('livewire.backend.dashboard',[
             //'columnChartModel' => $columnChartModel,
             //'chartEventsTitle' => $chartEventsTitle,
+            'semesters'  => $semesters,
             'chartData'  => $chartData,
             // 'title_event'  => $title_event,
             // 'count_event'  => $count_event,

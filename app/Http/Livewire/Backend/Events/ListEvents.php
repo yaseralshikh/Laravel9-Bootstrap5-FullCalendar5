@@ -576,7 +576,7 @@ class ListEvents extends Component
         $byEduType = $this->byEduType;
         $byStatus = $this->byStatus;
 
-        $events = Event::where('status', $byStatus)
+        $events = Event::where('status', $byStatus)->where('semester_id', $this->semesterActive())
         ->when($byOffice, function($query) use ($byOffice){
             $query->where('office_id', $byOffice);
         })
