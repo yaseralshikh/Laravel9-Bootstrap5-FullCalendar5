@@ -2,9 +2,11 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Support\Facades\Log;
 use Throwable;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -14,7 +16,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        AuthenticationException::class
     ];
 
     /**
@@ -35,7 +37,13 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $e)
     {
-        Log::channel('slack')->critical($e);
+        if($e->getMessage() != 'Unauthenticated.'){
+            Log::channel('slack')->critical($e);
+        }
+
+        if ($e instanceof TokenMismatchException) {
+            return response()->redirect('login')->with('status', 'Token expired, please try again.');
+        }
     }
 
     /**

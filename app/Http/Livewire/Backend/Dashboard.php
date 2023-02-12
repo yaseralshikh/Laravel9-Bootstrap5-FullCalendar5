@@ -46,8 +46,8 @@ class Dashboard extends Component
 
     public function render()
     {
-        $semesters =  Semester::whereStatus(1)->get();
         $bySemester = $this->bySemester ? $this->bySemester : $this->semesterActive();
+        $semesters =  Semester::whereStatus(1)->get();
         // chart
         //$events = Event::where('status', 1)->whereNotIn('title', ['إجازة'])->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->pluck('title');
 
@@ -90,7 +90,6 @@ class Dashboard extends Component
         ->pluck('count','title')->toArray();
 
         $chartData = json_encode($this->chartData);
-
         $this->dispatchBrowserEvent('refreshEventChart', ['refresh' => true , 'data' => $chartData]);
 
         // foreach($chartEventCount as $title => $count){

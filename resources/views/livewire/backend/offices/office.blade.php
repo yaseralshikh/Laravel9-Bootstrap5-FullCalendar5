@@ -121,6 +121,7 @@
                                     </th>
                                     <th class="align-middle" scope="col">@lang('site.directorSignature')</th>
                                     <th class="align-middle" scope="col">@lang('site.assistantSignature')</th>
+                                    <th class="align-middle" scope="col">@lang('site.assistant2Signature')</th>
                                     <th class="align-middle">
                                         @lang('site.status')
                                         <span wire:click="sortBy('status')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
@@ -153,6 +154,12 @@
                                             <img src="{{ $office->assistant_url }}" style="width: 50px;" class="img" alt="">
                                             @if ($office->assistant_signature_path)
                                                 <button wire:click.prevent="removeAssistantImage({{ $office->id }})" class="btn btn-outline-danger btn-xs">@lang('site.removeImage')</button>
+                                            @endif
+                                        </td>
+                                        <td class="align-middle">
+                                            <img src="{{ $office->assistant2_url }}" style="width: 50px;" class="img" alt="">
+                                            @if ($office->assistant2_signature_path)
+                                                <button wire:click.prevent="removeAssistant2Image({{ $office->id }})" class="btn btn-outline-danger btn-xs">@lang('site.removeImage')</button>
                                             @endif
                                         </td>
                                         <td class="align-middle">
@@ -288,6 +295,36 @@
                                             @if ($assistant_signature_image)
                                                 {{ $assistant_signature_image->getClientOriginalName() }}
                                                 <img src="{{ $assistant_signature_image }}" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+                                            @else
+                                                @lang('site.chooseImage')
+                                            @endif
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Modal assistant2 signature -->
+
+                                <div class="form-group">
+                                    <label for="custom-file">@lang('site.assistant2Signature')</label>
+                                    @if ($assistant2_signature_image)
+                                        <img src="{{ $assistant2_signature_image->temporaryUrl() }}" class="mb-2 d-block img img-circle" width="100px" alt="">
+                                    @else
+                                        <img src="{{ $data['assistant2_url'] ?? '' }}" class="mb-2 d-block img img-circle" width="100px" alt="">
+                                    @endif
+                                    <div class="mb-3 custom-file">
+                                        <div x-data="{ isUploading: false, progress: 5 }" x-on:livewire-upload-start="isUploading = true" x-on:livewire-upload-finish="isUploading = false; progress = 5" x-on:livewire-upload-error="isUploading = false" x-on:livewire-upload-progress="progress = $event.detail.progress">
+                                            <input wire:model="assistant2_signature_image" type="file" class="custom-file-input @error('assistant2_signature_image') is-invalid @enderror" id="validatedCustomFile">
+                                            {{-- progres bar --}}
+                                            <div x-show.transition="isUploading" class="mt-2 rounded progress progress-sm">
+                                                <div class="progress-bar bg-primary progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" x-bind:style="`width: ${progress}%`">
+                                                    <span class="sr-only">40% Complete (success)</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="custom-file-label" for="customFile">
+                                            @if ($assistant2_signature_image)
+                                                {{ $assistant2_signature_image->getClientOriginalName() }}
+                                                <img src="{{ $assistant2_signature_image }}" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
                                             @else
                                                 @lang('site.chooseImage')
                                             @endif

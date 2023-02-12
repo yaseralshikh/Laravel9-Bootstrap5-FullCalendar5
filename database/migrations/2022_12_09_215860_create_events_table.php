@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->datetime('start');
             $table->datetime('end');
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('week_id')->constrained();
             $table->foreignId('semester_id')->constrained();
             $table->foreignId('office_id')->constrained();

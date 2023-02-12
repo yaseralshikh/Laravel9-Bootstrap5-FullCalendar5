@@ -23,6 +23,7 @@ class Office extends Component
 
     public $director_signature_image;
     public $assistant_signature_image;
+    public $assistant2_signature_image;
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
@@ -124,6 +125,14 @@ class Office extends Component
                 }
             }
 
+            $signatureImages = ModelsOffice::whereIn('id', $this->selectedRows)->get(['assistant2_signature_path']);
+            foreach($signatureImages as $signatureImage){
+                $imageFileName = $signatureImage->assistant2_signature_path;
+                if($imageFileName){
+                    Storage::disk('signature_photos')->delete($imageFileName);
+                }
+            }
+
             // delete selected Offices from database
             ModelsOffice::whereIn('id', $this->selectedRows)->delete();
 
@@ -178,10 +187,11 @@ class Office extends Component
     public function createOffice()
     {
         $validatedData = Validator::make($this->data, [
-			'name'                      => 'required',
-            'director_signature_path'   => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'assistant_signature_path'  => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-			'director'                  => 'required',
+			'name'                       => 'required',
+            'director_signature_path'    => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'assistant_signature_path'   => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'assistant2_signature_path'  => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+			'director'                   => 'required',
 		])->validate();
 
 
@@ -191,6 +201,10 @@ class Office extends Component
 
         if ($this->assistant_signature_image) {
             $validatedData['assistant_signature_path'] = $this->assistant_signature_image->store('/', 'signature_photos');
+		}
+
+        if ($this->assistant2_signature_image) {
+            $validatedData['assistant2_signature_path'] = $this->assistant2_signature_image->store('/', 'signature_photos');
 		}
 
 		ModelsOffice::create($validatedData);
@@ -228,10 +242,11 @@ class Office extends Component
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'name'                      => 'required',
-                'director_signature_path'   => 'max:2048',
-                'assistant_signature_path'  => 'max:2048',
-                'director'                  => 'required',
+                'name'                       => 'required',
+                'director_signature_path'    => 'max:2048',
+                'assistant_signature_path'   => 'max:2048',
+                'assistant2_signature_path'  => 'max:2048',
+                'director'                   => 'required',
             ])->validate();
 
             if ($this->director_signature_image) {
@@ -240,6 +255,7 @@ class Office extends Component
                 }
                 $validatedData['director_signature_path'] = $this->director_signature_image->store('/', 'signature_photos');
             }
+
             if ($this->assistant_signature_image) {
                 if($this->office->assistant_signature_path){
                     Storage::disk('signature_photos')->delete($this->office->assistant_signature_path);
@@ -247,10 +263,18 @@ class Office extends Component
                 $validatedData['assistant_signature_path'] = $this->assistant_signature_image->store('/', 'signature_photos');
             }
 
+            if ($this->assistant2_signature_image) {
+                if($this->office->assistant2_signature_path){
+                    Storage::disk('signature_photos')->delete($this->office->assistant2_signature_path);
+                }
+                $validatedData['assistant2_signature_path'] = $this->assistant2_signature_image->store('/', 'signature_photos');
+            }
+
             $this->office->update($validatedData);
 
             $this->director_signature_image = null;
             $this->assistant_signature_image = null;
+            $this->assistant2_signature_image = null;
 
             $this->dispatchBrowserEvent('hide-form');
 
@@ -352,6 +376,44 @@ class Office extends Component
         }
     }
 
+    public function removeAssistant2Image($officeId)
+    {
+        try {
+            $office = ModelsOffice::findOrFail($officeId);
+            $assistant2FileName = $office->assistant2_signature_path;
+
+            if($assistant2FileName){
+                Storage::disk('signature_photos')->delete($assistant2FileName);
+
+                $office->update([
+                    'assistant2_signature_path' => null,
+                ]);
+
+                $this->assistant2_signature_image = null;
+
+                $this->alert('success', __('site.deleteSuccessfully'), [
+                    'position'  =>  'center',
+                    'timer'  =>  3000,
+                    'toast'  =>  true,
+                    'text'  =>  null,
+                    'showCancelButton'  =>  false,
+                    'showConfirmButton'  =>  false
+                ]);
+            }
+
+        } catch (\Throwable $th) {
+            $message = $this->alert('error', $th->getMessage(), [
+                'position'  =>  'center',
+                'timer'  =>  3000,
+                'toast'  =>  true,
+                'text'  =>  null,
+                'showCancelButton'  =>  false,
+                'showConfirmButton'  =>  false
+            ]);
+            return $message;
+        }
+    }
+
     // Show Modal Form to Confirm Office Removal
 
     public function confirmOfficeRemoval($officeId)
@@ -370,6 +432,7 @@ class Office extends Component
 
             $directorFileName = $office->director_signature_path;
             $assistantFileName = $office->assistant_signature_path;
+            $assistant2FileName = $office->assistant2_signature_path;
 
             if($directorFileName){
                 Storage::disk('signature_photos')->delete($directorFileName);
@@ -377,6 +440,10 @@ class Office extends Component
 
             if($assistantFileName){
                 Storage::disk('signature_photos')->delete($assistantFileName);
+            }
+
+            if($assistant2FileName){
+                Storage::disk('signature_photos')->delete($assistant2FileName);
             }
 
             $office->delete();

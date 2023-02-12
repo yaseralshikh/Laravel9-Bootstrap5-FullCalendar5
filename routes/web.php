@@ -31,12 +31,14 @@ use App\Http\Livewire\Backend\Specializations\Specializations;
 //     return view('auth.login');
 // });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::group(['middleware' => ['auth', 'verified']], function (){
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+});
 
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'role:admin|superadmin']], function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'role:admin|superadmin','verified']], function () {
     Route::get('/', Dashboard::class)->name('dashboard');
     Route::get('users', ListUsers::class)->name('users');
     Route::get('specializations', Specializations::class)->name('specializations');

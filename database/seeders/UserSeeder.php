@@ -22,6 +22,7 @@ class UserSeeder extends Seeder
             'edu_type' => 'الشؤون التعليمية',
             'password' => bcrypt('123123123'),
             'status' => 1,
+            'email_verified_at' => now(),
         ]);
 
         $user->attachRole('superadmin');

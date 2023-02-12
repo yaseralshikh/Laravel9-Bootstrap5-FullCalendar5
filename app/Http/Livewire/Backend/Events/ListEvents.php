@@ -2,24 +2,24 @@
 
 namespace App\Http\Livewire\Backend\Events;
 
-use PDF;
-use Carbon\Carbon;
+use App\Exports\EventsExport;
+use App\Models\Event;
+use App\Models\Office;
+use App\Models\Semester;
+use App\Models\Subtask;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Week;
-use App\Models\Event;
-use App\Models\Office;
-use App\Models\Subtask;
-use App\Rules\WeekRule;
-use Livewire\Component;
-use App\Models\Semester;
 use App\Rules\SemesterRule;
-use Livewire\WithPagination;
-use App\Exports\EventsExport;
-use Livewire\WithFileUploads;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Rules\WeekRule;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 class ListEvents extends Component
 {
@@ -36,9 +36,8 @@ class ListEvents extends Component
     public $event;
 
     public $byWeek = null; //filter by week_id
-    public $byEduType = Null; // filter bt edu_type
+    public $byEduType = null; // filter bt edu_type
     public $byStatus = 0; // filter bt status
-
 
     // public $users = []; // for office -> users connected
     // public $weeks = []; // for semester -> weeks connected
@@ -55,10 +54,10 @@ class ListEvents extends Component
     public $eventIdBeingRemoved = null;
 
     public $selectedRows = [];
-	public $selectPageRows = false;
+    public $selectPageRows = false;
     protected $listeners = ['deleteConfirmed' => 'deleteEvents'];
 
-    public $excelFile = Null;
+    public $excelFile = null;
     public $importTypevalue = 'addNew';
 
     // Updated Select Page Rows
@@ -91,56 +90,56 @@ class ListEvents extends Component
     // set All selected Event As Active
 
     public function setAllAsActive()
-	{
-		Event::whereIn('id', $this->selectedRows)->update(['status' => 1]);
+    {
+        Event::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
         $this->alert('success', __('site.eventActiveSuccessfully'), [
-            'position'  =>  'top-end',
-            'timer'  =>  3000,
-            'toast'  =>  true,
-            'text'  =>  null,
-            'showCancelButton'  =>  false,
-            'showConfirmButton'  =>  false
+            'position' => 'top-end',
+            'timer' => 3000,
+            'toast' => true,
+            'text' => null,
+            'showCancelButton' => false,
+            'showConfirmButton' => false,
         ]);
 
-		$this->reset(['selectPageRows', 'selectedRows']);
-	}
+        $this->reset(['selectPageRows', 'selectedRows']);
+    }
 
     // set All selected Event As InActive
 
-	public function setAllAsInActive()
-	{
-		Event::whereIn('id', $this->selectedRows)->update(['status' => 0]);
+    public function setAllAsInActive()
+    {
+        Event::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
         $this->alert('success', __('site.eventInActiveSuccessfully'), [
-            'position'  =>  'top-end',
-            'timer'  =>  3000,
-            'toast'  =>  true,
-            'text'  =>  null,
-            'showCancelButton'  =>  false,
-            'showConfirmButton'  =>  false
+            'position' => 'top-end',
+            'timer' => 3000,
+            'toast' => true,
+            'text' => null,
+            'showCancelButton' => false,
+            'showConfirmButton' => false,
         ]);
 
-		$this->reset(['selectPageRows', 'selectedRows']);
-	}
+        $this->reset(['selectPageRows', 'selectedRows']);
+    }
 
     // Delete Selected Event
 
     public function deleteEvents()
     {
         // delete selected events from database
-		Event::whereIn('id', $this->selectedRows)->delete();
+        Event::whereIn('id', $this->selectedRows)->delete();
 
         $this->alert('success', __('site.deleteSuccessfully'), [
-            'position'  =>  'top-end',
-            'timer'  =>  3000,
-            'toast'  =>  true,
-            'text'  =>  null,
-            'showCancelButton'  =>  false,
-            'showConfirmButton'  =>  false
+            'position' => 'top-end',
+            'timer' => 3000,
+            'toast' => true,
+            'text' => null,
+            'showCancelButton' => false,
+            'showConfirmButton' => false,
         ]);
 
-		$this->reset(['selectPageRows', 'selectedRows']);
+        $this->reset(['selectPageRows', 'selectedRows']);
     }
 
     // Sort By Column Name
@@ -196,37 +195,37 @@ class ListEvents extends Component
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'title'                 => 'required|max:255',
-                'user_id'               => 'required',
+                'title' => 'required|max:255',
+                'user_id' => 'required',
                 //'semester_id'           => ['required_with:start', new SemesterRule($this->data['start'])],
-                'week_id'               => ['required_with:start', new WeekRule($this->data['start'])],
+                'week_id' => ['required_with:start', new WeekRule($this->data['start'])],
                 //'office_id'             => 'nullable',
-                'start'                 => 'required',
-                'status'                => ['required'],
+                'start' => 'required',
+                'status' => ['required'],
             ])->validate();
 
             switch ($validatedData['title']) {
                 case "يوم مكتبي":
                     $color = '#000000';
-                break;
+                    break;
                 case "برنامج تدريبي":
                     $color = '#eb6c0c';
-                break;
+                    break;
                 case "إجازة مطولة":
                     $color = '#cf87fa';
-                break;
+                    break;
                 default:
                     $color = '#298A08';
             }
 
-            $validatedData['end'] = date('Y-m-d', strtotime($validatedData['start']. ' + 1 days'));
+            $validatedData['end'] = date('Y-m-d', strtotime($validatedData['start'] . ' + 1 days'));
             $validatedData['color'] = $color;
 
-            if(empty($validatedData['semester_id'])) {
+            if (empty($validatedData['semester_id'])) {
                 $validatedData['semester_id'] = $this->semesterActive();
             }
 
-            if(empty($validatedData['office_id'])) {
+            if (empty($validatedData['office_id'])) {
                 $validatedData['office_id'] = auth()->user()->office_id;
             }
 
@@ -235,22 +234,22 @@ class ListEvents extends Component
             $this->dispatchBrowserEvent('hide-form');
 
             $this->alert('success', __('site.saveSuccessfully'), [
-                'position'  =>  'top-end',
-                'timer'  =>  3000,
-                'toast'  =>  true,
-                'text'  =>  null,
-                'showCancelButton'  =>  false,
-                'showConfirmButton'  =>  false
+                'position' => 'top-end',
+                'timer' => 3000,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
             ]);
 
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             $message = $this->alert('error', $th->getMessage() . '<br>' . 'ادخال تاريخ المهمة مطلوب', [
-                'position'  =>  'center',
-                'timer'  =>  3000,
-                'toast'  =>  true,
-                'text'  =>  null,
-                'showCancelButton'  =>  false,
-                'showConfirmButton'  =>  false
+                'position' => 'center',
+                'timer' => 3000,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
             ]);
             return $message;
         }
@@ -262,17 +261,17 @@ class ListEvents extends Component
     {
         $this->reset('data');
 
-		$this->showEditModal = true;
+        $this->showEditModal = true;
 
-		$this->event = $event;
+        $this->event = $event;
 
-		$this->data = $event->toArray();
+        $this->data = $event->toArray();
 
         // dd($this->data);
 
-		$this->data['start'] = Carbon::parse($this->data['start'])->toDateString();
+        $this->data['start'] = Carbon::parse($this->data['start'])->toDateString();
 
-		$this->dispatchBrowserEvent('show-form');
+        $this->dispatchBrowserEvent('show-form');
     }
 
     // Update Event
@@ -281,54 +280,54 @@ class ListEvents extends Component
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'title'       => 'required|max:255',
-                'user_id'     => 'required',
+                'title' => 'required|max:255',
+                'user_id' => 'required',
                 'semester_id' => ['required', new SemesterRule($this->data['start'])],
-                'week_id'     => ['required', new WeekRule($this->data['start'])],
-                'office_id'   => 'nullable',
-                'start'       => 'required',
-                'status'      => 'required',
+                'week_id' => ['required', new WeekRule($this->data['start'])],
+                'office_id' => 'nullable',
+                'start' => 'required',
+                'status' => 'required',
             ])->validate();
 
             switch ($validatedData['title']) {
                 case "يوم مكتبي":
                     $color = '#000000';
-                  break;
+                    break;
                 case "برنامج تدريبي":
                     $color = '#eb6c0c';
-                  break;
+                    break;
                 case "إجازة مطولة":
                     $color = '#cf87fa';
-                  break;
+                    break;
                 default:
                     $color = '#298A08';
             }
 
             $validatedData['color'] = $color;
 
-            $validatedData['end'] = date('Y-m-d', strtotime($validatedData['start']. ' + 1 days'));
+            $validatedData['end'] = date('Y-m-d', strtotime($validatedData['start'] . ' + 1 days'));
 
             $this->event->update($validatedData);
 
             $this->dispatchBrowserEvent('hide-form');
 
             $this->alert('success', __('site.updateSuccessfully'), [
-                'position'  =>  'top-end',
-                'timer'  =>  3000,
-                'toast'  =>  true,
-                'text'  =>  null,
-                'showCancelButton'  =>  false,
-                'showConfirmButton'  =>  false
+                'position' => 'top-end',
+                'timer' => 3000,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
             ]);
 
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             $message = $this->alert('error', $th->getMessage(), [
-                'position'  =>  'top-end',
-                'timer'  =>  3000,
-                'toast'  =>  true,
-                'text'  =>  null,
-                'showCancelButton'  =>  false,
-                'showConfirmButton'  =>  false
+                'position' => 'top-end',
+                'timer' => 3000,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
             ]);
             return $message;
         }
@@ -355,22 +354,22 @@ class ListEvents extends Component
             $this->dispatchBrowserEvent('hide-delete-modal');
 
             $this->alert('success', __('site.deleteSuccessfully'), [
-                'position'  =>  'top-end',
-                'timer'  =>  3000,
-                'toast'  =>  true,
-                'text'  =>  null,
-                'showCancelButton'  =>  false,
-                'showConfirmButton'  =>  false
+                'position' => 'top-end',
+                'timer' => 3000,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
             ]);
 
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             $message = $this->alert('error', $th->getMessage(), [
-                'position'  =>  'top-end',
-                'timer'  =>  3000,
-                'toast'  =>  true,
-                'text'  =>  null,
-                'showCancelButton'  =>  false,
-                'showConfirmButton'  =>  false
+                'position' => 'top-end',
+                'timer' => 3000,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
             ]);
             return $message;
         }
@@ -404,22 +403,22 @@ class ListEvents extends Component
                     'events.xlsx');
             } else {
                 $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.selectEduType'), [
-                    'position'  =>  'center',
-                    'timer'  =>  6000,
-                    'toast'  =>  true,
-                    'text'  =>  null,
-                    'showCancelButton'  =>  false,
-                    'showConfirmButton'  =>  false
+                    'position' => 'center',
+                    'timer' => 6000,
+                    'toast' => true,
+                    'text' => null,
+                    'showCancelButton' => false,
+                    'showConfirmButton' => false,
                 ]);
             }
         } else {
             $this->alert('error', __('site.selectStatus'), [
-                'position'  =>  'center',
-                'timer'  =>  2000,
-                'toast'  =>  true,
-                'text'  =>  null,
-                'showCancelButton'  =>  false,
-                'showConfirmButton'  =>  false
+                'position' => 'center',
+                'timer' => 2000,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
             ]);
         }
     }
@@ -440,17 +439,19 @@ class ListEvents extends Component
         $byEduType = $this->byEduType;
         $byOffice = auth()->user()->office_id;
 
+        $this->items = [];
+
         if ($byWeek && $byEduType) {
 
-            $users = User::where('status',true)->where('edu_type',$byEduType)->where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)->with(['events' => function ($query) use ($byWeek) {
+            $users = User::where('status', true)->where('edu_type', $byEduType)->where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)->with(['events' => function ($query) use ($byWeek) {
                 $query->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
             }])->get();
 
-            array_push($this->items , '<b dir="rtl">' .'مشروفن بدون خطط او خططهم غير مكتملة !' . "</b><br><br>");
+            array_push($this->items, '<b dir="rtl">' . 'مشروفن خططهم غير مكتملة !' . "</b><br><br>");
             array_push($this->items, '<ol dir="rtl">');
 
             foreach ($users as $user) {
-                if ($user->events->count() == Null || $user->events->count() < 5) {
+                if ($user->events->count() == null || $user->events->count() < 5) {
                     $this->items[] = '<li>' . $user->name . ' ( ' . $user->events->count() . ' )' . "</li><br>";
                 }
             }
@@ -458,36 +459,41 @@ class ListEvents extends Component
             array_push($this->items, '</ol>');
 
             if (count($this->items) > 3) {
-                $this->alert('error', implode(" ", $this->items) , [
-                    'position'  =>  'center',
-                    'timer'  =>  null,
-                    'toast'  =>  true,
-                    'text'  =>  null,
-                    'showCancelButton'  =>  false,
-                    'showConfirmButton'  =>  true
+                $this->alert('error', implode(" ", $this->items), [
+                    'position' => 'center',
+                    'timer' => null,
+                    'toast' => true,
+                    'text' => null,
+                    'showCancelButton' => false,
+                    'showConfirmButton' => true,
+                    'width'=> '500px',
                 ]);
 
                 $this->items = [];
 
             } else {
-                $this->alert('success', __('site.allUsersHasEvents'), [
-                    'position'  =>  'center',
-                    'timer'  =>  3000,
-                    'toast'  =>  true,
-                    'text'  =>  null,
-                    'showCancelButton'  =>  false,
-                    'showConfirmButton'  =>  false
+                $this->alert('success', __('site.noReviews'), [
+                    'position' => 'center',
+                    'timer' => 3000,
+                    'toast' => true,
+                    'text' => null,
+                    'showCancelButton' => false,
+                    'showConfirmButton' => false,
+                    'width'=> '500px',
                 ]);
+
+                $this->items = [];
             }
 
         } else {
             $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.selectEduType'), [
-                'position'  =>  'center',
-                'timer'  =>  6000,
-                'toast'  =>  true,
-                'text'  =>  null,
-                'showCancelButton'  =>  false,
-                'showConfirmButton'  =>  false
+                'position' => 'center',
+                'timer' => 6000,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
+                'width'=> '500px',
             ]);
         }
     }
@@ -499,56 +505,56 @@ class ListEvents extends Component
         $byEduType = $this->byEduType;
         $byOffice = auth()->user()->office_id;
 
-        if($selectedRows){
+        if ($selectedRows) {
             if ($byWeek && $byEduType) {
-                $users = User::where('status',true)->where('office_id',$byOffice)->where('edu_type',$byEduType)->orderBy('name', 'asc')
-                ->whereHas('events', function ($query) use ($byWeek) {
-                    $query->where('week_id', $byWeek)->where('status', true);
-                })->with(['events' => function ($query) use ($byWeek,$selectedRows) {
+                $users = User::where('status', true)->where('office_id', $byOffice)->where('edu_type', $byEduType)->orderBy('name', 'asc')
+                    ->whereHas('events', function ($query) use ($byWeek) {
+                        $query->where('week_id', $byWeek)->where('status', true);
+                    })->with(['events' => function ($query) use ($byWeek, $selectedRows) {
                     $query->whereIn('id', $selectedRows)->WhereNotNull('id')->where('week_id', $byWeek)->where('status', true)->whereNotIn('title', ['إجازة'])->orderBy('start', 'asc');
                 }])->get();
 
-                if ($users->count() != Null) {
-                    $subtasks = Subtask::where('status',1)->where('office_id',$byOffice)->where('edu_type', $byEduType)->orderBy('position', 'asc')->get();
-                    $office = Office::where('id',$byOffice)->first();
+                if ($users->count() != null) {
+                    $subtasks = Subtask::where('status', 1)->where('office_id', $byOffice)->where('edu_type', $byEduType)->orderBy('position', 'asc')->get();
+                    $office = Office::where('id', $byOffice)->first();
 
-                    return response()->streamDownload(function() use($users, $subtasks, $office){
-                        $pdf = PDF::loadView('livewire.backend.events.events_pdf',[
+                    return response()->streamDownload(function () use ($users, $subtasks, $office) {
+                        $pdf = PDF::loadView('livewire.backend.events.events_pdf', [
                             'users' => $users,
                             'subtasks' => $subtasks,
                             'office' => $office,
                         ]);
                         return $pdf->stream('events');
-                    },'events.pdf');
+                    }, 'events.pdf');
                 } else {
                     $this->alert('error', __('site.noDataForExport'), [
-                        'position'  =>  'center',
-                        'timer'  =>  3000,
-                        'toast'  =>  true,
-                        'text'  =>  null,
-                        'showCancelButton'  =>  false,
-                        'showConfirmButton'  =>  false
+                        'position' => 'center',
+                        'timer' => 3000,
+                        'toast' => true,
+                        'text' => null,
+                        'showCancelButton' => false,
+                        'showConfirmButton' => false,
                     ]);
                 }
 
             } else {
                 $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.selectEduType'), [
-                    'position'  =>  'center',
-                    'timer'  =>  6000,
-                    'toast'  =>  true,
-                    'text'  =>  null,
-                    'showCancelButton'  =>  false,
-                    'showConfirmButton'  =>  false
+                    'position' => 'center',
+                    'timer' => 6000,
+                    'toast' => true,
+                    'text' => null,
+                    'showCancelButton' => false,
+                    'showConfirmButton' => false,
                 ]);
             }
         } else {
             $this->alert('error', __('site.selectRows'), [
-                'position'  =>  'center',
-                'timer'  =>  6000,
-                'toast'  =>  true,
-                'text'  =>  null,
-                'showCancelButton'  =>  false,
-                'showConfirmButton'  =>  false
+                'position' => 'center',
+                'timer' => 6000,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
             ]);
         }
     }
@@ -556,20 +562,20 @@ class ListEvents extends Component
     //Get Semester Active
     public function semesterActive()
     {
-        $semester_active = Semester::where('active' ,1)->get();
+        $semester_active = Semester::where('active', 1)->get();
         return $semester_active[0]->id;
     }
 
     //Get Week Active
     public function weekActive()
     {
-        $week_active = Week::where('active' ,1)->get();
+        $week_active = Week::where('active', 1)->get();
         return $week_active[0]->id;
     }
 
     // Get Events Property
     public function getEventsProperty()
-	{
+    {
         $searchString = $this->searchTerm;
         $byOffice = auth()->user()->office_id;
         $byWeek = $this->byWeek;
@@ -577,48 +583,48 @@ class ListEvents extends Component
         $byStatus = $this->byStatus;
 
         $events = Event::where('status', $byStatus)->where('semester_id', $this->semesterActive())
-        ->when($byOffice, function($query) use ($byOffice){
-            $query->where('office_id', $byOffice);
-        })
-        ->when($byWeek, function($query) use ($byWeek){
-            $query->where('week_id', $byWeek);
-        })->when($byEduType, function ($query) use($byEduType) {
-            $query->whereHas('user', function ($q) use($byEduType) {
+            ->when($byOffice, function ($query) use ($byOffice) {
+                $query->where('office_id', $byOffice);
+            })
+            ->when($byWeek, function ($query) use ($byWeek) {
+                $query->where('week_id', $byWeek);
+            })->when($byEduType, function ($query) use ($byEduType) {
+            $query->whereHas('user', function ($q) use ($byEduType) {
                 $q->where('edu_type', $byEduType);
             });
         })
-        ->search(trim(($searchString)))
-        ->orderBy($this->sortColumnName, $this->sortDirection)
-        ->latest('created_at')
-        ->paginate(100);
+            ->search(trim(($searchString)))
+            ->orderBy($this->sortColumnName, $this->sortDirection)
+            ->latest('created_at')
+            ->paginate(100);
 
         return $events;
-	}
+    }
 
     public function render()
     {
         $events = $this->events;
-        $users = User::whereStatus(1)->where('office_id',auth()->user()->office_id)->get();
-        $tasks = Task::whereStatus(1)->where('office_id' , auth()->user()->office_id)->get();
-        $weeks = Week::whereStatus(1)->where('semester_id' , $this->semesterActive())->get();
+        $users = User::whereStatus(1)->where('office_id', auth()->user()->office_id)->get();
+        $tasks = Task::whereStatus(1)->where('office_id', auth()->user()->office_id)->get();
+        $weeks = Week::whereStatus(1)->where('semester_id', $this->semesterActive())->get();
 
         $educationTypes = [
             [
-                'id'    => 1,
-                'title' => 'الشؤون التعليمية'
+                'id' => 1,
+                'title' => 'الشؤون التعليمية',
             ],
             [
-                'id'    => 2,
-                'title' => 'الشؤون المدرسية'
-            ]
+                'id' => 2,
+                'title' => 'الشؤون المدرسية',
+            ],
         ];
 
-        return view('livewire.backend.events.list-events',[
-            'events'  => $events,
-            'users'   => $users,
-            'weeks'   => $weeks,
-            'educationTypes'   => $educationTypes,
-            'tasks'   => $tasks,
+        return view('livewire.backend.events.list-events', [
+            'events' => $events,
+            'users' => $users,
+            'weeks' => $weeks,
+            'educationTypes' => $educationTypes,
+            'tasks' => $tasks,
         ])->layout('layouts.admin');
     }
 }

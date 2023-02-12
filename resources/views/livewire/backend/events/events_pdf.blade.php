@@ -165,10 +165,14 @@
                                 <li>{{ $subtask->title }}</li>
                             @endforeach
 
-                            @if ($office->assistant_signature_path)
-                                <img src="{{ $office->assistant_url }}" style="" width="75px" alt="">
+                            @if ($subtasks[0]->edu_type == 'الشؤون التعليمية')
+                                @if ($office->assistant_signature_path)
+                                    <img src="{{ $office->assistant_url }}" style="" width="75px" alt="">
+                                @endif
                             @else
-                                <br>
+                                @if ($office->assistant2_signature_path)
+                                    <img src="{{ $office->assistant2_url }}" style="" width="75px" alt="">
+                                @endif
                             @endif
                         </ol>
                     </div>
@@ -205,10 +209,8 @@
                     <table style="border-collapse: collapse;">
                         <tbody>
                             <tr style="border-top: 1px solid rgb(100, 100, 100);">
-                                <td class="logo_header" style="text-align:center;font-size: 12px;">رؤيتنا : تعليم مُتميز عالي
-                                    الجودة بِكوادر تعليمية مُؤهلة لِبناء مُواطن مُعتزّ بِقيمه الوطنية ومُنافس عالمياً.</td>
-                                <td class="logo_header" style="text-align:center;font-size: 12px;">{{ $users[0]->office->name }}
-                                </td>
+                                <td class="logo_header" style="text-align:right;font-size: 12px; padding-right:10px">رؤيتنا : تعليم ريادي.</td>
+                                <td class="logo_header" style="text-align:left;font-size: 12px; padding-left:10px">{{ $users[0]->office->name }}</td>
                             </tr>
                         </tbody>
                     </table>

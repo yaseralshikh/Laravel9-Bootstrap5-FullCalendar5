@@ -71,10 +71,12 @@ class EventsExport implements FromCollection, WithHeadings, WithMapping, ShouldA
         return [
             $event->id,
             $event->user->name,
+            $event->user->edu_type,
             $event->title,
             Hijri::Date('Y-m-d', $event->start) .' / '. Hijri::Date('l', $event->start) .' / '. Carbon::parse($event->start)->toDateString(),
             $event->semester->title,
             $event->week->title,
+            $event->week->semester->school_year,
             $event->office->name,
             $event->status ? 'Active' : 'Inactive',
         ] ;
@@ -85,10 +87,12 @@ class EventsExport implements FromCollection, WithHeadings, WithMapping, ShouldA
         return [
             'id',
             'Name',
+            'edu_type',
             'Event',
             'Date',
             'Semester',
             'Week',
+            'School Year',
             'Office',
             'Status',
         ];
@@ -98,7 +102,7 @@ class EventsExport implements FromCollection, WithHeadings, WithMapping, ShouldA
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange = 'A1:H1'; // All headers
+                $cellRange = 'A1:J1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray(
                     array(

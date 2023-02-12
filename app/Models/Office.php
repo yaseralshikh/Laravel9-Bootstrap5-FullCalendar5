@@ -16,6 +16,7 @@ class Office extends Model
         'director',
         'director_signature_path',
         'assistant_signature_path',
+        'assistant2_signature_path',
         'status',
     ];
 
@@ -56,6 +57,7 @@ class Office extends Model
     protected $appends = [
         'director_url',
         'assistant_url',
+        'assistant2_url',
     ];
 
     public function getDirectorUrlAttribute()
@@ -70,6 +72,15 @@ class Office extends Model
     {
         if ($this->assistant_signature_path && Storage::disk('signature_photos')->exists($this->assistant_signature_path)) {
             return Storage::disk('signature_photos')->url($this->assistant_signature_path);
+        }
+
+        return asset('backend/img/noimage.png');
+    }
+
+    public function getAssistant2UrlAttribute()
+    {
+        if ($this->assistant2_signature_path && Storage::disk('signature_photos')->exists($this->assistant2_signature_path)) {
+            return Storage::disk('signature_photos')->url($this->assistant2_signature_path);
         }
 
         return asset('backend/img/noimage.png');
