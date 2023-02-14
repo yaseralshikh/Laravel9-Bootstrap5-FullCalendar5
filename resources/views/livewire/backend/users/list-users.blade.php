@@ -169,6 +169,7 @@
                                         </span>
                                     </th>
                                     <th class=" align-middle">@lang('site.role')</th>
+                                    <th class=" align-middle">@lang('site.emailVerified')</th>
                                     <th>
                                         @lang('site.status')
                                         <span wire:click="sortBy('status')" class="text-sm float-sm-right"
@@ -205,6 +206,12 @@
                                                 'selected' : '' }}>{{ $role->name }}</option>
                                             @endforeach
                                         </select>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="font-weight-bold badge text-white {{ $user->email_verified_at != Null ? 'bg-success' : 'bg-secondary' }}">
+                                            {{ $user->emailVerified() }}
+                                        </span>
                                     </td>
                                     <td>
                                         <span

@@ -2,21 +2,26 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Event;
-use App\Models\Semester;
+use Carbon\Carbon;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Week;
+use App\Models\Event;
+use App\Models\Office;
+use App\Rules\WeekRule;
+use Livewire\Component;
+use App\Models\Semester;
+use App\Rules\UserOverLap;
 use App\Rules\EventOverLap;
 use App\Rules\SemesterRule;
-use App\Rules\UserOverLap;
-use App\Rules\WeekRule;
-use Carbon\Carbon;
+use App\Models\Specialization;
 use Illuminate\Support\Facades\Validator;
-use Livewire\Component;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Calendar extends Component
 {
+    use LivewireAlert;
+
     public $data = [];
 
     public $all_user;
@@ -29,6 +34,77 @@ class Calendar extends Component
     public $event_id;
 
     public $weeks = [];
+
+    // update User Profile
+
+    public $profileData = [];
+    public $userProfile;
+
+    public function editProfile(User $user_profile) {
+        $this->reset('profileData');
+
+        $this->userProfile = $user_profile;
+
+        $this->profileData = $user_profile->toArray();
+
+        $this->dispatchBrowserEvent('show-profile');
+    }
+
+    public function updateProfile()
+    {
+        try {
+            $emailVerifiedMessage = null;
+
+            $validatedData = Validator::make($this->profileData, [
+                'name'                      => 'required',
+                'email'                     => 'required|email|unique:users,email,'.$this->userProfile->id,
+                'office_id'                 => 'nullable',
+                'specialization_id'         => 'required',
+                'type'                      => 'required',
+                'edu_type'                  => 'required',
+                'status'                    => 'required',
+                'email_verified_at'         => 'nullable',
+                'password'                  => 'sometimes|confirmed',
+            ])->validate();
+
+            if(!empty($validatedData['password'])) {
+                $validatedData['password'] = bcrypt($validatedData['password']);
+            }
+
+            if($validatedData['email'] !=$this->userProfile->email){
+                $validatedData['email_verified_at'] = null;
+                $emailVerifiedMessage = true;
+                $this->userProfile->sendEmailVerificationNotification();
+            }
+
+            $this->userProfile->update($validatedData);
+
+            $this->dispatchBrowserEvent('hide-profile');
+
+            $this->alert('success', __('site.updateSuccessfully') . ($emailVerifiedMessage ? ' <p dir="rtl"> <br> ' . __('site.emailVerifiedMessage') . '</p>' : '') , [
+                'position'  =>  'top-end',
+                'timer'  =>  4000,
+                'toast'  =>  true,
+                'text'  =>  null,
+                'showCancelButton'  =>  false,
+                'showConfirmButton'  =>  false
+            ]);
+
+            $emailVerifiedMessage = null;
+
+        } catch (\Throwable $th) {
+            $message = $this->alert('error', $th->getMessage(), [
+                'position'  =>  'top-end',
+                'timer'  =>  3000,
+                'toast'  =>  true,
+                'text'  =>  null,
+                'showCancelButton'  =>  false,
+                'showConfirmButton'  =>  false
+            ]);
+            return $message;
+        }
+    }
+    // End update user profile
 
     protected function rules(): array
     {
@@ -264,6 +340,50 @@ class Calendar extends Component
         $weeks = Week::whereStatus(1)->get();
         $tasks = Task::where('office_id', auth()->user()->office_id)->whereStatus(1)->get();
 
-        return view('livewire.calendar', compact('tasks', 'weeks', 'semesters'));
+        $specializations = Specialization::whereStatus(true)->get();
+        $offices = Office::whereStatus(true)->get();
+
+        $types = [
+            [
+                'id'    => 1,
+                'title' => 'مشرف تربوي'
+            ],
+            [
+                'id'    => 2,
+                'title' => 'تقنية المعلومات'
+            ],
+            [
+                'id'    => 3,
+                'title' => 'مساعد مدير المكتب للشؤون التعليمية'
+            ],
+            [
+                'id'    => 4,
+                'title' => 'مساعد مدير المكتب للشؤون المدرسية'],
+            [
+                'id'    => 5,
+                'title' => 'مدير مكتب التعليم'
+            ]
+        ];
+
+        $educationTypes = [
+            [
+                'id'    => 1,
+                'title' => 'الشؤون التعليمية'
+            ],
+            [
+                'id'    => 2,
+                'title' => 'الشؤون المدرسية'
+            ]
+        ];
+
+        return view('livewire.calendar', compact(
+            'tasks',
+            'weeks',
+            'semesters',
+            'specializations',
+            'offices',
+            'types',
+            'educationTypes',
+        ));
     }
 }

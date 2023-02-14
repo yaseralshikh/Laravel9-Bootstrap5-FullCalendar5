@@ -33,7 +33,7 @@ class RememberToMakePlans extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'تذكير بإعداد الخطط الأسبوعية '. $this->user->name,
+            subject: 'تذكير بموعد إعداد خطة المشرف التربوي الأسبوعية',
         );
     }
 

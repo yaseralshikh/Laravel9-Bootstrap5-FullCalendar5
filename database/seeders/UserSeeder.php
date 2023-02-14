@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
         $user = \App\Models\User::create([
             'name' => 'ياسر محمد أحمد الشيخ',
             'email' => 'yaseralshikh@gmail.com',
-            'specialization_id' => 14,
+            'specialization_id' => 17,
             'office_id' => 1,
             'type' => 'مشرف تربوي',
             'edu_type' => 'الشؤون التعليمية',

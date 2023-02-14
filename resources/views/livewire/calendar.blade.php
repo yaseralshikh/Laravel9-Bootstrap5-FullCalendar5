@@ -25,10 +25,13 @@
     @endpush
 
     <div class="alert alert-success" dir="rtl" role="alert">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-dark" wire:click.prevent="editProfile({{ auth()->user()->id }})">@lang('site.profile')</button>
+        </div>
         <h4 class="alert-heading">ملاحظة :</h4>
         <ul class="list-group list-group-flush">
             <li>الالتزام بإعداد الخطة الاسبوعية قبل نهاية دوام كل يوم ثلاثاء من كل اسبوع دراسي.</li>
-            <li>مراعاة عدم حضور اكثر من مشرفين في المدرسة الواحدة.</li>
+            <li>مراعاة عدم حضور اكثر من مشرف تربوي في المدرسة الواحدة قدر الإمكان.</li>
             <li>الالتزام بالأيام المكتبية المتفق عليها حسب تعليمات إدارة المكتب.</li>
             <li>التعديل عند اللزوم قبل اعتماد الخطط.</li>
         </ul>
@@ -57,7 +60,7 @@
                             <select name="semester_id" wire:model.defer="semester_id"
                                 wire:change="semesterOption($event.target.value)"
                                 class="form-select  @error('semester_id') is-invalid @enderror" id="semester_id">
-                                <option value="" >@lang('site.choise', ['name' => 'ألفصل الدراسي']) :</option>
+                                <option value="">@lang('site.choise', ['name' => 'ألفصل الدراسي']) :</option>
                                 @foreach ($semesters as $semester)
                                 <option value="{{ $semester->id }}"
                                     style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
@@ -78,7 +81,7 @@
                             <label for="week_id" class="form-label">{{ __('site.schoolWeek') }} :</label>
                             <select name="week_id" wire:model.defer="week_id"
                                 class="form-select  @error('week_id') is-invalid @enderror" id="week_id">
-                                <option value="" >@lang('site.choise', ['name' => 'الأسبوع الدراسي']) :</option>
+                                <option value="">@lang('site.choise', ['name' => 'الأسبوع الدراسي']) :</option>
                                 @foreach ($weeks as $week)
                                 <option value="{{ $week->id }}"
                                     style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
@@ -173,7 +176,7 @@
                             <select name="semester_id" wire:model.defer="semester_id"
                                 wire:change="semesterOption($event.target.value)"
                                 class="form-select @error('semester_id') is-invalid @enderror" id="semester_id_1">
-                                <option value="" >@lang('site.choise', ['name' => 'الفصل الدراسي'])</option>
+                                <option value="">@lang('site.choise', ['name' => 'الفصل الدراسي'])</option>
                                 @foreach ($semesters as $semester)
                                 <option value="{{ $semester->id }}"
                                     style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
@@ -193,12 +196,12 @@
                             <label for="week_id_1" class="col-form-label">{{ __('site.schoolWeek') }} :</label>
                             <select wire:model.defer="week_id"
                                 class="form-select  @error('week_id') is-invalid @enderror" id="week_d_1">
-                                <option value="" >@lang('site.choise', ['name' => 'الأسبوع الدراسي'])</option>
+                                <option value="">@lang('site.choise', ['name' => 'الأسبوع الدراسي'])</option>
                                 @foreach ($weeks as $week)
-                                    <option value="{{ $week->id }}"
-                                        style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
-                                        $week->title . ' ( ' . $week->semester->school_year . ' )' }}
-                                    </option>
+                                <option value="{{ $week->id }}"
+                                    style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
+                                    $week->title . ' ( ' . $week->semester->school_year . ' )' }}
+                                </option>
                                 @endforeach
                             </select>
 
@@ -248,11 +251,167 @@
                                     data-bs-dismiss="modal">@lang('site.cancel')</button>
                                 <button class="btn btn-primary">@lang('site.update')</button>
                             </div>
-                            <button class="btn btn-danger"
-                                wire:click.prevent='delete'>@lang('site.delete')</button>
+                            <button class="btn btn-danger" wire:click.prevent='delete'>@lang('site.delete')</button>
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Update Profile -->
+
+    <div class="modal fade" id="editProfile" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="editProfileModalLabel">
+                        <span>@lang('site.updateRecord', ['name' => 'الملف الشخصي'])</span>
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form autocomplete="off" wire:submit.prevent="updateProfile">
+                    <div class="modal-body" dir="rtl">
+                        <div class="row h-100 justify-content-center align-items-center">
+                            <div class="col-12">
+
+                                <!-- Modal User Full Name -->
+
+                                <div class="form-group">
+                                    <label for="name">@lang('site.fullName') *</label>
+                                    <input type="text" wire:model.defer="profileData.name"
+                                        class="form-control @error('name') is-invalid @enderror" id="name"
+                                        aria-describedby="nameHelp" placeholder="@lang('site.enterFullName')">
+                                    @error('name')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Modal User Email -->
+
+                                <div class="form-group">
+                                    <label for="email">@lang('site.email') *</label>
+                                    <input type="email" wire:model.defer="profileData.email"
+                                        class="form-control @error('email') is-invalid @enderror" id="email"
+                                        aria-describedby="emailHelp" placeholder="@lang('site.enterEmail')">
+                                    @error('email')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Modal User Office -->
+
+                                <div class="form-group">
+                                    <label for="office_id">@lang('site.office') *</label>
+                                    <select id="office_id" class="form-control @error('office_id') is-invalid @enderror"
+                                        wire:model.defer="profileData.office_id">
+                                        <option hidden>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
+                                        @foreach ($offices as $office)
+                                        <option class="bg-light" value="{{ $office->id }}">{{ $office->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('office_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Modal User Specialization -->
+
+                                <div class="form-group">
+                                    <label for="specialization_id">@lang('site.specialization') *</label>
+                                    <select id="specialization_id"
+                                        class="form-control @error('specialization_id') is-invalid @enderror"
+                                        wire:model.defer="profileData.specialization_id">
+                                        <option hidden>@lang('site.choise', ['name' => 'التخصص'])</option>
+                                        @foreach ($specializations as $specialization)
+                                        <option class="bg-light" value="{{ $specialization->id }}">{{
+                                            $specialization->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('specialization_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Modal User Type -->
+
+                                <div class="form-group">
+                                    <label for="type">@lang('site.type') *</label>
+                                    <select id="type" class="form-control @error('type') is-invalid @enderror"
+                                        wire:model.defer="profileData.type">
+                                        <option hidden selected>@lang('site.choise', ['name' => 'العمل الحالي'])</option>
+                                        @foreach ($types as $type)
+                                        <option class="bg-light" value="{{ $type['title'] }}">{{ $type['title'] }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    @error('type')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Modal Education Type -->
+
+                                <div class="form-group">
+                                    <label for="edu_type">@lang('site.eduType') *</label>
+                                    <select id="edu_type" class="form-control @error('edu_type') is-invalid @enderror"
+                                        wire:model.defer="profileData.edu_type">
+                                        <option hidden selected>@lang('site.choise', ['name' => 'المرجع الإداري'])</option>
+                                        @foreach ($educationTypes as $eduType)
+                                            <option class="bg-light" value="{{ $eduType['title'] }}">{{ $eduType['title'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('edu_type')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Modal User Password -->
+
+                                <div class="form-group">
+                                    <label for="password">@lang('site.password')</label>
+                                    <input type="password" wire:model.defer="profileData.password"
+                                        class="form-control @error('password') is-invalid @enderror" id="password"
+                                        placeholder="@lang('site.enterPassword')">
+                                    @error('password')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Modal User Password Confirmation -->
+
+                                <div class="form-group">
+                                    <label for="passwordConfirmation">@lang('site.passwordConfirmation')</label>
+                                    <input type="password" wire:model.defer="profileData.password_confirmation"
+                                        class="form-control" id="passwordConfirmation"
+                                        placeholder="@lang('site.enterConfirmPassword')">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="mr-1 fa fa-times"></i><span> @lang('site.cancel') </span>
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="mr-1 fa fa-save"></i><span> @lang('site.saveChanges') </span>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -440,6 +599,13 @@
 
             window.addEventListener('swal',function(e){
                 Swal.fire(e.detail);
+            });
+
+            window.addEventListener('hide-profile', function (event) {
+                $('#editProfile').modal('hide');
+            });
+            window.addEventListener('show-profile', function (event) {
+                $('#editProfile').modal('show');
             });
         });
     </script>

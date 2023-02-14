@@ -24,7 +24,6 @@
                     <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}" class="img-circle elevation-2">
                     <a href="{{ route('home') }}" class="h1"><b>Admin</b>LTE</a>
                     <h4 class="text-primary">خطة المشرف الأسبوعية</h4>
-                    <h6>مكتب التعليم بوسط جازان - بنين</h6>
                 </div>
                 <div class="card-body">
                     <p class="login-box-msg">@lang('site.registerNewMembership')</p>

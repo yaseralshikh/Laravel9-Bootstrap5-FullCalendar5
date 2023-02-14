@@ -30,6 +30,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'edu_type',
         'password',
         'status',
+        'email_verified_at',
     ];
 
     /**
@@ -50,6 +51,11 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function emailVerified(): string
+    {
+        return $this->email_verified_at ? __('site.verified') : __('site.unVerified');
+    }
 
     public function status(): string
     {
