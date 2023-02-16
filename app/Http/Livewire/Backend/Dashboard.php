@@ -85,7 +85,7 @@ class Dashboard extends Component
         // New Chart
         //$chartEventsTitle = Event::whereStatus(1)->whereNotIn('title', ['إجازة'])->where('semester_id', $this->semesterActive())->where('office_id', auth()->user()->office_id)->select('title')->pluck('title');
 
-        $this->chartData = Event::whereStatus(1)->where('semester_id', $bySemester)->groupBy('title')
+        $this->chartData = Event::whereStatus(1)->whereNotIn('title', ['إجازة'])->where('semester_id', $bySemester)->groupBy('title')
         ->selectRaw('count(*) as count, title')
         ->pluck('count','title')->toArray();
 

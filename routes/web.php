@@ -7,7 +7,6 @@ use App\Http\Livewire\Backend\Dashboard;
 use App\Http\Livewire\Backend\LogViewer;
 use App\Http\Livewire\Backend\Tasks\Tasks;
 use App\Http\Livewire\Backend\Weeks\Weeks;
-use App\Http\Controllers\ProfileController;
 use App\Http\Livewire\Backend\Levels\Levels;
 use App\Http\Livewire\Backend\Offices\Office;
 use App\Http\Livewire\Backend\Subtask\Subtask;
@@ -38,8 +37,9 @@ Auth::routes(['verify' => true]);
 //     Route::get('/', [HomeController::class, 'index'])->name('home');
 // });
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
-
+Route::group(['middleware' => ['auth']], function (){
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+});
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'role:admin|superadmin']], function () {
     Route::get('/', Dashboard::class)->name('dashboard');

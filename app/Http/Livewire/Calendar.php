@@ -40,7 +40,8 @@ class Calendar extends Component
     public $profileData = [];
     public $userProfile;
 
-    public function editProfile(User $user_profile) {
+    public function editProfile(User $user_profile)
+    {
         $this->reset('profileData');
 
         $this->userProfile = $user_profile;
