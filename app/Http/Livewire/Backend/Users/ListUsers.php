@@ -152,7 +152,7 @@ class ListUsers extends Component
             'showConfirmButton'  =>  false
         ]);
 
-		$this->reset();
+		$this->reset('data');
     }
 
     // Sort By Column Name
@@ -301,7 +301,7 @@ class ListUsers extends Component
 
     public function show(User $user)
     {
-        $this->reset();
+        $this->reset('data');
 
 		$this->user = $user;
 
@@ -377,7 +377,7 @@ class ListUsers extends Component
 
     public function importExcelForm()
     {
-        $this->reset();
+        $this->reset('data');
 		$this->dispatchBrowserEvent('show-import-excel-modal');
     }
 
@@ -432,7 +432,7 @@ class ListUsers extends Component
                 'showConfirmButton'  =>  false
             ]);
 
-            $this->reset();
+            $this->reset('data');
             $this->dispatchBrowserEvent('hide-import-excel-modal');
 
 
@@ -448,7 +448,7 @@ class ListUsers extends Component
             return $message;
 
             $this->importTypevalue = null;
-            $this->reset();
+            $this->reset('data');
             $this->dispatchBrowserEvent('hide-import-excel-modal');
         }
     }
@@ -525,7 +525,7 @@ class ListUsers extends Component
                 'title' => 'الشؤون المدرسية'
             ]
         ];
-        
+
         return view('livewire.backend.users.list-users',[
             'users' => $users,
             'specializations' => $specializations ,

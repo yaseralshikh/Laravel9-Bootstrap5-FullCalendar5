@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Task;
 use App\Models\Event;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -28,10 +29,10 @@ class EventOverLap implements Rule
      */
     public function passes($attribute, $value)
     {
-        $event = Event::where('title', $value)
+        $event = Event::where('task_id', $value)
             ->where('start', $this->start)
-            ->whereNotIn('title',['إجازة','يوم مكتبي','برنامج تدريبي'])
-            ->count() == 1;
+            ->whereNotIn('task_id',[1,2,3])
+            ->count() <= 1;
 
         return $event ;
     }
@@ -43,6 +44,6 @@ class EventOverLap implements Rule
      */
     public function message()
     {
-        return 'تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرف اخر.';
+        return 'تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرفين أخرين.';
     }
 }

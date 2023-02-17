@@ -72,7 +72,7 @@ class EventsExport implements FromCollection, WithHeadings, WithMapping, ShouldA
             $event->id,
             $event->user->name,
             $event->user->edu_type,
-            $event->title,
+            $event->task->name,
             Hijri::Date('Y-m-d', $event->start) .' / '. Hijri::Date('l', $event->start) .' / '. Carbon::parse($event->start)->toDateString(),
             $event->semester->title,
             $event->week->title,

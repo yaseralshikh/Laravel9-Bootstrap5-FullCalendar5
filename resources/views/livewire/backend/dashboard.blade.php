@@ -198,7 +198,18 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <div class="shadow rounded p-4 border" style="height: 28rem;">
+                                <div class="shadow rounded p-4 border text-center" style="height: 31rem;">
+                                    <div class="form-group clearfix">
+                                        {{-- <span class="d-inline">Filter</span> --}}
+                                        @foreach ($levels as $level)
+                                            <div class="icheck-primary d-inline">
+                                                <label for="radioPrimary{{ $level->id }}">
+                                                    {{ $level->name }}
+                                                </label>
+                                                <input type="radio" id="radioPrimary{{ $level->id }}" wire:model="byLevel" value="{{ $level->id }}">
+                                            </div>
+                                        @endforeach
+                                    </div><hr>
 
                                     <div id="highchart"></div>
 
@@ -271,9 +282,6 @@
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
                                 </button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                    <i class="fas fa-times"></i>
-                                </button>
                             </div>
                         </div>
                         <div class="card-body">
@@ -303,12 +311,10 @@
                                                     <td>{{ $user->name }}</td>
                                                     <td>{{ $user->specialization->name }}</td>
                                                     <td>{{ $user->type }}</td>
-                                                    <td>{{ $user->events->whereNotIn('title',['يوم مكتبي','برنامج
-                                                        تدريبي','إجازة'])->count() }}</td>
-                                                    <td>{{ $user->events->where('title', 'يوم مكتبي')->count() }}</td>
-                                                    <td>{{ $user->events->where('title', 'برنامج تدريبي')->count() }}
-                                                    </td>
-                                                    <td>{{ $user->events->where('title', 'إجازة')->count() }}</td>
+                                                    <td>{{ $user->events->whereNotIn('task.name',['يوم مكتبي','برنامج تدريبي','إجازة'])->count() }}</td>
+                                                    <td>{{ $user->events->where('task.name','يوم مكتبي')->count() }}</td>
+                                                    <td>{{ $user->events->where('task.name','برنامج تدريبي')->count() }}</td>
+                                                    <td>{{ $user->events->where('task.name','إجازة')->count() }}</td>
                                                     <td class="bg-light">{{ $user->events->count() }}</td>
                                                 </tr>
                                                 @empty
@@ -340,7 +346,7 @@
             $(document).ready(function(){
                 //const data = <?php echo json_encode($chartData); ?>;
                 const data = @js($chartData);
-                console.log(data);
+
                 const title=[];
                 const count=[];
 
@@ -348,6 +354,8 @@
                     title.push(key);
                     count.push(value);
                 }
+
+                console.log(data);
 
                 const chart = Highcharts.chart('highchart', {
                     chart: {

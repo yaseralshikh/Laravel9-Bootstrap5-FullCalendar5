@@ -195,24 +195,22 @@ class ListEvents extends Component
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'title' => 'required|max:255',
+                'task_id' => 'required',
                 'user_id' => 'required',
-                //'semester_id'           => ['required_with:start', new SemesterRule($this->data['start'])],
                 'week_id' => ['required_with:start', new WeekRule($this->data['start'])],
-                //'office_id'             => 'nullable',
                 'start' => 'required',
                 'status' => ['required'],
             ])->validate();
 
-            switch ($validatedData['title']) {
-                case "يوم مكتبي":
+            switch ($validatedData['task_id']) {
+                case 1:
                     $color = '#000000';
                     break;
-                case "برنامج تدريبي":
-                    $color = '#eb6c0c';
-                    break;
-                case "إجازة مطولة":
+                case 2:
                     $color = '#cf87fa';
+                    break;
+                case 3:
+                    $color = '#eb6c0c';
                     break;
                 default:
                     $color = '#298A08';
@@ -280,7 +278,7 @@ class ListEvents extends Component
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'title' => 'required|max:255',
+                'task_id' => 'required',
                 'user_id' => 'required',
                 'semester_id' => ['required', new SemesterRule($this->data['start'])],
                 'week_id' => ['required', new WeekRule($this->data['start'])],
@@ -289,15 +287,15 @@ class ListEvents extends Component
                 'status' => 'required',
             ])->validate();
 
-            switch ($validatedData['title']) {
-                case "يوم مكتبي":
+            switch ($validatedData['task_id']) {
+                case 1:
                     $color = '#000000';
                     break;
-                case "برنامج تدريبي":
-                    $color = '#eb6c0c';
-                    break;
-                case "إجازة مطولة":
+                case 2:
                     $color = '#cf87fa';
+                    break;
+                case 3:
+                    $color = '#eb6c0c';
                     break;
                 default:
                     $color = '#298A08';
@@ -362,7 +360,7 @@ class ListEvents extends Component
                 'showConfirmButton' => false,
             ]);
 
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             $message = $this->alert('error', $th->getMessage(), [
                 'position' => 'top-end',
                 'timer' => 3000,
@@ -505,40 +503,54 @@ class ListEvents extends Component
         $byEduType = $this->byEduType;
         $byOffice = auth()->user()->office_id;
 
-        if ($selectedRows) {
-            if ($byWeek && $byEduType) {
-                $users = User::where('status', true)->where('office_id', $byOffice)->where('edu_type', $byEduType)->orderBy('name', 'asc')
-                    ->whereHas('events', function ($query) use ($byWeek) {
-                        $query->where('week_id', $byWeek)->where('status', true);
-                    })->with(['events' => function ($query) use ($byWeek, $selectedRows) {
-                    $query->whereIn('id', $selectedRows)->WhereNotNull('id')->where('week_id', $byWeek)->where('status', true)->whereNotIn('title', ['إجازة'])->orderBy('start', 'asc');
-                }])->get();
+        try {
 
-                if ($users->count() != null) {
-                    $subtasks = Subtask::where('status', 1)->where('office_id', $byOffice)->where('edu_type', $byEduType)->orderBy('position', 'asc')->get();
-                    $office = Office::where('id', $byOffice)->first();
+            if ($selectedRows) {
+                if ($byWeek && $byEduType) {
+                    $users = User::where('status', true)->where('office_id', $byOffice)->where('edu_type', $byEduType)->orderBy('name', 'asc')
+                        ->whereHas('events', function ($query) use ($byWeek) {
+                            $query->where('week_id', $byWeek)->where('status', true);
+                        })->with(['events' => function ($query) use ($byWeek, $selectedRows) {
+                        $query->with('task')->whereIn('id', $selectedRows)->WhereNotNull('id')->where('week_id', $byWeek)->where('status', true)->whereNotIn('task_id', [2])->orderBy('start', 'asc');
+                    }])->get();
 
-                    return response()->streamDownload(function () use ($users, $subtasks, $office) {
-                        $pdf = PDF::loadView('livewire.backend.events.events_pdf', [
-                            'users' => $users,
-                            'subtasks' => $subtasks,
-                            'office' => $office,
+//                    dd($users);
+
+                    if ($users->count() != null) {
+                        $subtasks = Subtask::where('status', 1)->where('office_id', $byOffice)->where('edu_type', $byEduType)->orderBy('position', 'asc')->get();
+                        $office = Office::where('id', $byOffice)->first();
+
+                        return response()->streamDownload(function () use ($users, $subtasks, $office) {
+                            $pdf = PDF::loadView('livewire.backend.events.events_pdf', [
+                                'users' => $users,
+                                'subtasks' => $subtasks,
+                                'office' => $office,
+                            ]);
+                            return $pdf->stream('events');
+                        }, 'events.pdf');
+                    } else {
+                        $this->alert('error', __('site.noDataForExport'), [
+                            'position' => 'center',
+                            'timer' => 3000,
+                            'toast' => true,
+                            'text' => null,
+                            'showCancelButton' => false,
+                            'showConfirmButton' => false,
                         ]);
-                        return $pdf->stream('events');
-                    }, 'events.pdf');
+                    }
+
                 } else {
-                    $this->alert('error', __('site.noDataForExport'), [
+                    $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.selectEduType'), [
                         'position' => 'center',
-                        'timer' => 3000,
+                        'timer' => 6000,
                         'toast' => true,
                         'text' => null,
                         'showCancelButton' => false,
                         'showConfirmButton' => false,
                     ]);
                 }
-
             } else {
-                $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.selectEduType'), [
+                $this->alert('error', __('site.selectRows'), [
                     'position' => 'center',
                     'timer' => 6000,
                     'toast' => true,
@@ -547,15 +559,17 @@ class ListEvents extends Component
                     'showConfirmButton' => false,
                 ]);
             }
-        } else {
-            $this->alert('error', __('site.selectRows'), [
-                'position' => 'center',
-                'timer' => 6000,
+
+        } catch (\Throwable $th) {
+            $message = $this->alert('error', $th->getMessage(), [
+                'position' => 'top-end',
+                'timer' => 3000,
                 'toast' => true,
                 'text' => null,
                 'showCancelButton' => false,
                 'showConfirmButton' => false,
             ]);
+            return $message;
         }
     }
 

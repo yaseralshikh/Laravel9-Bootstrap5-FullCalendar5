@@ -13,7 +13,7 @@ class Event extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
+        'task_id',
         'start',
         'end',
         'user_id',
@@ -49,12 +49,19 @@ class Event extends Model
         return $this->belongsTo(Office::class);
     }
 
+    public function task(): BelongsTo
+    {
+        return $this->belongsTo(Task::class);
+    }
+
     public function scopeSearch($query, $term)
     {
         $term = "%$term%";
 
         $query->where(function($query) use ($term){
-            $query->where('title', 'like' , $term)
+            $query->whereHas('task', function ($q) use ($term) {
+                    $q->where('name', 'like', $term);
+                })
                 ->orWhere(function ($qu) use ($term) {
                     $qu->whereHas('user', function ($q) use ($term) {
                         $q->where('name', 'like', $term);

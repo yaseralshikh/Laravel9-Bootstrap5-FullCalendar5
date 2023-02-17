@@ -152,7 +152,7 @@
                                 {{-- <td>{{ $event->week->title }}</td> --}}
                                 <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start) }}</td>
                                 <td>{{ Alkoumi\LaravelHijriDate\Hijri::Date('Y-m-d', $event->start) }}</td>
-                                <td>{{ $event->title }}</td>
+                                <td>{{ $event->task->name }}</td>
                             </tr>
                             @endforeach
                         </tbody>

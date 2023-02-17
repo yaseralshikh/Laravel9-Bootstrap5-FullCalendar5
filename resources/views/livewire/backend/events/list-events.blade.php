@@ -274,7 +274,7 @@
                                     <td class="dtr-control align-middle">{{ $event->user->name }}</td>
                                     <td class="align-middle">{{ $event->user->specialization->name }}</td>
                                     <td class="align-middle">{{ $event->user->edu_type }}</td>
-                                    <td class="align-middle" style="color: {{ $event->color }};">{{ $event->title }}
+                                    <td class="align-middle" style="color: {{ $event->color }};">{{ $event->task->name }}
                                     </td>
                                     <td class="align-middle">{{ Alkoumi\LaravelHijriDate\Hijri::Date('l', $event->start)
                                         }}<br>
@@ -440,13 +440,13 @@
                                 <!-- Modal Task (Event Title) -->
 
                                 <div class="form-group">
-                                    <label for="title" class="col-form-label">@lang('site.task') :</label>
+                                    <label for="task_id" class="col-form-label">@lang('site.task') :</label>
 
-                                    <select name="title" wire:model.defer="data.title"
-                                        class="form-control  @error('title') is-invalid @enderror" id="title">
+                                    <select name="task_id" wire:model.defer="data.task_id"
+                                        class="form-control  @error('task_id') is-invalid @enderror" id="task_id">
                                         <option value="" selected>@lang('site.choise', ['name' => 'المهمة'])</option>
                                         @foreach ($tasks as $task)
-                                            <option value="{{ $task->name }}" style="
+                                            <option value="{{ $task->id }}" style="
                                                 {{ $task->level_id == 1 ? 'background:#FBEFF2;' : '' }}
                                                 {{ $task->level_id == 2 ? 'background:#E6F8E0;' : '' }}
                                                 {{ $task->level_id == 3 ? 'background:#F7F8E0;' : '' }}
@@ -457,7 +457,7 @@
                                         @endforeach
                                     </select>
 
-                                    @error('title')
+                                    @error('task_id')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

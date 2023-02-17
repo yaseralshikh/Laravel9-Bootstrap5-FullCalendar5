@@ -102,11 +102,11 @@
                             <label for="title" class="col-form-label">@lang('site.task') :</label>
                             {{-- <input type="text" wire:model.defer="title"
                                 class="form-control @error('title') is-invalid @enderror" id="title"> --}}
-                            <select name="title" wire:model.defer="title"
-                                class="form-select  @error('title') is-invalid @enderror" id="title">
+                            <select name="task_id" wire:model.defer="task_id"
+                                class="form-select  @error('task_id') is-invalid @enderror" id="task_id">
                                 <option value="" selected>@lang('site.choise', ['name' => 'المهمة']) :</option>
                                 @foreach ($tasks as $task)
-                                <option value="{{ $task->name }}" style="
+                                <option value="{{ $task->id }}" style="
                                         {{ $task->level_id == 1 ? 'background:#FBEFF2;' : '' }}
                                         {{ $task->level_id == 2 ? 'background:#E6F8E0;' : '' }}
                                         {{ $task->level_id == 3 ? 'background:#F7F8E0;' : '' }}
@@ -116,7 +116,7 @@
                                 </option>
                                 @endforeach
                             </select>
-                            @error('title')
+                            @error('task_id')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -213,11 +213,11 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="title1" class="col-form-label">@lang('site.task') :</label>
-                            <select wire:model.defer="title" class="form-select  @error('title') is-invalid @enderror"
-                                id="title1">
+                            <label for="task_id1" class="col-form-label">@lang('site.task') :</label>
+                            <select wire:model.defer="task_id" class="form-select  @error('task_id') is-invalid @enderror"
+                                id="task_id">
                                 @foreach ($tasks as $task)
-                                <option value="{{ $task->name }}" style="
+                                <option value="{{ $task->id }}" style="
                                         {{ $task->level_id == 1 ? 'background:#FBEFF2;' : '' }}
                                         {{ $task->level_id == 2 ? 'background:#E6F8E0;' : '' }}
                                         {{ $task->level_id == 3 ? 'background:#F7F8E0;' : '' }}
@@ -228,7 +228,7 @@
                                 @endforeach
                             </select>
 
-                            @error('title')
+                            @error('task_id')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -424,7 +424,7 @@
                 @this.office_id = '';
                 @this.semester_id = '';
                 @this.week_id = '';
-                @this.title = '';
+                @this.task_id = '';
                 @this.start = '';
                 @this.end = '';
             });
@@ -435,7 +435,7 @@
                 @this.office_id = '';
                 @this.semester_id = '';
                 @this.week_id = '';
-                @this.title = '';
+                @this.task_id = '';
                 @this.start = '';
                 @this.end = '';
             });
@@ -467,6 +467,15 @@
                 droppable: true, // this allows things to be dropped onto the calendar
                 editable: true,
 
+                eventContent: function(info) {
+                    return {
+                        html: '<h6 style="font-weight: bold">&nbsp&nbsp<i class="fa fa-calendar" aria-hidden="true"></i>&nbsp&nbsp'
+                             + info.event.extendedProps.task.name + '</h6>' + '<span class="text-success">&nbsp&nbsp'
+                             + (info.event.extendedProps.status == 1 ? '<i class="fa fa-check" aria-hidden="true"></i>' : ''
+                             + '</span>')
+                    }
+                },
+
                 dateClick: function(info){
                     var startDate = info.dateStr;
                     var endDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() + 1));
@@ -483,6 +492,7 @@
                 // },
 
                 eventClick: function({event}) {
+
                     if (userID == event.extendedProps.user_id || userRole != 3) {
                         if (event.extendedProps.status && userRole == 3) {
                             Swal.fire({
@@ -498,7 +508,7 @@
                             @this.office_id     = event.extendedProps.office_id;
                             @this.semester_id   = event.extendedProps.semester_id;
                             @this.week_id       = event.extendedProps.week_id;
-                            @this.title         = event.title;
+                            @this.task_id       = event.extendedProps.task_id;
                             @this.start         = dayjs(event.startStr).format('YYYY-MM-DD');
                             @this.end           = dayjs(event.endStr).format('YYYY-MM-DD');
                             $('#editModal').modal('toggle');
@@ -519,7 +529,7 @@
                 // for show Tooltips //
                 // eventDidMount: function (info) {
                 //     $(info.el).popover({
-                //         title: info.event.title,
+                //         title: info.event.task_id,
                 //         placement: 'top',
                 //         trigger: 'hover',
                 //         //content: dayjs(info.event.startStr).format('YYYY-MM-DD'),
@@ -531,7 +541,7 @@
 
                 eventMouseEnter: function (info) {
                     $(info.el).tooltip({
-                        title: info.event.extendedProps.week.title + ' ( ' + info.event.extendedProps.semester.school_year  + ' ) ' + '<br />' + info.event.title + '<br />'+ '<span class="text-info">' + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
+                        title: info.event.extendedProps.week.title + ' ( ' + info.event.extendedProps.semester.school_year  + ' ) ' + '<br />' + info.event.extendedProps.task.name + '<br />'+ '<span class="text-info">' + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
                         html: true,
                         content:'ssss',
                         placement: 'top',
@@ -561,28 +571,32 @@
                             if (e.source === null) { e.remove(); }
                         });
                     }
-                }
-
+                },
             });
 
+            // for fill calendar
             calendar.addEventSource({
                 url: '/api/calendar/events'
             });
 
+            // for render calendar
             calendar.render();
 
+            // Listener close Modal Create
             document.addEventListener('closeModalCreate', function({detail}) {
                 if (detail.close) {
                     $('#createModal').modal('toggle');
                 }
             });
 
+            // Listener close Modal Edit
             document.addEventListener('closeModalEdit', function({detail}) {
                 if (detail.close) {
                     $('#editModal').modal('toggle');
                 }
             });
 
+            // Listener for refresh Calendar
             document.addEventListener('refreshEventCalendar', function({detail}) {
                 if (detail.refresh) {
                     calendar.refetchEvents();
@@ -597,10 +611,12 @@
                 }
             });
 
+            // Listener for SweetAleart
             window.addEventListener('swal',function(e){
                 Swal.fire(e.detail);
             });
 
+            // Listener for Profile
             window.addEventListener('hide-profile', function (event) {
                 $('#editProfile').modal('hide');
             });

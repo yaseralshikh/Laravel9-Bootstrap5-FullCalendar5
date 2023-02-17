@@ -28,7 +28,7 @@ class Calendar extends Component
     public $semester_id;
     public $week_id;
     public $office_id;
-    public $title;
+    public $task_id;
     public $start;
     public $end;
     public $event_id;
@@ -112,7 +112,7 @@ class Calendar extends Component
         return ([
             'semester_id' => ['required', new SemesterRule($this->start)],
             'week_id' => ['required', new WeekRule($this->start)],
-            'title' => ['required', new EventOverLap($this->start), new UserOverLap($this->start)],
+            'task_id' => ['required', new EventOverLap($this->start), new UserOverLap($this->start)],
         ]);
     }
 
@@ -127,19 +127,20 @@ class Calendar extends Component
 
         $color = null;
 
-        switch ($this->title) {
-            case "يوم مكتبي":
+        switch ($this->task_id) {
+            case 1:
                 $color = '#000000';
                 break;
-            case "برنامج تدريبي":
-                $color = '#eb6c0c';
-                break;
-            case "إجازة":
+            case 2:
                 $color = '#cf87fa';
+                break;
+            case 3:
+                $color = '#eb6c0c';
                 break;
             default:
                 $color = '#298A08';
         }
+
         if ($this->all_user) {
             $users = User::where('office_id', auth()->user()->office_id)->whereStatus(1)->get();
             foreach ($users as $user) {
@@ -148,7 +149,7 @@ class Calendar extends Component
                     'office_id' => $user->office_id,
                     'semester_id' => $this->semester_id,
                     'week_id' => $this->week_id,
-                    'title' => $this->title,
+                    'task_id' => $this->task_id,
                     'start' => $this->start,
                     'end' => $this->end,
                     'color' => $color,
@@ -161,7 +162,7 @@ class Calendar extends Component
                 'office_id' => auth()->user()->office_id,
                 'semester_id' => $this->semester_id,
                 'week_id' => $this->week_id,
-                'title' => $this->title,
+                'task_id' => $this->task_id,
                 'start' => $this->start,
                 'end' => $this->end,
                 'color' => $color,
@@ -187,7 +188,7 @@ class Calendar extends Component
             'semester_id' => $this->semester_id,
             'week_id' => $this->week_id,
             'office_id' => $this->office_id,
-            'title' => $this->title,
+            'task_id' => $this->task_id,
             'start' => $this->start,
             'end' => $this->end,
         ];
@@ -195,20 +196,20 @@ class Calendar extends Component
         $validatedData = Validator::make($this->data, [
             'semester_id' => ['required', new SemesterRule($this->start)],
             'week_id' => ['required', new WeekRule($this->start)],
-            'title' => ['required', new EventOverLap($this->start)],
+            'task_id' => ['required', new EventOverLap($this->start)],
         ])->validate();
 
         $color = null;
 
-        switch ($this->title) {
-            case "يوم مكتبي":
+        switch ($this->task_id) {
+            case 1:
                 $color = '#000000';
                 break;
-            case "برنامج تدريبي":
-                $color = '#eb6c0c';
-                break;
-            case "إجازة":
+            case 2:
                 $color = '#cf87fa';
+                break;
+            case 3:
+                $color = '#eb6c0c';
                 break;
             default:
                 $color = '#298A08';
@@ -217,7 +218,7 @@ class Calendar extends Component
         $validatedData['office_id'] = auth()->user()->office_id;
         $validatedData['semester_id'] = $this->semester_id;
         $validatedData['week_id'] = $this->week_id;
-        $validatedData['title'] = $this->title;
+        $validatedData['task_id'] = $this->task_id;
         $validatedData['start'] = $this->start;
         $validatedData['end'] = $this->end;
         $validatedData['color'] = $color;
@@ -267,10 +268,10 @@ class Calendar extends Component
                 ]);
             } else {
 
-                $eventOverLap = Event::where('title', $eventdata->title)
+                $eventOverLap = Event::where('task_id', $eventdata->task_id)
                     ->where('start', $event['start'])
-                    ->whereNotIn('title', ['إجازة', 'يوم مكتبي', 'برنامج تدريبي'])
-                    ->count() == 0;
+                    ->whereNotIn('task_id', [1,2,3])
+                    ->count() <= 1;
 
                 if ($eventOverLap) {
                     $eventStart = Carbon::create($event['start'])->toDateString();
@@ -290,7 +291,7 @@ class Calendar extends Component
                     ]);
                 } else {
                     $this->dispatchBrowserEvent('swal', [
-                        'title' => 'تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرف اخر.',
+                        'title' => 'تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرفين أخرين.',
                         'timer' => 3500,
                         'icon' => 'error',
                         'toast' => true,
