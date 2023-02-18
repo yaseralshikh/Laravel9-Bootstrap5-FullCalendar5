@@ -25,4 +25,9 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    public function site_off_line()
+    {
+        return view('site_off_line');
+    }
 }

@@ -29,10 +29,9 @@ class EventOverLap implements Rule
      */
     public function passes($attribute, $value)
     {
-        $event = Event::where('task_id', $value)
-            ->where('start', $this->start)
-            ->whereNotIn('task_id',[1,2,3])
-            ->count() <= 1;
+        $event = Event::where('task_id', $value)->where('start', $this->start)
+            ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي']);})
+            ->count() <= 0;
 
         return $event ;
     }

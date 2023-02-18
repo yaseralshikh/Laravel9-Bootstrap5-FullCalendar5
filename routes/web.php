@@ -37,6 +37,8 @@ Auth::routes(['verify' => true]);
 //     Route::get('/', [HomeController::class, 'index'])->name('home');
 // });
 
+// Route::get('/', [HomeController::class, 'site_off_line'])->name('home');
+
 Route::group(['middleware' => ['auth']], function (){
     Route::get('/', [HomeController::class, 'index'])->name('home');
 });
