@@ -8,7 +8,7 @@ class CalendarController extends Controller
 {
     public function index()
     {
-        $events = Event::with('user:id,name')//->where('user_id',auth()->user()->id)
+        $events = Event::with('user:id,name')->where('user_id',auth()->user()->id)
             ->with('task:id,name')
             ->with('week:id,title')
             ->with('semester:id,title,school_year')

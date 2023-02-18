@@ -315,7 +315,7 @@ class Weeks extends Component
 
         return $weeks;
 	}
-    
+
     public function render()
     {
         $weeks = $this->weeks;

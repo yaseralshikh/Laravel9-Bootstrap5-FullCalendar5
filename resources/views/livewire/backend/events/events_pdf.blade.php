@@ -113,10 +113,13 @@
                                     </div>
 
                                 </td>
-                                <td class="logo_header"><img src="{{ asset('backend/img/events/moe_logo.jpg') }}" width="150px"
-                                        alt=""></td>
-                                <td class="logo_header"><img src="{{ asset('backend/img/events/moe_logo_l.jpg') }}"
-                                        width="150px" alt=""></td>
+                                <td class="logo_header">
+                                    <img src="{{ asset('backend/img/events/moe_logo.jpg') }}" width="150px" alt="">
+                                </td>
+                                <td class="logo_header">
+                                    <img src="{{ asset('backend/img/events/moe_logo_l.jpg') }}" width="150px" alt="">
+                                    <span style="font-size: 11px;">{{ $users[0]->events[0]->week->title }} {{ $users[0]->events[0]->week->semester->school_year }}</span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

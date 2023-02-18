@@ -224,6 +224,8 @@ class ListUsers extends Component
 		$user = User::create($validatedData);
         $user->attachRole(3);
 
+        $this->user->sendEmailVerificationNotification();
+
         $this->dispatchBrowserEvent('hide-form');
 
         $this->alert('success', __('site.saveSuccessfully'), [
@@ -256,6 +258,8 @@ class ListUsers extends Component
     public function updateUser()
     {
         try {
+            $emailVerifiedMessage = null;
+
             $validatedData = Validator::make($this->data, [
                 'name'                      => 'required',
                 'email'                     => 'required|email|unique:users,email,'.$this->user->id,
@@ -265,23 +269,30 @@ class ListUsers extends Component
                 'edu_type'                  => 'required',
                 'status'                    => 'required',
                 'password'                  => 'sometimes|confirmed',
+                'email_verified_at'         => 'nullable',
             ])->validate();
 
             if(!empty($validatedData['password'])) {
                 $validatedData['password'] = bcrypt($validatedData['password']);
             }
 
+            if($validatedData['email'] != $this->user->getOriginal('email')){
+                $validatedData['email_verified_at'] = null;
+                $emailVerifiedMessage = true;
+                $this->user->sendEmailVerificationNotification();
+            }
+
             $this->user->update($validatedData);
 
             $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', __('site.updateSuccessfully'), [
+            $this->alert('success', __('site.updateSuccessfully') . ($emailVerifiedMessage ? ' <p dir="rtl"> <br> ' . __('site.emailVerifiedMessage') . '</p>' : '') , [
                 'position'  =>  'top-end',
-                'timer'  =>  3000,
-                'toast'  =>  true,
-                'text'  =>  null,
+                'timer'     =>  $emailVerifiedMessage ? 6000 : 3000,
+                'toast'     =>  true,
+                'text'      =>  null,
                 'showCancelButton'  =>  false,
-                'showConfirmButton'  =>  false
+                'showConfirmButton' =>  false
             ]);
 
         } catch (\Throwable $th) {
@@ -490,7 +501,7 @@ class ListUsers extends Component
     {
         $users = $this->users;
 
-        $specializations = Specialization::whereStatus(true)->get();
+        $specializations = Specialization::whereStatus(true)->orderBy('name', 'asc')->get();
         $offices = Office::whereStatus(true)->get();
         $roles = Role::whereNotIn('id',[1])->get();
         $types = [

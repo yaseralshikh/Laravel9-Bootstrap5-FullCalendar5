@@ -18,6 +18,17 @@
             color: rgb(255, 254, 254);
         }
 
+        .fc-h-event .fc-event-main-frame {
+            display: block; /* for make fc-event-title-container expand */
+            padding: 0 1px;
+            white-space: normal;
+        }
+
+        .fc-daygrid-event {
+            white-space: normal !important;
+            align-items: normal !important;
+        }
+
         /* .fc .fc-daygrid-day-frame {
             background-color: rgb(236, 236, 236);
         } */
@@ -456,7 +467,7 @@
                 timeZone: 'local',
                 locale: 'ar-sa',
                 displayEventTime : false,
-                weekNumbers: true,
+                //weekNumbers: true,
                 hiddenDays: [ 5,6 ],
                 //weekends: false,
                 //firstDay:0,

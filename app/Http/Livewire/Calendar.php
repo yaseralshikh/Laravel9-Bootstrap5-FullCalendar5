@@ -72,7 +72,7 @@ class Calendar extends Component
                 $validatedData['password'] = bcrypt($validatedData['password']);
             }
 
-            if($validatedData['email'] !=$this->userProfile->email){
+            if($validatedData['email'] != $this->userProfile->email){
                 $validatedData['email_verified_at'] = null;
                 $emailVerifiedMessage = true;
                 $this->userProfile->sendEmailVerificationNotification();
@@ -90,8 +90,6 @@ class Calendar extends Component
                 'showCancelButton'  =>  false,
                 'showConfirmButton'  =>  false
             ]);
-
-            $emailVerifiedMessage = null;
 
         } catch (\Throwable $th) {
             $message = $this->alert('error', $th->getMessage(), [
@@ -340,9 +338,9 @@ class Calendar extends Component
     {
         $semesters = Semester::whereStatus(1)->get();
         $weeks = Week::whereStatus(1)->get();
-        $tasks = Task::where('office_id', auth()->user()->office_id)->whereStatus(1)->get();
+        $tasks = Task::where('office_id', auth()->user()->office_id)->whereStatus(1)->orderBy('level_id', 'asc')->orderBy('name', 'asc')->get();
 
-        $specializations = Specialization::whereStatus(true)->get();
+        $specializations = Specialization::whereStatus(true)->orderBy('name', 'asc')->get();
         $offices = Office::whereStatus(true)->get();
 
         $types = [

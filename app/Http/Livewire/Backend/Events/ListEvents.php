@@ -618,8 +618,8 @@ class ListEvents extends Component
     public function render()
     {
         $events = $this->events;
-        $users = User::whereStatus(1)->where('office_id', auth()->user()->office_id)->get();
-        $tasks = Task::whereStatus(1)->where('office_id', auth()->user()->office_id)->get();
+        $users = User::whereStatus(1)->where('office_id', auth()->user()->office_id)->orderBy('name', 'asc')->get();
+        $tasks = Task::whereStatus(1)->where('office_id', auth()->user()->office_id)->orderBy('level_id', 'asc')->orderBy('name', 'asc')->get();
         $weeks = Week::whereStatus(1)->where('semester_id', $this->semesterActive())->get();
 
         $educationTypes = [
