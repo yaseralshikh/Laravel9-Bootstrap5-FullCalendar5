@@ -153,16 +153,7 @@
                                     <th>#</th>
                                     <th>@lang('site.subTask')</th>
                                     <th>@lang('site.section')</th>
-                                    <th>
-                                        @lang('site.eduType')
-                                        <span wire:click="sortBy('edu_type')" class="text-sm float-sm-right"
-                                            style="cursor: pointer;font-size:10px;">
-                                            <i class="mr-1 fa fa-arrow-up"
-                                                style="color:{{ $sortColumnName === 'edu_type' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                            <i class="fa fa-arrow-down"
-                                                style="color : {{ $sortColumnName === 'edu_type' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                        </span>
-                                    </th>
+                                    <th>@lang('site.eduType')</th>
                                     <th>
                                         @lang('site.status')
                                         <span wire:click="sortBy('status')" class="text-sm float-sm-right"
@@ -178,7 +169,7 @@
                             </thead>
                             <tbody wire:sortable="updateSubtaskPosition">
                                 @forelse ($subtasks as $subtask)
-                                <tr wire:sortable.item="{{ $subtask->id }}" wire:key="subtask-{{ $subtask->id }}">
+                                <tr wire:sortable.item="{{ $subtask->id }}" wire:key="subtask-{{ $subtask->id }}" style="background-color: {{ $subtask->section == "مهمة فرعية" ? '#EFFBFB' : '#FBF8EF' }}">
                                     <td wire:sortable.handle style="width:10px; cursor: move;" width="10px"><i
                                             class="fa fa-arrows-alt text-muted"></i></td>
                                     <td scope="col">
@@ -193,7 +184,7 @@
                                     <td dir="rtl" class="text-justify text-center">
                                         {{ $subtask->section }}
                                     </td>
-                                    <td dir="rtl" class="text-justify text-center">
+                                    <td dir="rtl" class="text-justify text-center" style="color: {{ $subtask->edu_type == "الشؤون التعليمية" ? 'blue' : 'green' }}">
                                         {{ $subtask->edu_type }}
                                     </td>
                                     <td>

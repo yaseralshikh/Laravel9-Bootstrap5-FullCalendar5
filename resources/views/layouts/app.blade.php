@@ -133,10 +133,16 @@
                 <!-- Section: Social media -->
                 <hr>
                 <!-- Copyright -->
-                <div class="text-center text-white ">
-                    © 2023 @lang('site.copyRight') : <a class="text-white" href="https://sweeklyplan.com/">sweeklyplan.com</a>
+                <div class="text-center text-white pt-3">
+                    <div class="float-start d-none d-sm-inline-block">
+                        <strong>@lang('site.copyRight') &copy; 2023 </strong>
+                    </div>
+                    <a dir="rtl" style="color: white;text-decoration: none;" href="https://twitter.com/yaser95" target="_blank">حقوق النشر محفوظة لموقع  https://sweeklyplan.com</a>
+                    <div class="float-end d-none d-sm-inline-block">
+                        <b>الإصدار</b> 1.0.0
+                    </div>
                 </div>
-                <!-- Copyright -->
+                <!-- End Copyright -->
             </div>
             <!-- Grid container -->
 

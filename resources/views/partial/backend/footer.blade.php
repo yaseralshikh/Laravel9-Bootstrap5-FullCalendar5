@@ -1,6 +1,5 @@
 <footer class="main-footer">
-    <strong>@lang('site.copyRight') &copy; 2023 <a href="https://sweeklyplan.com">https://sweeklyplan.com</a>.</strong>
-    كل الحقوق محفوظة.
+    <strong dir="rtl">@lang('site.copyRight') &copy; 2023 <a style="text-decoration: none;" href="https://twitter.com/yaser95" target="_blank">حقوق النشر محفوظة لموقع  https://sweeklyplan.com</a>
     <div class="float-right d-none d-sm-inline-block">
         <b>الإصدار</b> 1.0.0
     </div>
