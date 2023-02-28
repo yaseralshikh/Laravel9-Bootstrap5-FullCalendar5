@@ -65,6 +65,8 @@
                                     Excel</a> --}}
                                 <a dir="rtl" class="dropdown-item" wire:click.prevent="exportPDF"
                                     href="#">@lang('site.exportPDF')</a>
+                                <a dir="rtl" class="dropdown-item" target="_blank" href="https://www.ilovepdf.com/merge_pdf"
+                                    aria-disabled="true">@lang('site.merge_pdf')</a>
                                 <div class="dropdown-divider"></div>
                                 {{-- @if ($selectedRows) --}}
                                 <a class="dropdown-item {{ $selectedRows ? '' : 'disabled-link' }}"
@@ -79,14 +81,14 @@
                         </div>
                     </h3>
 
-                    {{-- <div class="card-tools">
+                    <div class="card-tools">
                         <div class="btn-group pr-2">
-                            <a href="#" class="btn btn-outline-secondary btn-sm hover-item" data-toggle="tooltip"
-                                data-placement="top" title="@lang('site.userWithoutPlan')"
-                                wire:click.prevent="userNullPlan">
-                                <i class="fa fa-calendar text-primary"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-secondary btn-sm hover-item" data-toggle="tooltip"
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" wire:model="siteStatus" wire:change='updateSiteStatus' class="custom-control-input"
+                                    id="customSwitchSiteStatus">
+                                <label class="custom-control-label" for="customSwitchSiteStatus">@lang('site.siteStatus')</label>
+                            </div>
+                            {{-- <a href="#" class="btn btn-outline-secondary btn-sm hover-item" data-toggle="tooltip"
                                 data-placement="top" title="@lang('site.exportExcel')" wire:click.prevent="exportExcel">
                                 <i class="fa fa-file-excel text-success"></i>
                             </a>
@@ -111,13 +113,13 @@
                                 data-toggle="tooltip" data-placement="top" title="@lang('site.deleteSelected')"
                                 wire:click.prevent="deleteSelectedRows">
                                 <i class="fa fa-duotone fa-trash"></i>
-                            </a>
+                            </a> --}}
                         </div>
 
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                        {{-- <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                             <i class="fas fa-minus"></i>
-                        </button>
-                    </div> --}}
+                        </button> --}}
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="form-group d-flex justify-content-between align-items-center">
@@ -150,7 +152,6 @@
                         <div>
                             <select dir="rtl" name="edu_type" wire:model="byEduType" class="form-control form-control-sm mr-5">
                                 <option value="" selected>@lang('site.choise', [ 'name' => 'المرجع الإداري'])</option>
-                                <option value="">@lang('site.all')</option>
                                 @foreach ($educationTypes as $eduType)
                                     <option class="bg-light" value="{{ $eduType['title'] }}">{{ $eduType['title'] }}</option>
                                 @endforeach
@@ -194,7 +195,7 @@
 
                         {{-- Total Events --}}
                         <div>
-                            <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'الخطط']) : &nbsp( {{ $events->total() }} )</label>
+                            <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'الخطط']) : &nbsp( {{ $events->count() }} )</label>
                         </div>
                     </div>
 
@@ -227,7 +228,7 @@
                                         <span wire:click="sortBy('user_id')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up"
-                                                style="color:{{ $sortColumnName === 'user_id' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                                style="color:{{ $sortColumnName === 'user_id.' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                             <i class="fa fa-arrow-down"
                                                 style="color : {{ $sortColumnName === 'user_id' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                         </span>
@@ -240,15 +241,22 @@
                                     </th>
                                     <th>
                                         @lang('site.task')
+                                        <span wire:click="sortBy('task_id')" class="text-sm float-sm-right"
+                                            style="cursor: pointer;font-size:10px;">
+                                            <i class="mr-1 fa fa-arrow-up"
+                                                style="color:{{ $sortColumnName === 'task_id' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                            <i class="fa fa-arrow-down"
+                                                style="color : {{ $sortColumnName === 'task_id' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                        </span>
                                     </th>
                                     <th>
                                         @lang('site.date')
-                                        <span wire:click="sortBy('title')" class="text-sm float-sm-right"
+                                        <span wire:click="sortBy('start')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up"
-                                                style="color:{{ $sortColumnName === 'title' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                                style="color:{{ $sortColumnName === 'start' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                             <i class="fa fa-arrow-down"
-                                                style="color : {{ $sortColumnName === 'title' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                                style="color : {{ $sortColumnName === 'start' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                         </span>
                                     </th>
                                     <th>
@@ -319,7 +327,7 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer bg-light">
-                    {!! $events->appends(request()->all())->links() !!}
+                    {{-- {!! $events->appends(request()->all())->links() !!} --}}
                 </div>
                 <!-- /.card-footer-->
             </div>

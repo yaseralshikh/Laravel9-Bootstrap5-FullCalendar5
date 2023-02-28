@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use Carbon\Carbon;
+use App\Models\Site;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Week;
@@ -343,6 +344,8 @@ class Calendar extends Component
         $specializations = Specialization::whereStatus(true)->orderBy('name', 'asc')->get();
         $offices = Office::whereStatus(true)->get();
 
+        $siteStatus = Site::where('office_id', auth()->user()->office_id)->first();
+
         $types = [
             [
                 'id'    => 1,
@@ -384,6 +387,7 @@ class Calendar extends Component
             'offices',
             'types',
             'educationTypes',
+            'siteStatus',
         ));
     }
 }

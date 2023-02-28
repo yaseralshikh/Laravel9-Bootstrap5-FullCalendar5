@@ -224,8 +224,6 @@ class ListUsers extends Component
 		$user = User::create($validatedData);
         $user->attachRole(3);
 
-        $this->user->sendEmailVerificationNotification();
-
         $this->dispatchBrowserEvent('hide-form');
 
         $this->alert('success', __('site.saveSuccessfully'), [
@@ -258,7 +256,6 @@ class ListUsers extends Component
     public function updateUser()
     {
         try {
-            $emailVerifiedMessage = null;
 
             $validatedData = Validator::make($this->data, [
                 'name'                      => 'required',
@@ -278,17 +275,15 @@ class ListUsers extends Component
 
             if($validatedData['email'] != $this->user->getOriginal('email')){
                 $validatedData['email_verified_at'] = null;
-                $emailVerifiedMessage = true;
-                $this->user->sendEmailVerificationNotification();
             }
 
             $this->user->update($validatedData);
 
             $this->dispatchBrowserEvent('hide-form');
 
-            $this->alert('success', __('site.updateSuccessfully') . ($emailVerifiedMessage ? ' <p dir="rtl"> <br> ' . __('site.emailVerifiedMessage') . '</p>' : '') , [
+            $this->alert('success', __('site.updateSuccessfully') , [
                 'position'  =>  'top-end',
-                'timer'     =>  $emailVerifiedMessage ? 6000 : 3000,
+                'timer'     =>  3000,
                 'toast'     =>  true,
                 'text'      =>  null,
                 'showCancelButton'  =>  false,

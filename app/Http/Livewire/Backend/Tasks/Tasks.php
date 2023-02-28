@@ -291,7 +291,7 @@ class Tasks extends Component
             ->search(trim(($searchString)))
             ->orderBy('level_id','ASC')
             ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(100);
+            ->paginate(50);
 
         return $tasks;
 	}

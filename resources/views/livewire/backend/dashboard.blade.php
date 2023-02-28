@@ -284,13 +284,13 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" wire:ignore>
                             <div class="table-responsive" dir="rtl">
                                 <div class="shadow rounded p-4 border">
                                     <div class="table-responsive">
                                         <table id="example2"
-                                            class="table text-center table-bordered table-hover dataTable dtr-inline"
-                                            aria-describedby="example2_info">
+                                            class="table text-center table-bordered table-hover dataTable dtr-inline display nowrap"
+                                            aria-describedby="example2_info" style="width:100%">
                                             <thead class="bg-light">
                                                 <tr>
                                                     <th>#</th>
@@ -341,9 +341,32 @@
 
         <script src="https://code.highcharts.com/highcharts.js"></script>
         <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        {{-- for DataTables plug-in --}}
+        <script src="{{ asset('backend/js/jquery.dataTables.min.js') }}"></script>
+        <script src="{{ asset('backend/js/dataTables.bootstrap4.min.js') }}"></script>
+        <script src="{{ asset('backend/js/dataTables.buttons.min.js') }}"></script>
+        <script src="{{ asset('backend/js/jszip.min.js') }}"></script>
+        <script src="{{ asset('backend/js/pdfmake.min.js') }}"></script>
+        <script src="{{ asset('backend/js/vfs_fonts.js') }}"></script>
+        <script src="{{ asset('backend/js/buttons.html5.min.js') }}"></script>
+        <script src="{{ asset('backend/js/buttons.print.min.js') }}"></script>
 
         <script>
             $(document).ready(function(){
+                // for DataTables plug-in
+                $(document).ready(function() {
+                    $('#example2').DataTable( {
+                        dom: 'Bfrtip',
+                        lengthMenu: [
+                            [ 10, 25, 50, -1 ],
+                            [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+                        ],
+                        buttons: [
+                            'pageLength', 'excel', 'print'
+                        ]
+                    } );
+                } );
+
                 //const data = <?php echo json_encode($chartData); ?>;
                 const data = @js($chartData);
 
@@ -354,8 +377,6 @@
                     title.push(key);
                     count.push(value);
                 }
-
-                console.log(data);
 
                 const chart = Highcharts.chart('highchart', {
                     chart: {
@@ -428,7 +449,6 @@
                 });
 
                 document.addEventListener('refreshEventChart', function({detail}) {
-
                     if (detail.refresh) {
                         // highcharts.Chart#event:updatedData;
 
@@ -437,8 +457,6 @@
                         //const data2 =[];
 
                         const data2 = JSON.parse(detail.data);
-
-                        console.log(data2);
 
                         const title=[];
                         const count=[];

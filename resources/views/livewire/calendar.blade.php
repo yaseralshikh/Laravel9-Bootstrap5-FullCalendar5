@@ -51,7 +51,16 @@
     </div>
 
     {{-- Calender --}}
-    <div id="calendar" wire:ignore></div>
+    @if ($siteStatus->status)
+        <div class="card mb-3 text-center">
+            <img src="{{ asset('backend/img/witting.gif') }}" class="img-thumbnail border border-0 rounded mx-auto d-block mt-3 mb-3" alt="sorry">
+            <div class="card-body mb-3" dir="rtl">
+                <h2 class="card-text">{{$siteStatus->description}}</h2>
+            </div>
+        </div>
+    @else
+        <div id="calendar" wire:ignore></div>
+    @endif
 
     {{-- Create Event Modal --}}
     <div dir="rtl" class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -452,175 +461,178 @@
             });
 
             const calendarEl = document.getElementById('calendar');
-            const checkbox = document.getElementById('drop-remove');
-            const tooltip = null;
-            const userID = {{ auth()->user()->id }};
-            const userOffice_id = {{ auth()->user()->office_id }};
-            const userRole = {{ auth()->user()->roles[0]->id }};
+            
+            if (calendarEl != null) {
+                const checkbox = document.getElementById('drop-remove');
+                const tooltip = null;
+                const userID = {{ auth()->user()->id }};
+                const userOffice_id = {{ auth()->user()->office_id }};
+                const userRole = {{ auth()->user()->roles[0]->id }};
 
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                headerToolbar: {
-                    right: 'title',
-                    left: 'dayGridMonth,listWeek,prev,next today'
-                },
-                timeZone: 'local',
-                locale: 'ar-sa',
-                displayEventTime : false,
-                //weekNumbers: true,
-                hiddenDays: [ 5,6 ],
-                //weekends: false,
-                //firstDay:0,
-                //themeSystem: 'bootstrap5',
-                dayMaxEvents: 5, // allow "more" link when too many events
-                //selectable: true,
-                selectable: false,
-                droppable: true, // this allows things to be dropped onto the calendar
-                editable: true,
+                const calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    headerToolbar: {
+                        right: 'title',
+                        left: 'dayGridMonth,listWeek,prev,next today'
+                    },
+                    timeZone: 'local',
+                    locale: 'ar-sa',
+                    displayEventTime : false,
+                    //weekNumbers: true,
+                    hiddenDays: [ 5,6 ],
+                    //weekends: false,
+                    //firstDay:0,
+                    //themeSystem: 'bootstrap5',
+                    dayMaxEvents: 5, // allow "more" link when too many events
+                    //selectable: true,
+                    selectable: false,
+                    droppable: true, // this allows things to be dropped onto the calendar
+                    editable: true,
 
-                eventContent: function(info) {
-                    return {
-                        html: '<h6 style="font-weight: bold">&nbsp&nbsp<i class="fa fa-calendar" aria-hidden="true"></i>&nbsp&nbsp'
-                             + info.event.extendedProps.task.name + '</h6>' + '<span class="text-success">&nbsp&nbsp'
-                             + (info.event.extendedProps.status == 1 ? '<i class="fa fa-check" aria-hidden="true"></i>' : ''
-                             + '</span>')
-                    }
-                },
+                    eventContent: function(info) {
+                        return {
+                            html: '<h6 style="font-weight: bold">&nbsp&nbsp<i class="fa fa-calendar" aria-hidden="true"></i>&nbsp&nbsp'
+                                + info.event.extendedProps.task.name + '</h6>' + '<span class="text-success">&nbsp&nbsp'
+                                + (info.event.extendedProps.status == 1 ? '<i class="fa fa-check" aria-hidden="true"></i>' : ''
+                                + '</span>')
+                        }
+                    },
 
-                dateClick: function(info){
-                    var startDate = info.dateStr;
-                    var endDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() + 1));
-                    @this.start = startDate;
-                    @this.end = endDate.toISOString().substr(0, 10);
-                    $('#createModal').modal('toggle');
-                },
+                    dateClick: function(info){
+                        var startDate = info.dateStr;
+                        var endDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() + 1));
+                        @this.start = startDate;
+                        @this.end = endDate.toISOString().substr(0, 10);
+                        $('#createModal').modal('toggle');
+                    },
 
-                // for select multiple days
-                // select: function(info){
-                //     @this.start = startStr;
-                //     @this.end = endStr;
-                //     $('#createModal').modal('toggle');
-                // },
+                    // for select multiple days
+                    // select: function(info){
+                    //     @this.start = startStr;
+                    //     @this.end = endStr;
+                    //     $('#createModal').modal('toggle');
+                    // },
 
-                eventClick: function({event}) {
+                    eventClick: function({event}) {
 
-                    if (userID == event.extendedProps.user_id || userRole != 3) {
-                        if (event.extendedProps.status && userRole == 3) {
+                        if (userID == event.extendedProps.user_id || userRole != 3) {
+                            if (event.extendedProps.status && userRole == 3) {
+                                Swal.fire({
+                                    title: 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد من المكتب',
+                                    timer: 2000,
+                                    icon: 'error',
+                                    toast: true,
+                                    showConfirmButton: false,
+                                    position: 'center'
+                                })
+                            } else {
+                                @this.event_id      = event.id;
+                                @this.office_id     = event.extendedProps.office_id;
+                                @this.semester_id   = event.extendedProps.semester_id;
+                                @this.week_id       = event.extendedProps.week_id;
+                                @this.task_id       = event.extendedProps.task_id;
+                                @this.start         = dayjs(event.startStr).format('YYYY-MM-DD');
+                                @this.end           = dayjs(event.endStr).format('YYYY-MM-DD');
+                                $('#editModal').modal('toggle');
+                            }
+                        } else {
                             Swal.fire({
-                                title: 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد من المكتب',
+                                title: 'لا تملك الصلاحية للتعديل !!',
                                 timer: 2000,
                                 icon: 'error',
                                 toast: true,
                                 showConfirmButton: false,
                                 position: 'center'
                             })
-                        } else {
-                            @this.event_id      = event.id;
-                            @this.office_id     = event.extendedProps.office_id;
-                            @this.semester_id   = event.extendedProps.semester_id;
-                            @this.week_id       = event.extendedProps.week_id;
-                            @this.task_id       = event.extendedProps.task_id;
-                            @this.start         = dayjs(event.startStr).format('YYYY-MM-DD');
-                            @this.end           = dayjs(event.endStr).format('YYYY-MM-DD');
-                            $('#editModal').modal('toggle');
                         }
-                    } else {
-                        Swal.fire({
-                            title: 'لا تملك الصلاحية للتعديل !!',
-                            timer: 2000,
-                            icon: 'error',
-                            toast: true,
-                            showConfirmButton: false,
-                            position: 'center'
-                        })
-                    }
 
-                },
+                    },
 
-                // for show Tooltips //
-                // eventDidMount: function (info) {
-                //     $(info.el).popover({
-                //         title: info.event.task_id,
-                //         placement: 'top',
-                //         trigger: 'hover',
-                //         //content: dayjs(info.event.startStr).format('YYYY-MM-DD'),
-                //         //content: info.event.extendedProps.user_id,
-                //         container: 'body',
-                //     });
-                //     info.el.style.backgroundColor = '#EFFBF8'
-                // },
+                    // for show Tooltips //
+                    // eventDidMount: function (info) {
+                    //     $(info.el).popover({
+                    //         title: info.event.task_id,
+                    //         placement: 'top',
+                    //         trigger: 'hover',
+                    //         //content: dayjs(info.event.startStr).format('YYYY-MM-DD'),
+                    //         //content: info.event.extendedProps.user_id,
+                    //         container: 'body',
+                    //     });
+                    //     info.el.style.backgroundColor = '#EFFBF8'
+                    // },
 
-                eventMouseEnter: function (info) {
-                    $(info.el).tooltip({
-                        title: info.event.extendedProps.week.title + ' ( ' + info.event.extendedProps.semester.school_year  + ' ) ' + '<br />' + info.event.extendedProps.task.name + '<br />'+ '<span class="text-info">' + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
-                        html: true,
-                        content:'ssss',
-                        placement: 'top',
-                        trigger: 'hover',
-                        container: 'body'
-                    });
-                },
-
-                eventMouseLeave:  function(info) {
-                    if (tooltip) {
-                        tooltip.dispose();
-                    }
-                },
-
-                drop: function(event) {
-                    // is the "remove after drop" checkbox checked?
-                    if (checkbox.checked) {
-                        // if so, remove the element from the "Draggable Events" list
-                        event.draggedEl.parentNode.removeChild(event.draggedEl);
-                    }
-                },
-                eventDrop: info => @this.eventDrop(info.event, info.oldEvent),
-                loading: function(isLoading) {
-                    if (!isLoading) {
-                        // Reset custom events
-                        this.getEvents().forEach(function(e){
-                            if (e.source === null) { e.remove(); }
+                    eventMouseEnter: function (info) {
+                        $(info.el).tooltip({
+                            title: info.event.extendedProps.week.title + ' ( ' + info.event.extendedProps.semester.school_year  + ' ) ' + '<br />' + info.event.extendedProps.task.name + '<br />'+ '<span class="text-info">' + info.event.extendedProps.user.name + '</span>' + '<br />' + '<span class="text-warning">' + (info.event.extendedProps.status == 1 ? 'تم الاعتماد' : '' + '</span>'),
+                            html: true,
+                            content:'ssss',
+                            placement: 'top',
+                            trigger: 'hover',
+                            container: 'body'
                         });
+                    },
+
+                    eventMouseLeave:  function(info) {
+                        if (tooltip) {
+                            tooltip.dispose();
+                        }
+                    },
+
+                    drop: function(event) {
+                        // is the "remove after drop" checkbox checked?
+                        if (checkbox.checked) {
+                            // if so, remove the element from the "Draggable Events" list
+                            event.draggedEl.parentNode.removeChild(event.draggedEl);
+                        }
+                    },
+                    eventDrop: info => @this.eventDrop(info.event, info.oldEvent),
+                    loading: function(isLoading) {
+                        if (!isLoading) {
+                            // Reset custom events
+                            this.getEvents().forEach(function(e){
+                                if (e.source === null) { e.remove(); }
+                            });
+                        }
+                    },
+                });
+
+                // for fill calendar
+                calendar.addEventSource({
+                    url: '/api/calendar/events'
+                });
+
+                // for render calendar
+                calendar.render();
+
+                // Listener close Modal Create
+                document.addEventListener('closeModalCreate', function({detail}) {
+                    if (detail.close) {
+                        $('#createModal').modal('toggle');
                     }
-                },
-            });
+                });
 
-            // for fill calendar
-            calendar.addEventSource({
-                url: '/api/calendar/events'
-            });
+                // Listener close Modal Edit
+                document.addEventListener('closeModalEdit', function({detail}) {
+                    if (detail.close) {
+                        $('#editModal').modal('toggle');
+                    }
+                });
 
-            // for render calendar
-            calendar.render();
+                // Listener for refresh Calendar
+                document.addEventListener('refreshEventCalendar', function({detail}) {
+                    if (detail.refresh) {
+                        calendar.refetchEvents();
+                    }
+                });
 
-            // Listener close Modal Create
-            document.addEventListener('closeModalCreate', function({detail}) {
-                if (detail.close) {
-                    $('#createModal').modal('toggle');
-                }
-            });
-
-            // Listener close Modal Edit
-            document.addEventListener('closeModalEdit', function({detail}) {
-                if (detail.close) {
-                    $('#editModal').modal('toggle');
-                }
-            });
-
-            // Listener for refresh Calendar
-            document.addEventListener('refreshEventCalendar', function({detail}) {
-                if (detail.refresh) {
-                    calendar.refetchEvents();
-                }
-            });
-
-            // when the selected option changes, dynamically change the calendar option
-            var localeSelectorEl = document.getElementById('locale-selector');
-            localeSelectorEl.addEventListener('change', function() {
-                if (this.value) {
-                    calendar.setOption('locale', this.value);
-                }
-            });
+                // when the selected option changes, dynamically change the calendar option
+                var localeSelectorEl = document.getElementById('locale-selector');
+                localeSelectorEl.addEventListener('change', function() {
+                    if (this.value) {
+                        calendar.setOption('locale', this.value);
+                    }
+                });
+            };
 
             // Listener for SweetAleart
             window.addEventListener('swal',function(e){

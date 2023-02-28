@@ -2,24 +2,26 @@
 
 namespace App\Http\Livewire\Backend\Events;
 
-use App\Exports\EventsExport;
-use App\Models\Event;
-use App\Models\Office;
-use App\Models\Semester;
-use App\Models\Subtask;
+use PDF;
+use Carbon\Carbon;
+use App\Models\Site;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Week;
-use App\Rules\SemesterRule;
+use App\Models\Event;
+use App\Models\Office;
+use App\Models\Subtask;
 use App\Rules\WeekRule;
-use Carbon\Carbon;
+use Livewire\Component;
+use App\Models\Semester;
+use App\Rules\SemesterRule;
+use Livewire\WithPagination;
+use App\Exports\EventsExport;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\Component;
-use Livewire\WithFileUploads;
-use Livewire\WithPagination;
-use Maatwebsite\Excel\Facades\Excel;
-use PDF;
 
 class ListEvents extends Component
 {
@@ -59,6 +61,26 @@ class ListEvents extends Component
 
     public $excelFile = null;
     public $importTypevalue = 'addNew';
+
+    public $siteStatus = null;
+
+    // update Site Status
+
+    public function updateSiteStatus()
+    {
+        $this->siteStatus === 0 ? '1' : '0';
+        $site  = Site::where('office_id', auth()->user()->office_id)->first();
+        $site->update(['status' => $this->siteStatus]);
+
+        $this->alert('success', __('site.siteStatusUpdateSuccessfully'), [
+            'position' => 'top-end',
+            'timer' => 2000,
+            'toast' => true,
+            'text' => null,
+            'showCancelButton' => false,
+            'showConfirmButton' => false,
+        ]);
+    }
 
     // Updated Select Page Rows
 
@@ -514,20 +536,31 @@ class ListEvents extends Component
                         $query->with('task')->whereIn('id', $selectedRows)->WhereNotNull('id')->where('week_id', $byWeek)->where('status', true)->whereNotIn('task_id', [2])->orderBy('start', 'asc');
                     }])->get();
 
-//                    dd($users);
-
                     if ($users->count() != null) {
                         $subtasks = Subtask::where('status', 1)->where('office_id', $byOffice)->where('edu_type', $byEduType)->orderBy('position', 'asc')->get();
                         $office = Office::where('id', $byOffice)->first();
 
-                        return response()->streamDownload(function () use ($users, $subtasks, $office) {
-                            $pdf = PDF::loadView('livewire.backend.events.events_pdf', [
-                                'users' => $users,
-                                'subtasks' => $subtasks,
-                                'office' => $office,
+                        if ($subtasks->count() == null) {
+                            Log::alert(__('site.notSubtasksFound'));
+                            $this->alert('error', __('site.notSubtasksFound'), [
+                                'position' => 'center',
+                                'timer' => 6000,
+                                'toast' => true,
+                                'text' => null,
+                                'showCancelButton' => false,
+                                'showConfirmButton' => false,
                             ]);
-                            return $pdf->stream('events');
-                        }, 'events.pdf');
+                        } else {
+                            return response()->streamDownload(function () use ($users, $subtasks, $office) {
+                                $pdf = PDF::loadView('livewire.backend.events.events_pdf', [
+                                    'users' => $users,
+                                    'subtasks' => $subtasks,
+                                    'office' => $office,
+                                ]);
+                                return $pdf->stream('events');
+                            }, 'events.pdf');
+                        }
+
                     } else {
                         $this->alert('error', __('site.noDataForExport'), [
                             'position' => 'center',
@@ -569,6 +602,9 @@ class ListEvents extends Component
                 'showCancelButton' => false,
                 'showConfirmButton' => false,
             ]);
+
+            Log::debug($th->getMessage());
+
             return $message;
         }
     }
@@ -610,7 +646,7 @@ class ListEvents extends Component
             ->search(trim(($searchString)))
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->latest('created_at')
-            ->paginate(100);
+            ->get();
 
         return $events;
     }
@@ -621,6 +657,9 @@ class ListEvents extends Component
         $users = User::whereStatus(1)->where('office_id', auth()->user()->office_id)->orderBy('name', 'asc')->get();
         $tasks = Task::whereStatus(1)->where('office_id', auth()->user()->office_id)->orderBy('level_id', 'asc')->orderBy('name', 'asc')->get();
         $weeks = Week::whereStatus(1)->where('semester_id', $this->semesterActive())->get();
+
+        $site  = Site::where('office_id', auth()->user()->office_id)->first();
+        $this->siteStatus = $site->status;
 
         $educationTypes = [
             [

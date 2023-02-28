@@ -31,6 +31,10 @@
         <link rel="stylesheet" href="{{ asset('backend/plugins/daterangepicker/daterangepicker.css') }}">
         <!-- summernote -->
         <link rel="stylesheet" href="{{ asset('backend/plugins/summernote/summernote-bs4.min.css') }}">
+        <!-- for DataTables plug-in -->
+        <link rel="stylesheet" href="{{ asset('backend/css/dataTables.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('backend/css/buttons.dataTables.min.css') }}">
+
         @yield('style')
         <style>
             body{

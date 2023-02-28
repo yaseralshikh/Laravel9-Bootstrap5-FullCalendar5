@@ -199,14 +199,9 @@
                                         <div class="btn-group btn-group-sm">
                                             <button wire:click.prevent="edit({{ $task }})"
                                                 class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
-                                            @if (auth()->user()->roles[0]->name == 'superadmin')
                                             <button wire:click.prevent="confirmTaskRemoval({{ $task->id }})"
                                                 class="btn btn-danger btn-sm"><i
                                                     class="fa fa-trash bg-danger"></i></button>
-                                            @else
-                                            <button class="btn btn-danger btn-sm" disabled><i
-                                                    class="fa fa-trash bg-danger"></i></button>
-                                            @endif
                                         </div>
                                         {{-- <form action="" method="post" id="delete-task-{{ $task->id }}"
                                             class="d-none">

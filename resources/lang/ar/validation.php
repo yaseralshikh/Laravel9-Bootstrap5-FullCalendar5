@@ -136,8 +136,35 @@ return [
         'week_id' => [
             'required' => 'الأسبوع الدراسي مطلوب',
         ],
+        'level_id' => [
+            'required' => 'المرحلة مطلوبة',
+        ],
+        'specialization_id' => [
+            'required' => 'التخصص مطلوب',
+        ],
+        'type' => [
+            'required' => 'العمل الحالي مطلوب',
+        ],
+        'section ' => [
+            'required' => 'القسم مطلوب',
+        ],
+        'director ' => [
+            'required' => 'اسم المدير الرباعي مطلوب',
+        ],
+        'edu_type' => [
+            'required' => 'المرجع الإداري مطلوب',
+        ],
         'title' => [
             'required' => 'المهمة مطلوبة',
+        ],
+        'start' => [
+            'required' => 'تاريخ البداية مطلوب',
+        ],
+        'end' => [
+            'required' => 'تاريخ النهاية مطلوب',
+        ],
+        'school_year' => [
+            'required' => 'السنة الحالية مطلوبة',
         ],
     ],
 
