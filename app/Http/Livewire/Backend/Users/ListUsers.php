@@ -9,12 +9,12 @@ use App\Models\Office;
 use Livewire\Component;
 use App\Exports\UsersExport;
 use App\Imports\UsersImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Specialization;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 

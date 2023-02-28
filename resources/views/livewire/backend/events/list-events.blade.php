@@ -134,6 +134,16 @@
                             </div>
                         </div>
 
+                        {{-- Paginate Filter --}}
+                        <div>
+                            <select dir="rtl" wire:model="paginateValue" class="form-control">
+                                <option value="50" selected>50</option>
+                                <option value="100" selected>100</option>
+                                <option value="150" selected>150</option>
+                                <option value="100000" selected>@lang('site.all')</option>
+                            </select>
+                        </div>
+
                         {{-- Week Filter --}}
                         <div>
                             <select dir="rtl" name="week_id" wire:model="byWeek"
@@ -195,7 +205,7 @@
 
                         {{-- Total Events --}}
                         <div>
-                            <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'الخطط']) : &nbsp( {{ $events->count() }} )</label>
+                            <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'الخطط']) : &nbsp( {{ $events->total() }} )</label>
                         </div>
                     </div>
 
@@ -327,7 +337,7 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer bg-light">
-                    {{-- {!! $events->appends(request()->all())->links() !!} --}}
+                    {!! $events->appends(request()->all())->links() !!}
                 </div>
                 <!-- /.card-footer-->
             </div>

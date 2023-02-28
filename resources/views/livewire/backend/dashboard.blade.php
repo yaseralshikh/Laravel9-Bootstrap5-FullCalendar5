@@ -23,6 +23,18 @@
                             </select>
                         </div>
 
+                        {{-- Office Filter --}}
+                        @role('superadmin')
+                            <div class="d-inline pr-3">
+                                <select dir="rtl" wire:model="byOffice" class="form-control form-control-sm mr-5">
+                                    <option value="" hidden selected>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
+                                    @foreach ($offices as $office)
+                                        <option value="{{ $office->id }}">{{ $office->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endrole
+
                         <li class="breadcrumb-item active">@lang('site.dashboard')</li>
                     </ol>
                 </div><!-- /.col -->
@@ -220,54 +232,6 @@
                     <!-- /.card -->
                 </section>
 
-                {{-- <section class="col-lg-12 connectedSortable">
-                    <div class="card card-primary card-outline">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="far fa-chart-bar"></i>
-                                @lang('site.barChart')
-                            </h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body" dir="rtl">
-                            <div class="table-responsive">
-                                <div class="shadow rounded p-4 border">
-                                    <div class="table-responsive">
-                                        <table id="example2"
-                                            class="table text-center table-bordered table-hover dataTable dtr-inline"
-                                            aria-describedby="example2_info">
-                                            <thead class="bg-light">
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>@lang('site.name')</th>
-                                                    <th>@lang('site.count')</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @forelse ($chartData as $key => $value)
-                                                <tr>
-                                                    <td class="bg-light">{{ $loop->iteration }}</td>
-                                                    <td>{{ $key }}</td>
-                                                    <td>{{ $value }}</td>
-                                                </tr>
-                                                @empty
-                                                <tr>
-                                                    <td colspan="3" class="text-center">@lang('site.noDataFound')</td>
-                                                </tr>
-                                                @endforelse
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section> --}}
-
                 <!-- users Events plan -->
 
                 <section class="col-lg-12 connectedSortable">
@@ -284,7 +248,58 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="card-body" wire:ignore>
+                        <div class="card-body">
+                            <div class="form-group d-flex justify-content-between align-items-center">
+
+                                <label class="flex-wrap"  style="width: 200px;">
+                                    @lang('site.totalRecord', ['name' => 'المستخدمين']) : &nbsp{{ $users->count() }}
+                                </label>
+
+                                <div>
+                                    <select dir="rtl" wire:model="paginateValue" class="form-control">
+                                        <option value="20" selected>20</option>
+                                        <option value="50" selected>50</option>
+                                        <option value="100" selected>100</option>
+                                        <option value="10000" selected>@lang('site.all')</option>
+                                    </select>
+                                </div>
+
+                                {{-- search and Export PDF & EXCEL --}}
+                                <div class="input-group" style="width: 350px;">
+
+                                    <div class="card-tools">
+                                        <div class="btn-group pr-2">
+                                            <div class="pl-5">
+                                                <a href="#"
+                                                    class="btn btn-outline-light hover-item"
+                                                    data-toggle="tooltip"
+                                                    data-placement="top"
+                                                    title="@lang('site.exportExcel')"
+                                                    wire:click.prevent="exportExcel">
+                                                    <i class="fa fa-file-excel text-success"></i>
+                                                </a>
+                                                <a href="#" class="btn btn-outline-light hover-item"
+                                                    data-toggle="tooltip"
+                                                    data-placement="top"
+                                                    title="@lang('site.exportPDF')"
+                                                    wire:click.prevent="exportPDF">
+                                                    <i class="fa fa-file-pdf text-danger"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <input type="search" wire:model="searchTerm" class="form-control"
+                                        placeholder="@lang('site.searchFor')" value="">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+
                             <div class="table-responsive" dir="rtl">
                                 <div class="shadow rounded p-4 border">
                                     <div class="table-responsive">
@@ -323,6 +338,13 @@
                                                 </tr>
                                                 @endforelse
                                             </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                  <td colspan="10">
+                                                        {!! $users->appends(request()->all())->links() !!}
+                                                  </td>
+                                                </tr>
+                                              </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -342,31 +364,30 @@
         <script src="https://code.highcharts.com/highcharts.js"></script>
         <script src="https://code.highcharts.com/modules/exporting.js"></script>
         {{-- for DataTables plug-in --}}
-        <script src="{{ asset('backend/js/jquery.dataTables.min.js') }}"></script>
+        {{-- <script src="{{ asset('backend/js/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('backend/js/dataTables.bootstrap4.min.js') }}"></script>
         <script src="{{ asset('backend/js/dataTables.buttons.min.js') }}"></script>
         <script src="{{ asset('backend/js/jszip.min.js') }}"></script>
         <script src="{{ asset('backend/js/pdfmake.min.js') }}"></script>
         <script src="{{ asset('backend/js/vfs_fonts.js') }}"></script>
         <script src="{{ asset('backend/js/buttons.html5.min.js') }}"></script>
-        <script src="{{ asset('backend/js/buttons.print.min.js') }}"></script>
+        <script src="{{ asset('backend/js/buttons.print.min.js') }}"></script> --}}
 
         <script>
             $(document).ready(function(){
                 // for DataTables plug-in
-                $(document).ready(function() {
-                    $('#example2').DataTable( {
-                        dom: 'Bfrtip',
-                        lengthMenu: [
-                            [ 10, 25, 50, -1 ],
-                            [ '10 rows', '25 rows', '50 rows', 'Show all' ]
-                        ],
-                        buttons: [
-                            'pageLength', 'excel', 'print'
-                        ]
-                    } );
-                } );
+                // $('#example2').DataTable( {
+                //     dom: 'Bfrtip',
+                //     lengthMenu: [
+                //         [ 10, 25, 50, -1 ],
+                //         [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+                //     ],
+                //     buttons: [
+                //         'pageLength', 'excel', 'print'
+                //     ]
+                // } );
 
+                // for chartData
                 //const data = <?php echo json_encode($chartData); ?>;
                 const data = @js($chartData);
 
@@ -448,6 +469,7 @@
                     }
                 });
 
+                // Listener for refresh Calendar
                 document.addEventListener('refreshEventChart', function({detail}) {
                     if (detail.refresh) {
                         // highcharts.Chart#event:updatedData;

@@ -30,6 +30,7 @@ class ListEvents extends Component
     use LivewireAlert;
 
     protected $paginationTheme = 'bootstrap';
+    public $paginateValue = 50;
 
     public $data = [];
 
@@ -533,7 +534,7 @@ class ListEvents extends Component
                         ->whereHas('events', function ($query) use ($byWeek) {
                             $query->where('week_id', $byWeek)->where('status', true);
                         })->with(['events' => function ($query) use ($byWeek, $selectedRows) {
-                        $query->with('task')->whereIn('id', $selectedRows)->WhereNotNull('id')->where('week_id', $byWeek)->where('status', true)->whereNotIn('task_id', [2])->orderBy('start', 'asc');
+                        $query->with('task')->whereHas('task', function ($q) {$q->whereNotIn('name', ['إجازة']);})->whereIn('id', $selectedRows)->WhereNotNull('id')->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
                     }])->get();
 
                     if ($users->count() != null) {
@@ -626,6 +627,7 @@ class ListEvents extends Component
     // Get Events Property
     public function getEventsProperty()
     {
+        $paginateValue = $this->paginateValue;
         $searchString = $this->searchTerm;
         $byOffice = auth()->user()->office_id;
         $byWeek = $this->byWeek;
@@ -646,7 +648,7 @@ class ListEvents extends Component
             ->search(trim(($searchString)))
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->latest('created_at')
-            ->get();
+            ->paginate($paginateValue);
 
         return $events;
     }

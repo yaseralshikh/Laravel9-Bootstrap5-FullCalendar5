@@ -8,9 +8,11 @@
 		<style>
             *{
                 direction: rtl;
+                padding: 0%;
+                margin: 0%;
             }
 			body {
-				font-family: 'KFGQPC', sans-serif;
+				font-family: 'amiri', sans-serif;
 				text-align: center;
                 display: table;
                 direction: rtl;
@@ -24,7 +26,7 @@
             }
             .counter{
                 padding: 10px;
-                text-align: left;
+                text-align: center;
             }
             th{
                 background-color: rgb(225, 222, 222);
@@ -34,25 +36,26 @@
                 border-collapse: collapse;
             }
             img{
-                margin-bottom: 15px;
+                margin-bottom: 5px;
             }
 		</style>
 	</head>
 
 	<body>
-		<h1>A simple, clean, and responsive HTML invoice template</h1>
-		<h3>Because sometimes, all you need is something simple.</h3>
-        <img src="{{ asset('backend/img/logo.png') }}" width="80px" alt="">
+        {{-- <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}" width="180px;" alt=""> --}}
+		<h2>إحصائية خطط المشرفين - {{ $users[0]->office->name }}</h2>
 		<div>
             <table class="">
                 <thead class="">
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Mile</th>
-                        <th>Specialization</th>
-                        <th>Role</th>
-                        <th>Status</th>
+                        <th>الاسم</th>
+                        <th>ألتخصص</th>
+                        <th>زيارات مدارس</th>
+                        <th>ايام مكتبية</th>
+                        <th>برامج تدريبية</th>
+                        <th>اجازات</th>
+                        <th>مجموع الخطط</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,25 +63,16 @@
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
                             <td>{{ $user->specialization->name }}</td>
-                            <td>{{ $user->roles[0]->name }}</td>
-                            <td>{{ $user->status }}</td>
+                            <td>{{ $user->events->whereNotIn('task.name',['إجازة','برنامج تدريبي','يوم مكتبي'])->count() }}</td>
+                            <td>{{ $user->events->where('task.name','يوم مكتبي' )->count() }}</td>
+                            <td>{{ $user->events->where('task.name','برنامج تدريبي' )->count() }}</td>
+                            <td>{{ $user->events->where('task.name','إجازة' )->count() }}</td>
+                            <td>{{ $user->events->count() }}</td>
                         </tr>
                     @endforeach
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <th class="counter" colspan="8">Users : {{ $users->count() }}</th>
-                    </tr>
-                </tfoot>
             </table>
-            <p style="text-align: justify">
-                هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق.
-                إذا كنت تحتاج إلى عدد أكبر من الفقرات يتيح لك مولد النص العربى زيادة عدد الفقرات كما تريد، النص لن يبدو مقسما ولا يحوي أخطاء لغوية، مولد النص العربى مفيد لمصممي المواقع على وجه الخصوص، حيث يحتاج العميل فى كثير من الأحيان أن يطلع على صورة حقيقية لتصميم الموقع.
-                ومن هنا وجب على المصمم أن يضع نصوصا مؤقتة على التصميم ليظهر للعميل الشكل كاملاً،دور مولد النص العربى أن يوفر على المصمم عناء البحث عن نص بديل لا علاقة له بالموضوع الذى يتحدث عنه التصميم فيظهر بشكل لا يليق.
-                هذا النص يمكن أن يتم تركيبه على أي تصميم دون مشكلة فلن يبدو وكأنه نص منسوخ، غير منظم، غير منسق، أو حتى غير مفهوم. لأنه مازال نصاً بديلاً ومؤقتاً.
-            </p>
 		</div>
 	</body>
 </html>
