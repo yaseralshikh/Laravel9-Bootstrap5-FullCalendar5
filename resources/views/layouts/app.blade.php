@@ -19,7 +19,9 @@
 
     {{-- Font awesome --}}
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
-
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{ asset('backend/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backend/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -150,12 +152,18 @@
 
     </div>
 
-    {{-- scripts --}}
-    <script src="{{ asset('js/main.js') }}"></script>
+    {{---------------- scripts ------------------}}
+
+    {{-- fullcalendar --}}
+    {{-- <script src="{{ asset('js/main.js') }}"></script> --}}
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
     <script src="{{ asset('js/locales-all.min.js') }}"></script>
     <script src="{{ asset('js/dayjs.min.js') }}"></script>
-    @livewireScripts
+    {{-- sweetalert2 --}}
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Select2 -->
+    <script src="{{ asset('backend/plugins/select2/js/select2.full.min.js') }}" defer></script>
+    @livewireScripts
     <x-livewire-alert::scripts />
     @stack('script')
 </body>

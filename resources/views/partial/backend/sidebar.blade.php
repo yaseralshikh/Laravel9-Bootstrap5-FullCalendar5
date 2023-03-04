@@ -68,6 +68,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('admin.jobs_type') }}"
+                        class="nav-link {{ request()->is('admin/jobs_type') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-briefcase"></i>
+                        <p>
+                            @lang('site.jobs_type')
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ url('/laratrust') }}"
                         class="nav-link {{ request()->is('/laratrust') ? 'active' : '' }}">
                         <i class="fas fa-cog"></i>

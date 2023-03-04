@@ -391,11 +391,11 @@
                                 @endrole --}}
 
                                 <!-- Modal user_id -->
-                                <div class="form-group">
+                                <div class="form-group" wire:ignore>
                                     <label for="user_id" class="form-label">{{ __('site.userName') }} :</label>
 
                                     <select name="user_id" wire:model.defer="data.user_id"
-                                        class="form-control  @error('user_id') is-invalid @enderror" id="user_id">
+                                        class="form-control @error('user_id') is-invalid @enderror" id="user_id">
                                         <option value="" selected>@lang('site.choise', ['name' => 'المشرف التربوي'])
                                         </option>
                                         @foreach ($users as $user)
@@ -409,30 +409,6 @@
                                     </span>
                                     @enderror
                                 </div>
-
-                                <!-- Modal Semester -->
-                                {{-- <div class="form-group">
-                                    <label for="semester_id" class="form-label">{{ __('site.semester') }} :</label>
-
-                                    <select name="semester_id" wire:model.defer="data.semester_id"
-                                        wire:change="semesterOption($event.target.value)"
-                                        class="form-control  @error('semester_id') is-invalid @enderror"
-                                        id="semester_id">
-                                        <option value="" selected>@lang('site.choise', ['name' => 'الفصل الدراسي'])</option>
-                                        @foreach ($semesters as $semester)
-                                        <option value="{{ $semester->id }}"
-                                            style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
-                                            $semester->title . ' ( ' .
-                                            $semester->school_year . ' )' }}</option>
-                                        @endforeach
-                                    </select>
-
-                                    @error('semester_id')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div> --}}
 
                                 <!-- Modal Week -->
                                 <div class="form-group">
@@ -457,11 +433,11 @@
 
                                 <!-- Modal Task (Event Title) -->
 
-                                <div class="form-group">
+                                <div class="form-group" wire:ignore>
                                     <label for="task_id" class="col-form-label">@lang('site.task') :</label>
 
                                     <select name="task_id" wire:model.defer="data.task_id"
-                                        class="form-control  @error('task_id') is-invalid @enderror" id="task_id">
+                                        class="form-control @error('task_id') is-invalid @enderror" id="task_id">
                                         <option value="" selected>@lang('site.choise', ['name' => 'المهمة'])</option>
                                         @foreach ($tasks as $task)
                                             <option value="{{ $task->id }}" style="
@@ -572,7 +548,12 @@
     {{-- <script src="{{ asset('backend/js/jquery.printPage.js') }}" type="text/javascript"></script> --}}
 
     <script>
-        $(document).ready( function() {
+        $(document).ready(function() {
+                $('.select2').select2();
+
+                $('.select2bs4').select2({
+                  theme: 'bootstrap4'
+                });
 
                 window.addEventListener('hide-form', function (event) {
                     $('#form').modal('hide');

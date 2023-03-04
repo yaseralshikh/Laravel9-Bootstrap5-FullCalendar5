@@ -7,10 +7,6 @@
             text-decoration: none;
             color: rgb(174, 172, 172);
         }
-        .sortable th.no-sort {
-        pointer-events: none;
-        }
-
     </style>
     @endsection
 
@@ -19,13 +15,13 @@
         <div class="container-fluid">
             <div class="mb-2 row">
                 <div class="col-sm-6">
-                    <h1 class="m-0">@lang('site.tasks')</h1>
+                    <h1 class="m-0">@lang('site.jobs_type')</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">@lang('site.dashboard')</a>
                         </li>
-                        <li class="breadcrumb-item active">@lang('site.tasks')</li>
+                        <li class="breadcrumb-item active">@lang('site.jobs_type')</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -40,9 +36,9 @@
             <div class="card">
                 <div class="card-header bg-light">
                     <h3 class="card-title">
-                        <button wire:click.prevent='addNewTask' class="ml-1 btn btn-sm btn-primary">
+                        <button wire:click.prevent='addNewJobType' class="ml-1 btn btn-sm btn-primary">
                             <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
-                                <span>@lang('site.addRecord', ['name' => 'مهمة'])</span>
+                                <span>@lang('site.addRecord', ['name' => 'تصنيف عمل'])</span>
                             </i>
                         </button>
 
@@ -81,65 +77,42 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="form-group d-flex justify-content-between align-items-center">
-
-                        {{-- search --}}
-                        <div class="input-group" style="width: 200px;">
-                            <input dir="rtl" type="search" wire:model="searchTerm" class="form-control" placeholder="@lang('site.searchFor')..." value="">
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-default">
-                                    <i class="fa fa-search"></i>
-                                </button>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="form-group ">
+                            {{-- search --}}
+                            <div class="input-group" style="width: 200px;">
+                                <input dir="rtl" type="search" wire:model="searchTerm" class="form-control"
+                                    placeholder="@lang('site.searchFor')..." value="">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                        {{-- offices Filter --}}
-                        @role('superadmin')
-                        <div>
-                            <select dir="rtl" name="office_id" wire:model="byOffice"
-                                class="form-control form-control-sm">
-                                <option value="" hidden>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
-                                @foreach ($offices as $office)
-                                <option value="{{ $office->id }}">{{ $office->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @endrole
-
-                        {{-- offices Filter --}}
-                        <div>
-                            <select dir="rtl" name="level_id" wire:model="byLevel"
-                                class="form-control form-control-sm">
-                                <option value="" selected>@lang('site.choise', ['name' => 'المرحلة'])</option>
-                                @foreach ($levels as $level)
-                                <option value="{{ $level->id }}">{{ $level->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'المهام']) : &nbsp{{ $tasks->total() }}</label>
-                        </div>
+                        <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'تصنيف العمل']) : &nbsp{{
+                            $jobs_type->total() }}</label>
 
                     </div>
 
                     @if ($selectedRows)
                     <span class="mb-2 text-success">
-                        <i class="fa fa-task" aria-hidden="true"></i>
+                        <i class="fa fa-level" aria-hidden="true"></i>
                         selected
                         <span class="text-dark font-weight-bold">{{ count($selectedRows) }}</span> {{
-                        Str::plural('task', count($selectedRows)) }}
+                        Str::plural('level', count($selectedRows)) }}
                         <a class="ml-2 text-gray" href="" wire:click="resetSelectedRows" data-toggle="tooltip"
                             data-placement="top" title="Reset Selected Rows"><i class="fas fa-times"></i></a>
                     </span>
                     @endif
 
                     <div class="table-responsive">
-                        <table id="example2" class="table text-center table-bordered table-hover dtr-inline sortable"
+                        <table id="example2" class="table text-center table-bordered table-hover dataTable dtr-inline"
                             aria-describedby="example2_info">
                             <thead class="bg-light">
                                 <tr>
-                                    <th class="no-sort" scope="col">
+                                    <th scope="col">
                                         <div class="custom-control custom-checkbox small">
                                             <input type="checkbox" wire:model="selectPageRows" value=""
                                                 class="custom-control-input" id="customCheck">
@@ -148,70 +121,71 @@
                                     </th>
                                     <th>#</th>
                                     <th>
-                                        @lang('site.task')
-                                        {{-- <span wire:click="sortBy('name')" class="text-sm float-sm-right"
+                                        @lang('site.title')
+                                        <span wire:click="sortBy('title')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up"
-                                                style="color:{{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                                style="color:{{ $sortColumnName === 'title' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                             <i class="fa fa-arrow-down"
-                                                style="color : {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                        </span> --}}
+                                                style="color : {{ $sortColumnName === 'title' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                        </span>
                                     </th>
-                                    <th>
-                                        @lang('site.level')
-                                        {{-- <span wire:click="sortBy('level_id')" class="text-sm float-sm-right"
+                                    {{-- <th>
+                                        @lang('site.description')
+                                        <span wire:click="sortBy('description')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up"
-                                                style="color:{{ $sortColumnName === 'level_id' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                                style="color:{{ $sortColumnName === 'description' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                             <i class="fa fa-arrow-down"
-                                                style="color : {{ $sortColumnName === 'level_id' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                        </span> --}}
-                                    </th>
-                                    <th>
-                                        @lang('site.eventsCount')
-                                    </th>
+                                                style="color : {{ $sortColumnName === 'description' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                        </span>
+                                    </th> --}}
                                     <th>
                                         @lang('site.status')
-                                        {{-- <span wire:click="sortBy('status')" class="text-sm float-sm-right"
+                                        <span wire:click="sortBy('status')" class="text-sm float-sm-right"
                                             style="cursor: pointer;font-size:10px;">
                                             <i class="mr-1 fa fa-arrow-up"
                                                 style="color:{{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                             <i class="fa fa-arrow-down"
                                                 style="color : {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                        </span> --}}
+                                        </span>
                                     </th>
-                                    <th class="no-sort" colspan="2">@lang('site.action')</th>
+                                    <th colspan="2">@lang('site.action')</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($tasks as $task)
+                                @forelse ($jobs_type as $job)
                                 <tr>
                                     <td scope="col">
                                         <div class="custom-control custom-checkbox small">
-                                            <input type="checkbox" wire:model="selectedRows" value="{{ $task->id }}"
-                                                class="custom-control-input" id="{{ $task->id }}">
-                                            <label class="custom-control-label" for="{{ $task->id }}"></label>
+                                            <input type="checkbox" wire:model="selectedRows" value="{{ $job->id }}"
+                                                class="custom-control-input" id="{{ $job->id }}">
+                                            <label class="custom-control-label" for="{{ $job->id }}"></label>
                                         </div>
                                     </td>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $task->name }}</td>
-                                    <td>{{ $task->level->name }}</td>
-                                    <td>{{ $task->events()->count() }}</td>
+                                    <td>{{ $job->title }}</td>
+                                    {{-- <td>{{ $job->description }}</td> --}}
                                     <td>
                                         <span
-                                            class="font-weight-bold badge text-white {{ $task->status == 1 ? 'bg-success' : 'bg-secondary' }}">
-                                            {{ $task->status() }}
+                                            class="font-weight-bold badge text-white {{ $job->status == 1 ? 'bg-success' : 'bg-secondary' }}">
+                                            {{ $job->status() }}
                                         </span>
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
-                                            <button wire:click.prevent="edit({{ $task }})"
+                                            <button wire:click.prevent="edit({{ $job }})"
                                                 class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
-                                            <button wire:click.prevent="confirmTaskRemoval({{ $task->id }})"
+                                            @if (auth()->user()->roles[0]->name == 'superadmin')
+                                            <button wire:click.prevent="confirmJobTypeRemoval({{ $job->id }})"
                                                 class="btn btn-danger btn-sm"><i
                                                     class="fa fa-trash bg-danger"></i></button>
+                                            @else
+                                            <button class="btn btn-danger btn-sm" disabled><i
+                                                    class="fa fa-trash bg-danger"></i></button>
+                                            @endif
                                         </div>
-                                        {{-- <form action="" method="post" id="delete-task-{{ $task->id }}"
+                                        {{-- <form action="" method="post" id="delete-level-{{ $level->id }}"
                                             class="d-none">
                                             @csrf
                                             @method('DELETE')
@@ -221,23 +195,16 @@
 
                                 @empty
                                 <tr>
-                                    <td colspan="9" class="text-center">@lang('site.noDataFound')</td>
+                                    <td colspan="8" class="text-center">@lang('site.noDataFound')</td>
                                 </tr>
                                 @endforelse
                             </tbody>
-                            {{-- <tfoot>
-                                <tr>
-                                    <td colspan="5">
-                                        {!! $tasks->appends(request()->all())->links() !!}
-                                    </td>
-                                </tr>
-                            </tfoot> --}}
                         </table>
                     </div>
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer bg-light">
-                    {!! $tasks->appends(request()->all())->links() !!}
+                    {!! $jobs_type->appends(request()->all())->links() !!}
                 </div>
                 <!-- /.card-footer-->
             </div>
@@ -246,19 +213,19 @@
     </section>
     <!-- /.content -->
 
-    <!-- Modal Create or Update Task -->
+    <!-- Modal Create or Update Level -->
 
     <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
         wire:ignore.self>
         <div class="modal-dialog" role="document">
-            <form autocomplete="off" wire:submit.prevent="{{ $showEditModal ? 'updateTask' : 'createTask' }}">
+            <form autocomplete="off" wire:submit.prevent="{{ $showEditModal ? 'updateJobType' : 'createJobType' }}">
                 <div class="modal-content">
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
                             @if ($showEditModal)
-                            <span>@lang('site.updateRecord', ['name' => 'مهمة'])</span>
+                            <span>@lang('site.updateRecord', ['name' => 'تصنيف'])</span>
                             @else
-                            <span>@lang('site.addRecord', ['name' => 'مهمة'])</span>
+                            <span>@lang('site.addRecord', ['name' => 'تصنيف'])</span>
                             @endif
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -269,52 +236,25 @@
                         <div class="row h-100 justify-content-center align-items-center">
                             <div class="col-12">
 
-                                <!-- Modal Office -->
-                                @role('superadmin')
-                                <div class="form-group">
-                                    <label for="office_id">@lang('site.office')</label>
-                                    <select id="office_id" class="form-control @error('office_id') is-invalid @enderror"
-                                        wire:model.defer="data.office_id">
-                                        <option hidden>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
-                                        @foreach ($offices as $office)
-                                        <option class="bg-light" value="{{ $office->id }}">{{ $office->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('office_id')
+                                <!-- Modal JobType Title -->
+                                <div dir="rtl" class="form-group">
+                                    <input type="text" tabindex="1" wire:model.defer="data.title"
+                                        class="form-control @error('title') is-invalid @enderror" id="title"
+                                        aria-describedby="titleHelp"
+                                        placeholder="@lang('site.enterFieldName', ['name' => 'العمل'])">
+                                    @error('title')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                     @enderror
                                 </div>
-                                @endrole
-
-                                <!-- Modal Task Full Name -->
-
-                                <div class="form-group">
-                                    <label for="name">@lang('site.task')</label>
-                                    <input type="text" wire:model.defer="data.name"
-                                        class="form-control @error('name') is-invalid @enderror" id="name"
-                                        aria-describedby="nameHelp" dir="rtl" placeholder="@lang('site.enterFieldName', ['name' => 'اسم المهمة'])">
-                                    @error('name')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-
-                                <!-- Modal Task Type -->
-
-                                <div class="form-group">
-                                    <label for="level_id">@lang('site.level')</label>
-                                    <select id="level_id"
-                                        class="form-control @error('level_id') is-invalid @enderror"
-                                        wire:model.defer="data.level_id">
-                                        <option hidden>@lang('site.choise', ['name' => 'المرحلة'])</option>
-                                        @foreach ($levels as $level)
-                                        <option class="bg-light" value="{{ $level->id }}">{{ $level->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('level_id')
+                                <!-- Modal JobType Description -->
+                                <div dir="rtl" class="form-group">
+                                    <input type="text" tabindex="1" wire:model.defer="data.description"
+                                        class="form-control @error('description') is-invalid @enderror" id="description"
+                                        aria-describedby="descriptionHelp"
+                                        placeholder="@lang('site.enterFieldName', ['name' => 'وصف'])">
+                                    @error('description')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -340,14 +280,14 @@
         </div>
     </div>
 
-    <!-- Modal Delete Task -->
+    <!-- Modal Delete Level -->
 
     <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">
-                    <h5>@lang('site.deleteRecord', ['name' => 'مهمة'])</h5>
+                    <h5>@lang('site.deleteRecord', ['name' => 'العمل'])</h5>
                 </div>
 
                 <div class="modal-body">
@@ -357,7 +297,7 @@
                 <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
                             class="mr-1 fa fa-times"></i> @lang('site.cancel')</button>
-                    <button type="button" wire:click.prevent="deleteTask" class="btn btn-danger"><i
+                    <button type="button" wire:click.prevent="deleteJobType" class="btn btn-danger"><i
                             class="mr-1 fa fa-trash"></i>@lang('site.delete')</button>
                 </div>
             </div>
@@ -368,27 +308,15 @@
 
     <script>
         $(document).ready( function() {
-
                 window.addEventListener('hide-form', function (event) {
                     $('#form').modal('hide');
                 });
-
                 window.addEventListener('show-form', function (event) {
                     $('#form').modal('show');
                 });
-
-                window.addEventListener('hide-modal-show', function (event) {
-                    $('#modal-show-task').modal('hide');
-                });
-
-                window.addEventListener('show-modal-show', function (event) {
-                    $('#modal-show-task').modal('show');
-                });
-
                 window.addEventListener('show-delete-modal', function (event) {
                     $('#confirmationModal').modal('show');
                 });
-
                 window.addEventListener('hide-delete-modal', function (event) {
                     $('#confirmationModal').modal('hide');
                 });
@@ -400,13 +328,14 @@
     <script>
         window.addEventListener('show-delete-alert-confirmation', event =>{
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
+                    title: 'هل انت متأكد من ذلك ؟',
+                    text: "! لن تتمكن من التراجع عن هذا",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    cancelButtonText: 'الغاء',
+                    confirmButtonText: 'نعم قم بالحذف'
                     }).then((result) => {
                     if (result.isConfirmed) {
                         Livewire.emit('deleteConfirmed')

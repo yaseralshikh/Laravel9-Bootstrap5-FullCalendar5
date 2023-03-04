@@ -232,6 +232,70 @@
                     <!-- /.card -->
                 </section>
 
+                {{-- Empty Tasks --}}
+
+                <section class="col-lg-12 connectedSortable">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fa fa-table"></i>
+                                @lang('site.emptyTasks')
+                            </h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive" dir="rtl">
+                                <div class="shadow rounded p-4 border">
+                                    <div class="table-responsive">
+                                        <table id="example1"
+                                            class="table text-center table-bordered table-hover dataTable dtr-inline display nowrap"
+                                            aria-describedby="example1_info" style="width:100%">
+                                            <thead class="bg-light">
+                                                <tr>
+                                                    <th colspan="4"><h4>@lang('site.emptyTasks')</h4></th>
+                                                </tr>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>@lang('site.school')</th>
+                                                    <th>@lang('site.level')</th>
+                                                    <th>@lang('site.visitedCount')</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse ($empty_tasks as $task)
+                                                <tr>
+                                                    <td class="bg-light">{{ $loop->iteration }}</td>
+                                                    <td>{{ $task->name }}</td>
+                                                    <td>{{ $task->level->name }}</td>
+                                                    <td class="text-red">{{ $task->events_count }}</td>
+                                                </tr>
+                                                @empty
+                                                <tr>
+                                                    <td colspan="4" class="text-center">@lang('site.noDataFound')</td>
+                                                </tr>
+                                                @endforelse
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                  <td colspan="10">
+                                                        {!! $empty_tasks->appends(request()->all())->links() !!}
+                                                  </td>
+                                                </tr>
+                                              </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </section>
+
                 <!-- users Events plan -->
 
                 <section class="col-lg-12 connectedSortable">
@@ -239,7 +303,7 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="far fa-chart-bar"></i>
+                                <i class="fa fa-table"></i>
                                 @lang('site.statisticsUsersEvent')
                             </h3>
                             <div class="card-tools">
@@ -307,6 +371,9 @@
                                             class="table text-center table-bordered table-hover dataTable dtr-inline display nowrap"
                                             aria-describedby="example2_info" style="width:100%">
                                             <thead class="bg-light">
+                                                <tr>
+                                                    <th colspan="10"><h4>@lang('site.statisticsUsersEvent')</h4></th>
+                                                </tr>
                                                 <tr>
                                                     <th>#</th>
                                                     <th>@lang('site.name')</th>

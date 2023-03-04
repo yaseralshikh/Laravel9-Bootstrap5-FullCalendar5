@@ -31,10 +31,14 @@
         <link rel="stylesheet" href="{{ asset('backend/plugins/daterangepicker/daterangepicker.css') }}">
         <!-- summernote -->
         <link rel="stylesheet" href="{{ asset('backend/plugins/summernote/summernote-bs4.min.css') }}">
+        <!-- Select2 -->
+        <link rel="stylesheet" href="{{ asset('backend/plugins/select2/css/select2.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('backend/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
         <!-- for DataTables plug-in -->
         <link rel="stylesheet" href="{{ asset('backend/css/dataTables.bootstrap4.min.css') }}">
         <link rel="stylesheet" href="{{ asset('backend/css/buttons.dataTables.min.css') }}">
-
+        {{-- sortable-tablesort --}}
+        {{-- <link href="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable.min.css" rel="stylesheet" /> --}}
         @yield('style')
         <style>
             body{
@@ -80,8 +84,8 @@
         <!-- AdminLTE App -->
         <script src="{{ asset('backend/js/adminlte.min.js') }}"></script>
         {{-- <script src="{{ asset('backend/js/demo.js')}}"></script> ********--}}
-
-        @yield('script')
+        <!-- Select2 -->
+        <script src="{{ asset('backend/plugins/select2/js/select2.full.min.js') }}"></script>
         @yield('alpine-plugins')
         <!-- Alpine Core -->
         <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -89,7 +93,9 @@
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <x-livewire-alert::scripts />
         <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
-
+        {{-- sortable-tablesort --}}
+        <script src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable.min.js"></script>
+        @yield('script')
         @livewireChartsScripts
     </body>
 </html>

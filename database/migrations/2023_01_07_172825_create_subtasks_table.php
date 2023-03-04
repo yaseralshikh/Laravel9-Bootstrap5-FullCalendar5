@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('section');
-            $table->foreignId('office_id')->constrained();
+            $table->foreignId('office_id')->constrained()->onDelete('cascade');
             $table->integer('position')->default(Null);
             $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();

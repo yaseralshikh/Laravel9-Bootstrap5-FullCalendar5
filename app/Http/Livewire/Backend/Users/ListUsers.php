@@ -6,15 +6,16 @@ use PDF;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Office;
+use App\Models\JobType;
 use Livewire\Component;
 use App\Exports\UsersExport;
 use App\Imports\UsersImport;
-use Maatwebsite\Excel\Facades\Excel;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Specialization;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -499,27 +500,7 @@ class ListUsers extends Component
         $specializations = Specialization::whereStatus(true)->orderBy('name', 'asc')->get();
         $offices = Office::whereStatus(true)->get();
         $roles = Role::whereNotIn('id',[1])->get();
-        $types = [
-            [
-                'id'    => 1,
-                'title' => 'مشرف تربوي'
-            ],
-            [
-                'id'    => 2,
-                'title' => 'تقنية المعلومات'
-            ],
-            [
-                'id'    => 3,
-                'title' => 'مساعد مدير المكتب للشؤون التعليمية'
-            ],
-            [
-                'id'    => 4,
-                'title' => 'مساعد مدير المكتب للشؤون المدرسية'],
-            [
-                'id'    => 5,
-                'title' => 'مدير مكتب التعليم'
-            ]
-        ];
+        $jobs_type = JobType::whereStatus(true)->get();
 
         $educationTypes = [
             [
@@ -533,12 +514,12 @@ class ListUsers extends Component
         ];
 
         return view('livewire.backend.users.list-users',[
-            'users' => $users,
-            'specializations' => $specializations ,
-            'offices' => $offices ,
-            'types' => $types ,
-            'educationTypes' => $educationTypes ,
-            'roles' => $roles ,
+            'users'             => $users,
+            'specializations'   => $specializations ,
+            'offices'           => $offices ,
+            'jobs_type'         => $jobs_type ,
+            'educationTypes'    => $educationTypes ,
+            'roles'             => $roles ,
         ])->layout('layouts.admin');
     }
 }

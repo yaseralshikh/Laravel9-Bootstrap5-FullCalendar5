@@ -44,6 +44,10 @@ class OfficeSeeder extends Seeder
                 'name'         => 'مكتب التعليم بفرسان',
                 'director'     => 'عبدالله بن محمد نسيب',
             ],
+            [
+                'name'         => 'إدارة الإشراف',
+                'director'     => 'د. أحمد بن ظافر عطيف',
+            ],
         ];
 
         foreach ($offices as $office) {

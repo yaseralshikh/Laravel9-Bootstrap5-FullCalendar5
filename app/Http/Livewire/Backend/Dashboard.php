@@ -29,7 +29,7 @@ class Dashboard extends Component
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
-    public $paginateValue = 10;
+    public $paginateValue = 20;
 
     public function semesterActive()
     {
@@ -84,21 +84,23 @@ class Dashboard extends Component
         $offices = Office::whereStatus(true)->get();
         $semesters =  Semester::whereStatus(true)->get();
         $levels = Level::all();
+        $empty_tasks = Task::whereStatus(true)->where('office_id', $byOffice)->whereIn('level_id', [1,2,3,4])->withCount('events')->having('events_count', '=', 0)->orderBy('level_id', 'asc')->paginate(25);
 
         return view('livewire.backend.dashboard',[
-            'offices'  => $offices,
-            'semesters'  => $semesters,
-            'levels'  => $levels,
-            'chartData'  => $chartData,
-            'usersCount' => $usersCount,
-            'schoolsCount' => $schoolsCount,
-            'users' => $users,
-            'weeksCount' => $weeksCount,
-            'eventsSchoolCount' => $eventsSchoolCount,
-            'eventsOfficeCount' => $eventsOfficeCount,
-            'eventsTrainingCount' => $eventsTrainingCount,
-            'eventsVacationCount' => $eventsVacationCount,
-            'eventsCount' => $eventsCount,
+            'offices'               => $offices,
+            'semesters'             => $semesters,
+            'levels'                => $levels,
+            'empty_tasks'           => $empty_tasks,
+            'chartData'             => $chartData,
+            'usersCount'            => $usersCount,
+            'schoolsCount'          => $schoolsCount,
+            'users'                 => $users,
+            'weeksCount'            => $weeksCount,
+            'eventsSchoolCount'     => $eventsSchoolCount,
+            'eventsOfficeCount'     => $eventsOfficeCount,
+            'eventsTrainingCount'   => $eventsTrainingCount,
+            'eventsVacationCount'   => $eventsVacationCount,
+            'eventsCount'           => $eventsCount,
         ])->layout('layouts.admin');
     }
 }

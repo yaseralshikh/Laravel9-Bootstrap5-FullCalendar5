@@ -375,8 +375,8 @@
                                     <select id="type" class="form-control @error('type') is-invalid @enderror"
                                         wire:model.defer="data.type">
                                         <option hidden selected>@lang('site.choise', ['name' => 'العمل الحالي'])</option>
-                                        @foreach ($types as $type)
-                                        <option class="bg-light" value="{{ $type['title'] }}">{{ $type['title'] }}
+                                        @foreach ($jobs_type as $job)
+                                        <option class="bg-light" value="{{ $job->title }}">{{ $job->title }}
                                         </option>
                                         @endforeach
                                     </select>

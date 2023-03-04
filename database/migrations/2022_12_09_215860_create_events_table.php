@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('week_id')->constrained();
             $table->foreignId('semester_id')->constrained();
-            $table->foreignId('office_id')->constrained();
+            $table->foreignId('office_id')->constrained()->onDelete('cascade');
             $table->string('color')->nullable();
             $table->unsignedTinyInteger('status')->default(0);
             $table->timestamps();

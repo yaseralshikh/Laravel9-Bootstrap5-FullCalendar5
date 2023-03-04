@@ -12,6 +12,7 @@ use App\Http\Livewire\Backend\Offices\Office;
 use App\Http\Livewire\Backend\Subtask\Subtask;
 use App\Http\Livewire\Backend\Users\ListUsers;
 use App\Http\Livewire\Backend\Events\ListEvents;
+use App\Http\Livewire\Backend\JobsType\JobsType;
 use App\Http\Livewire\Backend\Semesters\Semesters;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 use App\Http\Livewire\Backend\Specializations\Specializations;
@@ -54,6 +55,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'ro
     Route::get('weeks', Weeks::class )->name('weeks');
     Route::get('semesters', Semesters::class )->name('semesters');
     Route::get('offices', Office::class )->name('offices');
+    Route::get('jobs_type', JobsType::class )->name('jobs_type');
     // Route::get('events2', Events::class )->name('events2');
     Route::get('/logs', [LogViewerController::class, 'index'])->name('log-viewer');
 });

@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('sites', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('section');
             $table->foreignId('office_id')->constrained()->onDelete('cascade');
             $table->unsignedTinyInteger('status')->default(0);

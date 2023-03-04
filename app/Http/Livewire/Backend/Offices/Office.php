@@ -2,13 +2,14 @@
 
 namespace App\Http\Livewire\Backend\Offices;
 
-use App\Models\Office as ModelsOffice;
+use App\Models\Site;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
+use App\Models\Office as ModelsOffice;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
 
 class Office extends Component
 {
@@ -207,7 +208,14 @@ class Office extends Component
             $validatedData['assistant2_signature_path'] = $this->assistant2_signature_image->store('/', 'signature_photos');
 		}
 
-		ModelsOffice::create($validatedData);
+		$newOffice = ModelsOffice::create($validatedData);
+
+        Site::create([
+            'title' => 'قفل إدخال الخطط',
+            'description' => 'المعذرة .. حسب توجيهات الإدارة فقد تم إقفل إدخال الخطط من قبل المشرفين مؤقتاً وسيتم فتحها في وقت لاحق ، شكراُ على اهتمامكم .',
+            'section' => 'front_end',
+            'office_id' => $newOffice->id,
+        ]);
 
         $this->dispatchBrowserEvent('hide-form');
 

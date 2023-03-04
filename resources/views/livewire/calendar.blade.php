@@ -118,12 +118,12 @@
                         </div>
 
                         <!-- Task -->
-                        <div class="mb-3">
-                            <label for="title" class="col-form-label">@lang('site.task') :</label>
+                        <div class="form-group mb-3" wire:ignore>
+                            <label for="task_id" class="col-form-label">@lang('site.task') :</label>
                             {{-- <input type="text" wire:model.defer="title"
                                 class="form-control @error('title') is-invalid @enderror" id="title"> --}}
                             <select name="task_id" wire:model.defer="task_id"
-                                class="form-select  @error('task_id') is-invalid @enderror" id="task_id">
+                                class="form-select @error('task_id') is-invalid @enderror" id="task_id">
                                 <option value="" selected>@lang('site.choise', ['name' => 'المهمة']) :</option>
                                 @foreach ($tasks as $task)
                                 <option value="{{ $task->id }}" style="
@@ -232,10 +232,11 @@
                             @enderror
                         </div>
 
-                        <div class="mb-3">
-                            <label for="task_id1" class="col-form-label">@lang('site.task') :</label>
-                            <select wire:model.defer="task_id" class="form-select  @error('task_id') is-invalid @enderror"
-                                id="task_id">
+                        <!-- Task -->
+                        <div class="form-group mb-3" wire:ignore>
+                            <label for="task_id_edit" class="col-form-label">@lang('site.task') :</label>
+                            <select wire:model.defer="task_id" class="form-select  select2bs4 @error('task_id') is-invalid @enderror"
+                                id="task_id_edit">
                                 @foreach ($tasks as $task)
                                 <option value="{{ $task->id }}" style="
                                         {{ $task->level_id == 1 ? 'background:#FBEFF2;' : '' }}
@@ -323,24 +324,6 @@
                                     @enderror
                                 </div>
 
-                                <!-- Modal User Office -->
-
-                                <div class="form-group">
-                                    <label for="office_id">@lang('site.office') *</label>
-                                    <select id="office_id" class="form-control @error('office_id') is-invalid @enderror"
-                                        wire:model.defer="profileData.office_id">
-                                        <option hidden>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
-                                        @foreach ($offices as $office)
-                                        <option class="bg-light" value="{{ $office->id }}">{{ $office->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('office_id')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-
                                 <!-- Modal User Specialization -->
 
                                 <div class="form-group">
@@ -368,8 +351,8 @@
                                     <select id="type" class="form-control @error('type') is-invalid @enderror"
                                         wire:model.defer="profileData.type">
                                         <option hidden selected>@lang('site.choise', ['name' => 'العمل الحالي'])</option>
-                                        @foreach ($types as $type)
-                                        <option class="bg-light" value="{{ $type['title'] }}">{{ $type['title'] }}
+                                        @foreach ($jobs_type as $job)
+                                        <option class="bg-light" value="{{ $job->title }}">{{ $job->title }}
                                         </option>
                                         @endforeach
                                     </select>
@@ -437,6 +420,7 @@
     </div>
 
     @push('script')
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const createModalEl = document.getElementById('createModal');
@@ -461,7 +445,7 @@
             });
 
             const calendarEl = document.getElementById('calendar');
-            
+
             if (calendarEl != null) {
                 const checkbox = document.getElementById('drop-remove');
                 const tooltip = null;
@@ -585,6 +569,7 @@
                             event.draggedEl.parentNode.removeChild(event.draggedEl);
                         }
                     },
+
                     eventDrop: info => @this.eventDrop(info.event, info.oldEvent),
                     loading: function(isLoading) {
                         if (!isLoading) {
@@ -632,6 +617,12 @@
                         calendar.setOption('locale', this.value);
                     }
                 });
+
+                $('.select2').select2();
+
+                $('.select2bs4').select2({
+                    theme: 'bootstrap4'
+                });
             };
 
             // Listener for SweetAleart
@@ -647,6 +638,8 @@
                 $('#editProfile').modal('show');
             });
         });
+
     </script>
+
     @endpush
 </div>

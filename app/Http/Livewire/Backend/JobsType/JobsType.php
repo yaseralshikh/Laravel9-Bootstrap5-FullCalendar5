@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Http\Livewire\Backend\Tasks;
+namespace App\Http\Livewire\Backend\JobsType;
 
-use App\Models\Task;
-use App\Models\Level;
-use App\Models\Office;
+use App\Models\JobType;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class Tasks extends Component
+class JobsType extends Component
 {
     use WithPagination;
     use LivewireAlert;
@@ -18,31 +16,28 @@ class Tasks extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $data = [];
-    public $task;
+    public $jobtype;
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
-    public $byOffice = null; //filter by office_id
-    public $byLevel = null; //filter by Level_id
-
-    public $sortColumnName = 'name';
+    public $sortColumnName = 'id';
     public $sortDirection = 'asc';
 
     public $showEditModal = false;
 
-    public $taskIdBeingRemoved = null;
+    public $jobstypeIdBeingRemoved = null;
 
     public $selectedRows = [];
 	public $selectPageRows = false;
-    protected $listeners = ['deleteConfirmed' => 'deleteTasks'];
+    protected $listeners = ['deleteConfirmed' => 'deleteJobsType'];
 
     // Updated Select Page Rows
 
     public function updatedSelectPageRows($value)
     {
         if ($value) {
-            $this->selectedRows = $this->tasks->pluck('id')->map(function ($id) {
+            $this->selectedRows = $this->jobstype->pluck('id')->map(function ($id) {
                 return (string) $id;
             });
         } else {
@@ -64,11 +59,11 @@ class Tasks extends Component
         $this->dispatchBrowserEvent('show-delete-alert-confirmation');
     }
 
-    // set All selected User As Active
+    // set All selected JobType As Active
 
     public function setAllAsActive()
 	{
-		Task::whereIn('id', $this->selectedRows)->update(['status' => 1]);
+		JobType::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
         $this->alert('success', __('site.activeSuccessfully'), [
             'position'  =>  'top-end',
@@ -82,11 +77,11 @@ class Tasks extends Component
 		$this->reset(['selectPageRows', 'selectedRows']);
 	}
 
-    // set All selected User As InActive
+    // set All selected JobType As InActive
 
 	public function setAllAsInActive()
 	{
-		Task::whereIn('id', $this->selectedRows)->update(['status' => 0]);
+		JobType::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
         $this->alert('success', __('site.inActiveSuccessfully'), [
             'position'  =>  'top-end',
@@ -100,12 +95,12 @@ class Tasks extends Component
 		$this->reset(['selectPageRows', 'selectedRows']);
 	}
 
-    // Delete Selected User with relationship roles And permission
+    // Delete Selected JobsType
 
-    public function deleteTasks()
+    public function deleteJobsType()
     {
-        // delete selected users from database
-		Task::whereIn('id', $this->selectedRows)->delete();
+        // delete selected Levels from database
+        JobType::whereIn('id', $this->selectedRows)->delete();
 
         $this->alert('success', __('site.deleteSuccessfully'), [
             'position'  =>  'top-end',
@@ -116,7 +111,7 @@ class Tasks extends Component
             'showConfirmButton'  =>  false
         ]);
 
-		$this->reset();
+        $this->reset('data');
     }
 
     // Sort By Column Name
@@ -146,31 +141,26 @@ class Tasks extends Component
         $this->resetPage();
     }
 
-    // show add new user form modal
+    // show add new Level form modal
 
-    public function addNewTask()
+    public function addNewJobType()
     {
         $this->reset('data');
         $this->showEditModal = false;
-        //$this->tasks = Task::whereStatus(1)->where('office_id',auth()->user()->office_id)->get();
         $this->dispatchBrowserEvent('show-form');
     }
 
-    // Create new user
+    // Create new JobType
 
-    public function createTask()
+    public function createJobType()
     {
         $validatedData = Validator::make($this->data, [
-			'name'                  => 'required',
-			'office_id'              => 'nullable',
-			'level_id'              => 'required',
+			'title'                  => 'required|max:255',
+			'description'            => 'max:255',
 		])->validate();
 
-        if(empty($validatedData['office_id'])) {
-            $validatedData['office_id'] = auth()->user()->office_id;
-        }
 
-		Task::create($validatedData);
+		JobType::create($validatedData);
 
         $this->dispatchBrowserEvent('hide-form');
 
@@ -184,33 +174,32 @@ class Tasks extends Component
         ]);
     }
 
-    // show Update new user form modal
+    // show Update new JobType form modal
 
-    public function edit(Task $task)
+    public function edit(JobType $jobtype)
     {
         $this->reset('data');
 
         $this->showEditModal = true;
 
-        $this->task = $task;
+        $this->jobtype = $jobtype;
 
-        $this->data = $task->toArray();
+        $this->data = $jobtype->toArray();
 
         $this->dispatchBrowserEvent('show-form');
     }
 
-    // Update Task
+    // Update JobType
 
-    public function updateTask()
+    public function updateJobType()
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'name'            => 'required',
-                'office_id'       => 'nullable',
-                'level_id'        => 'required',
+                'title'                  => 'required|max:255',
+                'description'            => 'max:255',
             ])->validate();
 
-            $this->task->update($validatedData);
+            $this->jobtype->update($validatedData);
 
             $this->dispatchBrowserEvent('hide-form');
 
@@ -236,23 +225,23 @@ class Tasks extends Component
         }
     }
 
-    // Show Modal Form to Confirm Task Removal
+    // Show Modal Form to Confirm JobType Removal
 
-    public function confirmTaskRemoval($taskId)
+    public function confirmJobTypeRemoval($JobTypeId)
     {
-        $this->taskIdBeingRemoved = $taskId;
+        $this->jobstypeIdBeingRemoved = $JobTypeId;
 
         $this->dispatchBrowserEvent('show-delete-modal');
     }
 
-    // Delete Task
+    // Delete JobType
 
-    public function deleteTask()
+    public function deleteJobType()
     {
         try {
-            $task = Task::findOrFail($this->taskIdBeingRemoved);
+            $job_type = JobType::findOrFail($this->jobstypeIdBeingRemoved);
 
-            $task->delete();
+            $job_type->delete();
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
@@ -277,35 +266,19 @@ class Tasks extends Component
         }
     }
 
-    public function getTasksProperty()
+    public function getJobsTypeProperty()
 	{
-        $searchString = $this->searchTerm;
-        $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
-        $byLevel = $this->byLevel;
-
-        $tasks = Task::with('events')->where('office_id', $byOffice)
-            ->when($byLevel, function ($query) use($byLevel) {
-                $query->where('level_id', $byLevel);
-            })
-            //->where('level_id', $byLevel)
-            ->search(trim(($searchString)))
-            ->orderBy('level_id','ASC')
+        $JobsType = JobType::query()
+            ->where('title', 'like', '%'.$this->searchTerm.'%')
             ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(50);
+            ->paginate(30);
 
-        return $tasks;
+        return $JobsType;
 	}
 
     public function render()
     {
-        $tasks = $this->tasks;
-        $levels = Level::all();
-        $offices = Office::whereStatus(true)->get();
-
-        return view('livewire.backend.tasks.tasks',[
-            'tasks'     => $tasks,
-            'offices'   => $offices,
-            'levels'    => $levels,
-        ])->layout('layouts.admin');
+        $jobs_type = $this->JobsType;
+        return view('livewire.backend.jobs-type.jobs-type', compact('jobs_type'))->layout('layouts.admin');
     }
 }

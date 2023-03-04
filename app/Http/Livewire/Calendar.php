@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Week;
 use App\Models\Event;
 use App\Models\Office;
+use App\Models\JobType;
 use App\Rules\WeekRule;
 use Livewire\Component;
 use App\Models\Semester;
@@ -252,7 +253,7 @@ class Calendar extends Component
         ]);
     }
 
-    public function eventDrop($event)
+    public function eventDrop($event,$oldEvent)
     {
         $eventdata = Event::find($event['id']);
         if (($eventdata->user_id == auth()->user()->id) || (auth()->user()->roles[0]->id != 3)) {
@@ -273,21 +274,40 @@ class Calendar extends Component
                     ->count() <= 1;
 
                 if ($eventOverLap) {
+
                     $eventStart = Carbon::create($event['start'])->toDateString();
                     $eventEnd = Carbon::create($event['end'])->toDateString();
 
-                    $eventdata->start = $eventStart;
-                    $eventdata->end = $eventEnd;
-                    $eventdata->save();
+                    $week_Id = Week::where('start', '<=', $eventStart)->where('end', '>=', $eventEnd)->pluck('id')->first();
 
-                    $this->dispatchBrowserEvent('swal', [
-                        'title' => __('site.updateSuccessfully'),
-                        'timer' => 2000,
-                        'icon' => 'success',
-                        'toast' => true,
-                        'showConfirmButton' => false,
-                        'position' => 'center',
-                    ]);
+                    if ($week_Id) {
+
+                        $eventdata->start = $eventStart;
+                        $eventdata->end = $eventEnd;
+                        $eventdata->week_id = $week_Id;
+                        
+                        $eventdata->save();
+
+                        $this->dispatchBrowserEvent('swal', [
+                            'title' => __('site.updateSuccessfully'),
+                            'timer' => 2000,
+                            'icon' => 'success',
+                            'toast' => true,
+                            'showConfirmButton' => false,
+                            'position' => 'center',
+                        ]);
+
+                    } else {
+                        $this->dispatchBrowserEvent('swal', [
+                            'title' => 'الأسبوع الدراسي غير مطابق للفصل الدراسي',
+                            'timer' => 3500,
+                            'icon' => 'error',
+                            'toast' => true,
+                            'showConfirmButton' => false,
+                            'position' => 'center',
+                        ]);
+                    }
+
                 } else {
                     $this->dispatchBrowserEvent('swal', [
                         'title' => 'تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرفين أخرين.',
@@ -342,31 +362,10 @@ class Calendar extends Component
         $tasks = Task::where('office_id', auth()->user()->office_id)->whereStatus(1)->orderBy('level_id', 'asc')->orderBy('name', 'asc')->get();
 
         $specializations = Specialization::whereStatus(true)->orderBy('name', 'asc')->get();
-        $offices = Office::whereStatus(true)->get();
 
         $siteStatus = Site::where('office_id', auth()->user()->office_id)->first();
 
-        $types = [
-            [
-                'id'    => 1,
-                'title' => 'مشرف تربوي'
-            ],
-            [
-                'id'    => 2,
-                'title' => 'تقنية المعلومات'
-            ],
-            [
-                'id'    => 3,
-                'title' => 'مساعد مدير المكتب للشؤون التعليمية'
-            ],
-            [
-                'id'    => 4,
-                'title' => 'مساعد مدير المكتب للشؤون المدرسية'],
-            [
-                'id'    => 5,
-                'title' => 'مدير مكتب التعليم'
-            ]
-        ];
+        $jobs_type = JobType::whereStatus(true)->get();
 
         $educationTypes = [
             [
@@ -384,8 +383,7 @@ class Calendar extends Component
             'weeks',
             'semesters',
             'specializations',
-            'offices',
-            'types',
+            'jobs_type',
             'educationTypes',
             'siteStatus',
         ));

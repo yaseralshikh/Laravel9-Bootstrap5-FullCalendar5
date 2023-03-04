@@ -40,6 +40,11 @@ class Office extends Model
         return $this->hasMany(Subtask ::class);
     }
 
+    public function sites(): HasMany
+    {
+        return $this->hasMany(Site ::class);
+    }
+
     public function status(): string
     {
         return $this->status ? __('site.active') : __('site.inActive');
