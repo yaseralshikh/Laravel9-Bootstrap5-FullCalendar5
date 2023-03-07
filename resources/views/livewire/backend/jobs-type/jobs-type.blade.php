@@ -328,14 +328,15 @@
     <script>
         window.addEventListener('show-delete-alert-confirmation', event =>{
                 Swal.fire({
-                    title: 'هل انت متأكد من ذلك ؟',
-                    text: "! لن تتمكن من التراجع عن هذا",
+                    title: '?@lang("site.delete")',
+                    text: "@lang('site.deleteMessage')",
                     icon: 'warning',
+                    iconHtml: '؟',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    cancelButtonText: 'الغاء',
-                    confirmButtonText: 'نعم قم بالحذف'
+                    confirmButtonText: 'نعم',
+                    cancelButtonText: 'لا',
                     }).then((result) => {
                     if (result.isConfirmed) {
                         Livewire.emit('deleteConfirmed')

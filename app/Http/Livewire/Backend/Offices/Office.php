@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Backend\Offices;
 
-use App\Models\Site;
+use App\Models\Feature;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
@@ -210,10 +210,11 @@ class Office extends Component
 
 		$newOffice = ModelsOffice::create($validatedData);
 
-        Site::create([
+        Feature::create([
             'title' => 'قفل إدخال الخطط',
+            'value' => 0,
             'description' => 'المعذرة .. حسب توجيهات الإدارة فقد تم إقفل إدخال الخطط من قبل المشرفين مؤقتاً وسيتم فتحها في وقت لاحق ، شكراُ على اهتمامكم .',
-            'section' => 'front_end',
+            'section' => 'خطط المشرفين',
             'office_id' => $newOffice->id,
         ]);
 

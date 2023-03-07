@@ -51,11 +51,11 @@
     </div>
 
     {{-- Calender --}}
-    @if ($siteStatus->status)
+    @if ($featureValue->value)
         <div class="card mb-3 text-center">
-            <img src="{{ asset('backend/img/witting.gif') }}" class="img-thumbnail border border-0 rounded mx-auto d-block mt-3 mb-3" alt="sorry">
+            <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}" class="img-thumbnail border border-0 rounded mx-auto d-block mt-3 mb-3" alt="sorry">
             <div class="card-body mb-3" dir="rtl">
-                <h2 class="card-text">{{$siteStatus->description}}</h2>
+                <h2 class="card-text">{{$featureValue->description}}</h2>
             </div>
         </div>
     @else
@@ -74,55 +74,11 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="save">
-                        <!-- Semester -->
-                        <div class="mb-3">
-                            <label for="semester_id" class="form-label">{{ __('site.semester') }} :</label>
-                            <select name="semester_id" wire:model.defer="semester_id"
-                                wire:change="semesterOption($event.target.value)"
-                                class="form-select  @error('semester_id') is-invalid @enderror" id="semester_id">
-                                <option value="">@lang('site.choise', ['name' => 'ألفصل الدراسي']) :</option>
-                                @foreach ($semesters as $semester)
-                                <option value="{{ $semester->id }}"
-                                    style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
-                                    $semester->title . ' ( ' . $semester->school_year . ' )' }}
-                                </option>
-                                @endforeach
-                            </select>
-
-                            @error('semester_id')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
-                        <!-- Week -->
-                        <div class="mb-3">
-                            <label for="week_id" class="form-label">{{ __('site.schoolWeek') }} :</label>
-                            <select name="week_id" wire:model.defer="week_id"
-                                class="form-select  @error('week_id') is-invalid @enderror" id="week_id">
-                                <option value="">@lang('site.choise', ['name' => 'الأسبوع الدراسي']) :</option>
-                                @foreach ($weeks as $week)
-                                <option value="{{ $week->id }}"
-                                    style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
-                                    $week->title . ' ( ' . $week->semester->school_year . ' )' }}
-                                </option>
-                                @endforeach
-                            </select>
-
-                            @error('week_id')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
                         <!-- Task -->
-                        <div class="form-group mb-3" wire:ignore>
+
+                        <div class="form-group mb-3" wire:ignore.self>
                             <label for="task_id" class="col-form-label">@lang('site.task') :</label>
-                            {{-- <input type="text" wire:model.defer="title"
-                                class="form-control @error('title') is-invalid @enderror" id="title"> --}}
-                            <select name="task_id" wire:model.defer="task_id"
+                            <select wire:model.defer="task_id"
                                 class="form-select @error('task_id') is-invalid @enderror" id="task_id">
                                 <option value="" selected>@lang('site.choise', ['name' => 'المهمة']) :</option>
                                 @foreach ($tasks as $task)
@@ -136,11 +92,13 @@
                                 </option>
                                 @endforeach
                             </select>
+
                             @error('task_id')
-                            <span class="invalid-feedback" role="alert">
+                            <span class="invalid-feedback d-block" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
+
                         </div>
 
                         <!-- start -->
@@ -190,52 +148,10 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="update">
-                        <!-- Semester -->
-                        <div class="mb-3">
-                            <label for="semester_id_1" class="form-label">{{ __('site.semester') }} :</label>
-                            <select name="semester_id" wire:model.defer="semester_id"
-                                wire:change="semesterOption($event.target.value)"
-                                class="form-select @error('semester_id') is-invalid @enderror" id="semester_id_1">
-                                <option value="">@lang('site.choise', ['name' => 'الفصل الدراسي'])</option>
-                                @foreach ($semesters as $semester)
-                                <option value="{{ $semester->id }}"
-                                    style="{{ $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
-                                    $semester->title . ' ( ' . $semester->school_year . ' )' }}</option>
-                                @endforeach
-                            </select>
-
-                            @error('semester_id')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
-                        <!-- Week -->
-                        <div class="mb-3">
-                            <label for="week_id_1" class="col-form-label">{{ __('site.schoolWeek') }} :</label>
-                            <select wire:model.defer="week_id"
-                                class="form-select  @error('week_id') is-invalid @enderror" id="week_d_1">
-                                <option value="">@lang('site.choise', ['name' => 'الأسبوع الدراسي'])</option>
-                                @foreach ($weeks as $week)
-                                <option value="{{ $week->id }}"
-                                    style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{
-                                    $week->title . ' ( ' . $week->semester->school_year . ' )' }}
-                                </option>
-                                @endforeach
-                            </select>
-
-                            @error('week_id')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
                         <!-- Task -->
-                        <div class="form-group mb-3" wire:ignore>
+                        <div class="form-group mb-3" wire:ignore.self>
                             <label for="task_id_edit" class="col-form-label">@lang('site.task') :</label>
-                            <select wire:model.defer="task_id" class="form-select  select2bs4 @error('task_id') is-invalid @enderror"
+                            <select wire:model.defer="task_id" class="form-select @error('task_id') is-invalid @enderror"
                                 id="task_id_edit">
                                 @foreach ($tasks as $task)
                                 <option value="{{ $task->id }}" style="
@@ -250,7 +166,7 @@
                             </select>
 
                             @error('task_id')
-                            <span class="invalid-feedback" role="alert">
+                            <span class="invalid-feedback d-block" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
@@ -426,8 +342,6 @@
             const createModalEl = document.getElementById('createModal');
             createModalEl.addEventListener('hidden.bs.modal', event => {
                 @this.office_id = '';
-                @this.semester_id = '';
-                @this.week_id = '';
                 @this.task_id = '';
                 @this.start = '';
                 @this.end = '';
@@ -437,8 +351,6 @@
             editModalEl.addEventListener('hidden.bs.modal', event => {
                 @this.event_id = '';
                 @this.office_id = '';
-                @this.semester_id = '';
-                @this.week_id = '';
                 @this.task_id = '';
                 @this.start = '';
                 @this.end = '';
@@ -512,8 +424,6 @@
                             } else {
                                 @this.event_id      = event.id;
                                 @this.office_id     = event.extendedProps.office_id;
-                                @this.semester_id   = event.extendedProps.semester_id;
-                                @this.week_id       = event.extendedProps.week_id;
                                 @this.task_id       = event.extendedProps.task_id;
                                 @this.start         = dayjs(event.startStr).format('YYYY-MM-DD');
                                 @this.end           = dayjs(event.endStr).format('YYYY-MM-DD');

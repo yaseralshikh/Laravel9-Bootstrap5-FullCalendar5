@@ -4,12 +4,12 @@ namespace App\Http\Livewire\Backend\Events;
 
 use PDF;
 use Carbon\Carbon;
-use App\Models\Site;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Week;
 use App\Models\Event;
 use App\Models\Office;
+use App\Models\Feature;
 use App\Models\Subtask;
 use App\Rules\WeekRule;
 use Livewire\Component;
@@ -63,17 +63,18 @@ class ListEvents extends Component
     public $excelFile = null;
     public $importTypevalue = 'addNew';
 
-    public $siteStatus = null;
+    public $featureValue = null;
 
     // update Site Status
 
-    public function updateSiteStatus()
+    public function updateFeatureValue()
     {
-        $this->siteStatus === 0 ? '1' : '0';
-        $site  = Site::where('office_id', auth()->user()->office_id)->first();
-        $site->update(['status' => $this->siteStatus]);
+        $this->featureValue === 0 ? 1 : 0;
 
-        $this->alert('success', __('site.siteStatusUpdateSuccessfully'), [
+        $feature = Feature::where('office_id', auth()->user()->office_id)->where('title', 'قفل إدخال الخطط')->first();
+        $feature->update(['value' => $this->featureValue]);
+
+        $this->alert('success', __('site.featureValueUpdateSuccessfully'), [
             'position' => 'top-end',
             'timer' => 2000,
             'toast' => true,
@@ -207,7 +208,7 @@ class ListEvents extends Component
         $this->showEditModal = false;
         $this->data['status'] = 1;
         // $this->data['semester_id'] = $this->semesterActive();
-        $this->data['week_id'] = $this->weekActive();
+        // $this->data['week_id'] = $this->weekActive();
 
         $this->dispatchBrowserEvent('show-form');
     }
@@ -216,13 +217,13 @@ class ListEvents extends Component
 
     public function createEvent()
     {
-        try {
+        // try {
             $validatedData = Validator::make($this->data, [
-                'task_id' => 'required',
                 'user_id' => 'required',
-                'week_id' => ['required_with:start', new WeekRule($this->data['start'])],
+                'task_id' => 'required',
+                // 'week_id' => ['required_with:start', new WeekRule($this->data['start'])],
                 'start' => 'required',
-                'status' => ['required'],
+                'status' => 'required',
             ])->validate();
 
             switch ($validatedData['task_id']) {
@@ -242,38 +243,55 @@ class ListEvents extends Component
             $validatedData['end'] = date('Y-m-d', strtotime($validatedData['start'] . ' + 1 days'));
             $validatedData['color'] = $color;
 
-            if (empty($validatedData['semester_id'])) {
-                $validatedData['semester_id'] = $this->semesterActive();
+            $semester_Id = Semester::where('start', '<=', $validatedData['start'])->where('end', '>=',  $validatedData['end'])->pluck('id')->first();
+            $week_Id = Week::where('start', '<=', $validatedData['start'])->where('end', '>=',  $validatedData['end'])->pluck('id')->first();
+
+            if ($semester_Id && $week_Id) {
+
+                if (empty($validatedData['office_id'])) {
+                    $validatedData['office_id'] = auth()->user()->office_id;
+                }
+
+                $validatedData['semester_id']   = $semester_Id ;
+                $validatedData['week_id']       = $week_Id ;
+
+                Event::create($validatedData);
+
+                $this->dispatchBrowserEvent('hide-form');
+
+                $this->alert('success', __('site.saveSuccessfully'), [
+                    'position' => 'top-end',
+                    'timer' => 3000,
+                    'toast' => true,
+                    'text' => null,
+                    'showCancelButton' => false,
+                    'showConfirmButton' => false,
+                ]);
+
+            } else {
+
+                $this->alert('error', 'الأسبوع الدراسي غير مطابق للفصل الدراسي' , [
+                    'position' => 'center',
+                    'timer' => 3000,
+                    'toast' => true,
+                    'text' => null,
+                    'showCancelButton' => false,
+                    'showConfirmButton' => false,
+                ]);
+
             }
 
-            if (empty($validatedData['office_id'])) {
-                $validatedData['office_id'] = auth()->user()->office_id;
-            }
-
-            Event::create($validatedData);
-
-            $this->dispatchBrowserEvent('hide-form');
-
-            $this->alert('success', __('site.saveSuccessfully'), [
-                'position' => 'top-end',
-                'timer' => 3000,
-                'toast' => true,
-                'text' => null,
-                'showCancelButton' => false,
-                'showConfirmButton' => false,
-            ]);
-
-        } catch (\Throwable$th) {
-            $message = $this->alert('error', $th->getMessage() . '<br>' . 'ادخال تاريخ المهمة مطلوب', [
-                'position' => 'center',
-                'timer' => 3000,
-                'toast' => true,
-                'text' => null,
-                'showCancelButton' => false,
-                'showConfirmButton' => false,
-            ]);
-            return $message;
-        }
+        // } catch (\Throwable$th) {
+        //     $message = $this->alert('error', $th->getMessage() , [
+        //         'position' => 'center',
+        //         'timer' => 3000,
+        //         'toast' => true,
+        //         'text' => null,
+        //         'showCancelButton' => false,
+        //         'showConfirmButton' => false,
+        //     ]);
+        //     return $message;
+        // }
     }
 
     // show Update new event form modal
@@ -660,8 +678,8 @@ class ListEvents extends Component
         $tasks = Task::whereStatus(1)->where('office_id', auth()->user()->office_id)->orderBy('level_id', 'asc')->orderBy('name', 'asc')->get();
         $weeks = Week::whereStatus(1)->where('semester_id', $this->semesterActive())->get();
 
-        $site  = Site::where('office_id', auth()->user()->office_id)->first();
-        $this->siteStatus = $site->status;
+        $feature = Feature::where('office_id', auth()->user()->office_id)->where('title', 'قفل إدخال الخطط')->first();
+        $this->featureValue = $feature->value;
 
         $educationTypes = [
             [

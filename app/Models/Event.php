@@ -26,7 +26,7 @@ class Event extends Model
 
     public function status(): string
     {
-        return $this->status ? __('site.active') : __('site.inActive');
+        return $this->status ? __('site.permission') : __('site.unPermission');
     }
 
     public function user(): BelongsTo

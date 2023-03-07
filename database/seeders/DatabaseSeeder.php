@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SemesterSeeder::class);
         $this->call(WeekSeeder::class);
         $this->call(TaskSeeder::class);
-        $this->call(SiteSeeder::class);
+        $this->call(FeatureSeeder::class);
         $this->call(JobTypeSeeder::class);
     }
 }

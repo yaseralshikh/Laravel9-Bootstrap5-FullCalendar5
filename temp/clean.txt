@@ -15,3 +15,8 @@ git push -u origin Dashboard
 git status
 
 git checkout .    ------> for cancel all change
+
+
+--------------------------------------
+sql for copy data between 2 table :
+INSERT INTO fullcalendar3.users_new SELECT * from fullcalendar2.users

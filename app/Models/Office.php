@@ -40,9 +40,9 @@ class Office extends Model
         return $this->hasMany(Subtask ::class);
     }
 
-    public function sites(): HasMany
+    public function features(): HasMany
     {
-        return $this->hasMany(Site ::class);
+        return $this->hasMany(Feature ::class);
     }
 
     public function status(): string

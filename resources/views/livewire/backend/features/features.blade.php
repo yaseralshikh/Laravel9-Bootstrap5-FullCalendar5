@@ -15,13 +15,13 @@
         <div class="container-fluid">
             <div class="mb-2 row">
                 <div class="col-sm-6">
-                    <h1 class="m-0">@lang('site.specializations')</h1>
+                    <h1 class="m-0">@lang('site.features')</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">@lang('site.dashboard')</a>
                         </li>
-                        <li class="breadcrumb-item active">@lang('site.specializations')</li>
+                        <li class="breadcrumb-item active">@lang('site.features')</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -36,9 +36,9 @@
             <div class="card">
                 <div class="card-header bg-light">
                     <h3 class="card-title">
-                        <button wire:click.prevent='addNewSpecialization' class="ml-1 btn btn-sm btn-primary">
+                        <button wire:click.prevent='addNewFeature' class="ml-1 btn btn-sm btn-primary">
                             <i class="mr-2 fa fa-plus-circle" aria-hidden="true">
-                                <span>@lang('site.addRecord', ['name' => 'تخصص'])</span>
+                                <span>@lang('site.addRecord', ['name' => 'ميزة / خاصية'])</span>
                             </i>
                         </button>
 
@@ -81,7 +81,8 @@
                         <div class="form-group ">
                             {{-- search --}}
                             <div class="input-group" style="width: 200px;">
-                                <input dir="rtl" type="search" wire:model="searchTerm" class="form-control" placeholder="@lang('site.searchFor')..." value="">
+                                <input dir="rtl" type="search" wire:model="searchTerm" class="form-control"
+                                    placeholder="@lang('site.searchFor')..." value="">
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-default">
                                         <i class="fa fa-search"></i>
@@ -90,8 +91,8 @@
                             </div>
                         </div>
 
-                        <label class="flex-wrap">@lang('site.totalRecord' , ['name' => 'التخصصات']) : &nbsp{{
-                            $specializations->total() }}</label>
+                        <label class="flex-wrap">@lang('site.totalRecord', ['name' => 'الخصائص والمميزات']) : &nbsp{{
+                            $features->total() }}</label>
 
                     </div>
 
@@ -100,7 +101,7 @@
                         <i class="fa fa-level" aria-hidden="true"></i>
                         selected
                         <span class="text-dark font-weight-bold">{{ count($selectedRows) }}</span> {{
-                        Str::plural('specialization', count($selectedRows)) }}
+                        Str::plural('feature', count($selectedRows)) }}
                         <a class="ml-2 text-gray" href="" wire:click="resetSelectedRows" data-toggle="tooltip"
                             data-placement="top" title="Reset Selected Rows"><i class="fas fa-times"></i></a>
                     </span>
@@ -119,55 +120,46 @@
                                         </div>
                                     </th>
                                     <th>#</th>
-                                    <th>
-                                        @lang('site.specialization')
-                                        <span wire:click="sortBy('name')" class="text-sm float-sm-right"
-                                            style="cursor: pointer;font-size:10px;">
-                                            <i class="mr-1 fa fa-arrow-up"
-                                                style="color:{{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                            <i class="fa fa-arrow-down"
-                                                style="color : {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                        </span>
-                                    </th>
-                                    <th>
-                                        @lang('site.status')
-                                        <span wire:click="sortBy('status')" class="text-sm float-sm-right"
-                                            style="cursor: pointer;font-size:10px;">
-                                            <i class="mr-1 fa fa-arrow-up"
-                                                style="color:{{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                            <i class="fa fa-arrow-down"
-                                                style="color : {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                        </span>
-                                    </th>
+                                    <th> @lang('site.title')</th>
+                                    <th>@lang('site.value')</th>
+                                    <th>@lang('site.section')</th>
+                                    <th>@lang('site.office')</th>
+                                    <th> @lang('site.status') </th>
                                     <th colspan="2">@lang('site.action')</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($specializations as $specialization)
+                                @forelse ($features as $feature)
                                 <tr>
                                     <td scope="col">
                                         <div class="custom-control custom-checkbox small">
-                                            <input type="checkbox" wire:model="selectedRows"
-                                                value="{{ $specialization->id }}" class="custom-control-input"
-                                                id="{{ $specialization->id }}">
-                                            <label class="custom-control-label" for="{{ $specialization->id }}"></label>
+                                            <input type="checkbox" wire:model="selectedRows" value="{{ $feature->id }}"
+                                                class="custom-control-input" id="{{ $feature->id }}">
+                                            <label class="custom-control-label" for="{{ $feature->id }}"></label>
                                         </div>
                                     </td>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td tabindex="0">{{ $specialization->name }}</td>
+                                    <td>{{ $feature->title }}</td>
                                     <td>
                                         <span
-                                            class="font-weight-bold badge text-white {{ $specialization->status == 1 ? 'bg-success' : 'bg-secondary' }}">
-                                            {{ $specialization->status() }}
+                                            class="font-weight-bold badge text-white {{ $feature->value == 1 ? 'bg-secondary' : 'bg-success' }}">
+                                            {{ $feature->value() }}
+                                        </span>
+                                    </td>
+                                    <td dir="rtl">{{ $feature->section }}</td>
+                                    <td>{{ $feature->office->name }}</td>
+                                    <td>
+                                        <span
+                                            class="font-weight-bold badge text-white {{ $feature->status == 1 ? 'bg-success' : 'bg-secondary' }}">
+                                            {{ $feature->status() }}
                                         </span>
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
-                                            <button wire:click.prevent="edit({{ $specialization }})"
+                                            <button wire:click.prevent="edit({{ $feature }})"
                                                 class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></button>
                                             @if (auth()->user()->roles[0]->name == 'superadmin')
-                                            <button
-                                                wire:click.prevent="confirmSpecializationRemoval({{ $specialization->id }})"
+                                            <button wire:click.prevent="confirmFeatureRemoval({{ $feature->id }})"
                                                 class="btn btn-danger btn-sm"><i
                                                     class="fa fa-trash bg-danger"></i></button>
                                             @else
@@ -175,8 +167,8 @@
                                                     class="fa fa-trash bg-danger"></i></button>
                                             @endif
                                         </div>
-                                        {{-- <form action="" method="post"
-                                            id="delete-specialization-{{ $specialization->id }}" class="d-none">
+                                        {{-- <form action="" method="post" id="delete-site-{{ $site->id }}"
+                                            class="d-none">
                                             @csrf
                                             @method('DELETE')
                                         </form> --}}
@@ -192,7 +184,7 @@
                             {{-- <tfoot>
                                 <tr>
                                     <td colspan="5">
-                                        {!! $specializations->appends(request()->all())->links() !!}
+                                        {!! $sites->appends(request()->all())->links() !!}
                                     </td>
                                 </tr>
                             </tfoot> --}}
@@ -201,7 +193,7 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer bg-light">
-                    {!! $specializations->appends(request()->all())->links() !!}
+                    {!! $features->appends(request()->all())->links() !!}
                 </div>
                 <!-- /.card-footer-->
             </div>
@@ -210,20 +202,19 @@
     </section>
     <!-- /.content -->
 
-    <!-- Modal Create or Update Specialization -->
+    <!-- Modal Create or Update Site -->
 
     <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
         wire:ignore.self>
         <div class="modal-dialog" role="document">
-            <form autocomplete="off"
-                wire:submit.prevent="{{ $showEditModal ? 'updateSpecialization' : 'createSpecialization' }}">
+            <form autocomplete="off" wire:submit.prevent="{{ $showEditModal ? 'updateFeature' : 'createFeature' }}">
                 <div class="modal-content">
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
                             @if ($showEditModal)
-                            <span>@lang('site.updateRecord', ['name' => 'تخصص'])</span>
+                            <span>@lang('site.updateRecord', ['name' => 'ميزة / خاصية'])</span>
                             @else
-                            <span>@lang('site.addRecord', ['name' => 'تخصص'])</span>
+                            <span>@lang('site.addRecord', ['name' => 'ميزة / خاصية'])</span>
                             @endif
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -234,18 +225,74 @@
                         <div class="row h-100 justify-content-center align-items-center">
                             <div class="col-12">
 
-                                <!-- Modal Specialization Full Name -->
-
+                                <!-- Modal Office -->
                                 <div class="form-group">
-                                    <label for="name">@lang('site.specialization')</label>
-                                    <input type="text" tabindex="1" wire:model.defer="data.name"
-                                        class="form-control @error('name') is-invalid @enderror" id="name"
-                                        aria-describedby="nameHelp" dir="rtl" placeholder="@lang('site.enterFieldName', ['name' => 'اسم التخصص'])">
-                                    @error('name')
+                                    <label class="float-right" for="office_id">@lang('site.office')</label>
+                                    <select id="office_id" class="form-control @error('office_id') is-invalid @enderror"
+                                        wire:model.defer="data.office_id">
+                                        <option hidden>@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
+                                        @foreach ($offices as $office)
+                                        <option class="bg-light" value="{{ $office->id }}">{{ $office->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('office_id')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                     @enderror
+                                </div>
+
+                                <!-- Modal feature title -->
+                                <div dir="rtl" class="form-group">
+                                    <label class="float-right">@lang('site.featureTitle')</label>
+                                    <input type="text" wire:model.defer="data.title"
+                                        class="form-control @error('title') is-invalid @enderror" id="title"
+                                        aria-describedby="titleHelp"
+                                        placeholder="@lang('site.enterFieldName', ['name' => 'عنوان الميزة / الخاصية'])">
+                                    @error('title')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Modal feature section -->
+                                <div dir="rtl" class="form-group">
+                                    <label class="float-right">@lang('site.featureSection')</label>
+                                    <input type="text" wire:model.defer="data.section"
+                                        class="form-control @error('section') is-invalid @enderror" id="section"
+                                        aria-describedby="sectionHelp"
+                                        placeholder="@lang('site.enterFieldName', ['name' => 'اسم القسم'])">
+                                    @error('section')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Modal Description -->
+                                <div class="form-group">
+                                    <label class="float-right">@lang('site.featureDescription')</label>
+                                    <textarea dir="rtl" wire:model.defer="data.description" class="form-control @error('description') is-invalid @enderror" rows="3" placeholder="اكتب نص لا يزيد عن 255 حرف" spellcheck="false" data-ms-editor="true"></textarea>
+
+                                    @error('description')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Modal feature Value -->
+                                <div class="form-group clearfix">
+                                    <label for="statusRadio" class="d-inline">@lang('site.value') :</label>
+                                    <div class="icheck-primary d-inline ml-2 mr-2">
+                                        <input type="radio" id="radioPrimary1value" wire:model="data.value" value="0">
+                                        <label for="radioPrimary1value">@lang('site.open')</label>
+                                    </div>
+                                    <div class="icheck-primary d-inline">
+                                        <input type="radio" id="radioPrimary2value" wire:model="data.value" value="1">
+                                        <label for="radioPrimary2value">@lang('site.close')</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -267,14 +314,14 @@
         </div>
     </div>
 
-    <!-- Modal Delete Specialization -->
+    <!-- Modal Delete Site -->
 
     <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">
-                    <h5>@lang('site.deleteRecord', ['name' => 'تخصص'])</h5>
+                    <h5>@lang('site.deleteRecord', ['name' => 'ميزة / خاصية'])</h5>
                 </div>
 
                 <div class="modal-body">
@@ -284,7 +331,7 @@
                 <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
                             class="mr-1 fa fa-times"></i> @lang('site.cancel')</button>
-                    <button type="button" wire:click.prevent="deleteSpecialization" class="btn btn-danger"><i
+                    <button type="button" wire:click.prevent="deleteFeature" class="btn btn-danger"><i
                             class="mr-1 fa fa-trash"></i>@lang('site.delete')</button>
                 </div>
             </div>

@@ -61,7 +61,7 @@
                 <li class="nav-item">
                     <a href="{{ route('admin.specializations') }}"
                         class="nav-link {{ request()->is('admin/specializations') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-briefcase"></i>
+                        <i class="nav-icon fas fa-address-card"></i>
                         <p>
                             @lang('site.specializations')
                         </p>
@@ -70,7 +70,7 @@
                 <li class="nav-item">
                     <a href="{{ route('admin.jobs_type') }}"
                         class="nav-link {{ request()->is('admin/jobs_type') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-briefcase"></i>
+                        <i class="nav-icon fas fa-address-card"></i>
                         <p>
                             @lang('site.jobs_type')
                         </p>
@@ -170,7 +170,7 @@
                 <li class="nav-item">
                     <a href="{{ route('admin.offices') }}"
                         class="nav-link {{ request()->is('admin/offices') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-graduation-cap"></i>
+                        <i class="nav-icon fas fa-building"></i>
                         <p>
                             @lang('site.offices')
                         </p>
@@ -178,13 +178,23 @@
                 </li>
 
                 <li class="nav-header text-secondary">
-                    <h6>@lang('site.logViewerSection')</h6>
+                    <h6>@lang('site.settingsSection')</h6>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.features') }}"
+                        class="nav-link {{ request()->is('admin/features') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-briefcase"></i>
+                        <p>
+                            @lang('site.features')
+                        </p>
+                    </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('admin.log-viewer') }}"
                         class="nav-link {{ request()->is('admin/log-viewer') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-graduation-cap"></i>
+                        <i class="nav-icon fas fa-exclamation-triangle"></i>
                         <p>
                             @lang('site.logViewer')
                         </p>

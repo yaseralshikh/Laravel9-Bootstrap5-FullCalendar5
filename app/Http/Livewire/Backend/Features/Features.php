@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Livewire\Backend\Levels;
+namespace App\Http\Livewire\Backend\Features;
 
+use App\Models\Office;
+use App\Models\Feature;
 use Livewire\Component;
-use App\Models\Level;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class Levels extends Component
+class Features extends Component
 {
     use WithPagination;
     use LivewireAlert;
@@ -16,7 +17,7 @@ class Levels extends Component
     protected $paginationTheme = 'bootstrap';
 
     public $data = [];
-    public $level;
+    public $feature;
 
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
@@ -26,18 +27,20 @@ class Levels extends Component
 
     public $showEditModal = false;
 
-    public $levelIdBeingRemoved = null;
+    public $featureIdBeingRemoved = null;
 
     public $selectedRows = [];
 	public $selectPageRows = false;
-    protected $listeners = ['deleteConfirmed' => 'deleteLevels'];
+    protected $listeners = ['deleteConfirmed' => 'deleteFeatures'];
+
+    public $featureValue = null;
 
     // Updated Select Page Rows
 
     public function updatedSelectPageRows($value)
     {
         if ($value) {
-            $this->selectedRows = $this->levels->pluck('id')->map(function ($id) {
+            $this->selectedRows = $this->features->pluck('id')->map(function ($id) {
                 return (string) $id;
             });
         } else {
@@ -63,7 +66,7 @@ class Levels extends Component
 
     public function setAllAsActive()
 	{
-		Level::whereIn('id', $this->selectedRows)->update(['status' => 1]);
+		Feature::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
         $this->alert('success', __('site.activeSuccessfully'), [
             'position'  =>  'top-end',
@@ -81,7 +84,7 @@ class Levels extends Component
 
 	public function setAllAsInActive()
 	{
-		Level::whereIn('id', $this->selectedRows)->update(['status' => 0]);
+		Feature::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
         $this->alert('success', __('site.inActiveSuccessfully'), [
             'position'  =>  'top-end',
@@ -95,12 +98,12 @@ class Levels extends Component
 		$this->reset(['selectPageRows', 'selectedRows']);
 	}
 
-    // Delete Selected Levels
+    // Delete All Selected Features
 
-    public function deleteLevels()
+    public function deleteFeatures()
     {
-        // delete selected Levels from database
-        Level::whereIn('id', $this->selectedRows)->delete();
+        // delete selected Features from database
+        Feature::whereIn('id', $this->selectedRows)->delete();
 
         $this->alert('success', __('site.deleteSuccessfully'), [
             'position'  =>  'top-end',
@@ -141,25 +144,31 @@ class Levels extends Component
         $this->resetPage();
     }
 
-    // show add new Level form modal
+    // show add new Feature form modal
 
-    public function addNewLevel()
+    public function addNewFeature()
     {
         $this->reset('data');
         $this->showEditModal = false;
+        $this->data['status'] = 1;
+        $this->data['value'] = 0;
         $this->dispatchBrowserEvent('show-form');
     }
 
     // Create new user
 
-    public function createLevel()
+    public function createFeature()
     {
         $validatedData = Validator::make($this->data, [
-			'name'                  => 'required',
+			'title'                  => 'required|max:255',
+			'value'                  => 'required',
+			'description'            => 'nullable|max:255',
+			'section'                => 'required|max:255',
+			'office_id'              => 'required|max:255',
 		])->validate();
 
 
-		Level::create($validatedData);
+		Feature::create($validatedData);
 
         $this->dispatchBrowserEvent('hide-form');
 
@@ -173,31 +182,34 @@ class Levels extends Component
         ]);
     }
 
-    // show Update new Level form modal
+    // show Update new Feature form modal
 
-    public function edit(Level $level)
+    public function edit(Feature $feature)
     {
         $this->reset('data');
 
         $this->showEditModal = true;
 
-        $this->level = $level;
+        $this->feature = $feature;
 
-        $this->data = $level->toArray();
+        $this->data = $feature->toArray();
 
         $this->dispatchBrowserEvent('show-form');
     }
 
     // Update Task
 
-    public function updateLevel()
+    public function updateFeature()
     {
-        try {
             $validatedData = Validator::make($this->data, [
-                'name'                      => 'required',
+                'title'                  => 'required|max:255',
+                'value'                  => 'required',
+                'description'            => 'nullable|max:255',
+                'section'                => 'nullable|max:255',
+                'office_id'              => 'required|max:255',
             ])->validate();
 
-            $this->level->update($validatedData);
+            $this->feature->update($validatedData);
 
             $this->dispatchBrowserEvent('hide-form');
 
@@ -209,37 +221,25 @@ class Levels extends Component
                 'showCancelButton'  =>  false,
                 'showConfirmButton'  =>  false
             ]);
-
-        } catch (\Throwable $th) {
-            $message = $this->alert('error', $th->getMessage(), [
-                'position'  =>  'top-end',
-                'timer'  =>  3000,
-                'toast'  =>  true,
-                'text'  =>  null,
-                'showCancelButton'  =>  false,
-                'showConfirmButton'  =>  false
-            ]);
-            return $message;
-        }
     }
 
-    // Show Modal Form to Confirm Level Removal
+    // Show Modal Form to Confirm Feature Removal
 
-    public function confirmLevelRemoval($levelId)
+    public function confirmFeatureRemoval($featureId)
     {
-        $this->levelIdBeingRemoved = $levelId;
+        $this->featureIdBeingRemoved = $featureId;
 
         $this->dispatchBrowserEvent('show-delete-modal');
     }
 
     // Delete Task
 
-    public function deleteLevel()
+    public function deleteFeature()
     {
         try {
-            $level = Level::findOrFail($this->levelIdBeingRemoved);
+            $feature = Feature::findOrFail($this->featureIdBeingRemoved);
 
-            $level->delete();
+            $feature->delete();
 
             $this->dispatchBrowserEvent('hide-delete-modal');
 
@@ -264,22 +264,24 @@ class Levels extends Component
         }
     }
 
-    public function getLevelsProperty()
+    public function getFeaturesProperty()
 	{
-        $levels = Level::query()
-            ->where('name', 'like', '%'.$this->searchTerm.'%')
+        $features = Feature::query()
+            ->where('title', 'like', '%'.$this->searchTerm.'%')
             ->orderBy($this->sortColumnName, $this->sortDirection)
             ->paginate(30);
 
-        return $levels;
+        return $features;
 	}
 
     public function render()
     {
-        $levels = $this->levels;
+        $features = $this->features;
+        $offices = Office::whereStatus(true)->get();
 
-        return view('livewire.backend.levels.levels',[
-            'levels'    => $levels,
-        ])->layout('layouts.admin');
+        return view('livewire.backend.features.features', compact(
+            'features',
+            'offices',
+        ))->layout('layouts.admin');
     }
 }

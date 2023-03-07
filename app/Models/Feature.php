@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Site extends Model
+class Feature extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'title',
+        'value',
         'description',
         'section',
         'office_id',
@@ -21,6 +22,11 @@ class Site extends Model
     public function office(): BelongsTo
     {
         return $this->belongsTo(Office::class);
+    }
+
+    public function value(): string
+    {
+        return $this->value ? __('site.close') : __('site.open');
     }
 
     public function status(): string

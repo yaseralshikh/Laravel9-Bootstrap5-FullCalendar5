@@ -84,9 +84,9 @@
                     <div class="card-tools">
                         <div class="btn-group pr-2">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" wire:model="siteStatus" wire:change='updateSiteStatus' class="custom-control-input"
-                                    id="customSwitchSiteStatus">
-                                <label class="custom-control-label" for="customSwitchSiteStatus">@lang('site.siteStatus')</label>
+                                <input type="checkbox" wire:model="featureValue" wire:change='updateFeatureValue' class="custom-control-input"
+                                    id="customSwitchFeatureValue">
+                                <label class="custom-control-label" for="customSwitchFeatureValue">@lang('site.featureValue')</label>
                             </div>
                             {{-- <a href="#" class="btn btn-outline-secondary btn-sm hover-item" data-toggle="tooltip"
                                 data-placement="top" title="@lang('site.exportExcel')" wire:click.prevent="exportExcel">
@@ -167,34 +167,6 @@
                                 @endforeach
                             </select>
                         </div>
-
-                        {{-- Semester Filter --}}
-                        {{-- <div>
-                            <select dir="rtl" name="semester_id" wire:model="bySemester"
-                                wire:change="semesterOption($event.target.value)"
-                                class="form-control form-control-sm mr-5">
-                                <option value="" selected>@lang('site.choise', [ 'name' => 'الفصل الدراسي'])</option>
-                                @foreach ($semesters as $semester)
-                                <option value="{{ $semester->id }}" {{ $semester->active ? 'selected' : '' }} style="{{
-                                    $semester->active ? 'color: blue; background:#F2F2F2;' : '' }}">{{ $semester->title . ' ( '
-                                    .
-                                    $semester->school_year . ' )' }}</option>
-                                @endforeach
-                            </select>
-                        </div> --}}
-
-                        {{-- offices Filter --}}
-                        {{-- @role('superadmin')
-                        <div>
-                            <select dir="rtl" name="office_id" wire:model="byOffice"
-                                class="form-control form-control-sm">
-                                <option value="">@lang('site.choise', ['name' => 'مكتب التعليم'])</option>
-                                @foreach ($offices as $office)
-                                <option value="{{ $office->id }} {{ $office->id == auth()->user()->office_id }} ? 'selected' : ''">{{ $office->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @endrole --}}
 
                         {{-- Status Filter --}}
                         <div class="custom-control custom-switch">
@@ -366,6 +338,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
+
                         <div class="row h-100 justify-content-center align-items-center">
                             <div class="col-12">
 
@@ -391,7 +364,7 @@
                                 @endrole --}}
 
                                 <!-- Modal user_id -->
-                                <div class="form-group" wire:ignore>
+                                <div class="form-group" wire:ignore.self>
                                     <label for="user_id" class="form-label">{{ __('site.userName') }} :</label>
 
                                     <select name="user_id" wire:model.defer="data.user_id"
@@ -404,36 +377,16 @@
                                     </select>
 
                                     @error('user_id')
-                                    <span class="invalid-feedback" role="alert">
+                                    <span class="invalid-feedback d-block" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
-                                </div>
 
-                                <!-- Modal Week -->
-                                <div class="form-group">
-                                    <label for="week_id" class="form-label">{{ __('site.schoolWeek') }} :</label>
-
-                                    <select name="week_id" wire:model.defer="data.week_id"
-                                        class="form-control  @error('week_id') is-invalid @enderror" id="week_id">
-                                        <option value="" selected>@lang('site.choise', ['name' => 'الأسبوع الدراسي'])</option>
-                                        @foreach ($weeks as $week)
-                                        <option value="{{ $week->id }}"
-                                            style="{{ $week->active ? 'color: blue; background:#F2F2F2;' : '' }}">
-                                            {{  $week->title . ' ( ' . $week->semester->school_year . ' )' }}</option>
-                                        @endforeach
-                                    </select>
-
-                                    @error('week_id')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
                                 </div>
 
                                 <!-- Modal Task (Event Title) -->
 
-                                <div class="form-group" wire:ignore>
+                                <div class="form-group" wire:ignore.self>
                                     <label for="task_id" class="col-form-label">@lang('site.task') :</label>
 
                                     <select name="task_id" wire:model.defer="data.task_id"
@@ -452,39 +405,27 @@
                                     </select>
 
                                     @error('task_id')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <div class="invalid-feedback d-block">
+                                        {{ $message }}
+                                    </div>
                                     @enderror
+
                                 </div>
 
                                 <!-- Modal Event Start -->
 
-                                <div class="form-group">
+                                <div class="form-group" wire:ignore.self>
                                     <label for="start">@lang('site.date') :</label>
                                     <input type="date" wire:model.defer="data.start"
                                         class="form-control @error('start') is-invalid @enderror" id="start"
                                         aria-describedby="startHelp" placeholder="Enter start">
+
                                     @error('start')
-                                    <div class="invalid-feedback">
+                                    <div class="invalid-feedback d-block">
                                         {{ $message }}
                                     </div>
                                     @enderror
                                 </div>
-
-                                <!-- Modal Event End -->
-                                {{-- <div class="form-group">
-                                    <label for="end">End</label>
-                                    <input type="hidden" wire:model.defer="data.end"
-                                        class="form-control @error('end') is-invalid @enderror" id="end"
-                                        aria-describedby="endHelp" placeholder="Enter end">
-                                    @error('end')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div> --}}
-
                             </div>
                         </div>
 

@@ -38,6 +38,7 @@ class SpecializationSeeder extends Seeder
             'الجودة',
             'تقنية المعلومات',
             'الاختبارات',
+            'التدريب التربوي',
         ];
 
         foreach ($specializations as $specialization) {
