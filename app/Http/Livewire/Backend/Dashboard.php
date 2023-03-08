@@ -12,12 +12,16 @@ use App\Models\Office;
 use Livewire\Component;
 use App\Models\Semester;
 use Livewire\WithPagination;
+use App\Exports\EmptyTasksExport;
 use App\Exports\UsersCountingExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Dashboard extends Component
 {
     use WithPagination;
+    use LivewireAlert;
+
     protected $paginationTheme = 'bootstrap';
 
     public $byOffice = null; // filter bt Office
@@ -29,7 +33,11 @@ class Dashboard extends Component
     public $searchTerm = null;
     protected $queryString = ['searchTerm' => ['except' => '']];
 
+    public $emptySchoolSearchString = null;
+    protected $emptySchoolQueryString = ['emptySchoolSearchString' => ['except' => '']];
+
     public $paginateValue = 20;
+    public $emptySchoolsPaginateValue = 50;
 
     public function semesterActive()
     {
@@ -39,22 +47,137 @@ class Dashboard extends Component
 
     public function exportExcel()
     {
-        return Excel::download(new UsersCountingExport($this->searchTerm,$this->byOffice ? $this->byOffice : auth()->user()->office_id), 'users.xlsx');
+        $bySemester = $this->bySemester ? $this->bySemester : $this->semesterActive();
+        return Excel::download(new UsersCountingExport($bySemester,$this->byOffice ? $this->byOffice : auth()->user()->office_id), 'users.xlsx');
     }
+
+    public function emptySchoolsExportExcel()
+    {
+        $bySemester = $this->bySemester ? $this->bySemester : $this->semesterActive();
+        return Excel::download(new EmptyTasksExport($bySemester,$this->byOffice ? $this->byOffice : auth()->user()->office_id), 'tasks.xlsx');
+    }
+
     public function exportPDF()
     {
-        return response()->streamDownload(function(){
+        try {
 
-            $users = User::with('events')->where('office_id' , $this->byOffice ? $this->byOffice : auth()->user()->office_id)->orderBy('name', 'asc')->get();
-            $pdf = PDF::loadView('livewire.backend.users.users_pdf',['users' => $users]);
-            return $pdf->stream('users');
-        },'users.pdf');
+            $bySemester = $this->bySemester  ? $this->bySemester : $this->semesterActive();
+
+            $semester = Semester::findOrFail($bySemester);
+
+            $users = User::whereStatus(true)->with([
+                'events' => function ($query) use($bySemester) {
+                    $query->where('semester_id', $bySemester);
+                }
+            ])
+            ->where('office_id' , $this->byOffice ? $this->byOffice : auth()->user()->office_id)
+            ->orderBy('name', 'asc')
+            ->get();
+
+            if ($users->count() <> 0) {
+
+                return response()->streamDownload(function() use($users, $semester){
+
+                    $pdf = PDF::loadView('livewire.backend.users.users_pdf',[
+                        'users' => $users ,
+                        'semester' => $semester ,
+                    ]);
+
+                    return $pdf->stream('users');
+
+                },'users.pdf');
+
+            } else {
+
+                $this->alert('error', __('site.noDataFound'), [
+                    'position'  =>  'center',
+                    'timer'  =>  3000,
+                    'toast'  =>  true,
+                    'text'  =>  null,
+                    'showCancelButton'  =>  false,
+                    'showConfirmButton'  =>  false
+                ]);
+            }
+
+        } catch (\Throwable $th) {
+
+            $message = $this->alert('error', $th->getMessage(), [
+                'position'  =>  'top-end',
+                'timer'  =>  3000,
+                'toast'  =>  true,
+                'text'  =>  null,
+                'showCancelButton'  =>  false,
+                'showConfirmButton'  =>  false
+            ]);
+
+            return $message;
+        }
+    }
+
+    public function emptySchoolsExportPDF()
+    {
+        try {
+
+            $bySemester = $this->bySemester  ? $this->bySemester : $this->semesterActive();
+
+            $semester = Semester::findOrFail($bySemester);
+
+            $tasks = Task::whereStatus(true)->where('office_id' , $this->byOffice ? $this->byOffice : auth()->user()->office_id)->whereIn('level_id', [1,2,3])
+            ->withCount([
+                'events' => function ($query) use($bySemester) {
+                    $query->where('semester_id', $bySemester);
+                }
+            ])
+            ->having('events_count', '=', 0)
+            ->orderBy('name', 'asc')
+            ->orderBy('level_id', 'asc')
+            ->get();
+
+            if ($tasks->count() <> 0) {
+
+                return response()->streamDownload(function() use($tasks, $semester ){
+
+                    $pdf = PDF::loadView('livewire.backend.tasks.emptyTasks_pdf',[
+                        'tasks' => $tasks,
+                        'semester' => $semester,
+                    ]);
+
+                    return $pdf->stream('tasks');
+
+                },'tasks.pdf');
+
+            } else {
+
+                $this->alert('error', __('site.noDataFound'), [
+                    'position'  =>  'center',
+                    'timer'  =>  3000,
+                    'toast'  =>  true,
+                    'text'  =>  null,
+                    'showCancelButton'  =>  false,
+                    'showConfirmButton'  =>  false
+                ]);
+            }
+
+        } catch (\Throwable $th) {
+            $message = $this->alert('error', $th->getMessage(), [
+                'position'  =>  'top-end',
+                'timer'  =>  3000,
+                'toast'  =>  true,
+                'text'  =>  null,
+                'showCancelButton'  =>  false,
+                'showConfirmButton'  =>  false
+            ]);
+
+            return $message;
+        }
     }
 
     public function render()
     {
         $searchString = $this->searchTerm;
+        $emptySchoolSearchString = $this->emptySchoolSearchString;
         $paginateValue = $this->paginateValue;
+        $emptySchoolsPaginateValue = $this->emptySchoolsPaginateValue;
         $byLevel = $this->byLevel;
         $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
         $bySemester = $this->bySemester  ? $this->bySemester : $this->semesterActive();
@@ -84,13 +207,24 @@ class Dashboard extends Component
         $offices = Office::whereStatus(true)->get();
         $semesters =  Semester::whereStatus(true)->get();
         $levels = Level::all();
-        $empty_tasks = Task::whereStatus(true)->where('office_id', $byOffice)->whereIn('level_id', [1,2,3,4])->withCount('events')->having('events_count', '=', 0)->orderBy('level_id', 'asc')->paginate(25);
+        $empty_schools = Task::whereStatus(true)->where('office_id', $byOffice)->whereIn('level_id', [1,2,3])
+            ->withCount([
+                'events' => function ($query) use($bySemester) {
+                    $query->where('semester_id', $bySemester);
+                }
+            ])
+            ->having('events_count', '=', 0)
+            ->search(trim(($emptySchoolSearchString)))
+            ->orderBy('name', 'asc')
+            ->orderBy('level_id', 'asc')
+            ->paginate($emptySchoolsPaginateValue);
+
 
         return view('livewire.backend.dashboard',[
             'offices'               => $offices,
             'semesters'             => $semesters,
             'levels'                => $levels,
-            'empty_tasks'           => $empty_tasks,
+            'empty_schools'           => $empty_schools,
             'chartData'             => $chartData,
             'usersCount'            => $usersCount,
             'schoolsCount'          => $schoolsCount,

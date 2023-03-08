@@ -212,7 +212,6 @@
                             <div class="table-responsive">
                                 <div class="shadow rounded p-4 border text-center" style="height: 31rem;">
                                     <div class="form-group clearfix">
-                                        {{-- <span class="d-inline">Filter</span> --}}
                                         @foreach ($levels as $level)
                                             <div class="icheck-primary d-inline">
                                                 <label for="radioPrimary{{ $level->id }}">
@@ -249,6 +248,59 @@
                             </div>
                         </div>
                         <div class="card-body">
+
+                            <div class="form-group d-flex justify-content-between align-items-center">
+
+                                <label class="flex-wrap"  style="width: 200px;">
+                                    @lang('site.totalRecord', ['name' => 'المدارس']) : &nbsp{{ $empty_schools->total() }}
+                                </label>
+
+                                <div>
+                                    <select dir="rtl" wire:model="emptySchoolsPaginateValue" class="form-control">
+                                        <option value="50" selected>50</option>
+                                        <option value="100" selected>100</option>
+                                        <option value="200" selected>200</option>
+                                        <option value="20000" selected>@lang('site.all')</option>
+                                    </select>
+                                </div>
+
+                                {{-- search and Export PDF & EXCEL --}}
+                                <div class="input-group" style="width: 350px;">
+
+                                    <div class="card-tools">
+                                        <div class="btn-group pr-2">
+                                            <div class="pl-5">
+                                                <a href="#"
+                                                    class="btn btn-outline-light hover-item"
+                                                    data-toggle="tooltip"
+                                                    data-placement="top"
+                                                    title="@lang('site.exportExcel')"
+                                                    wire:click.prevent="emptySchoolsExportExcel">
+                                                    <i class="fa fa-file-excel text-success"></i>
+                                                </a>
+                                                <a href="#" class="btn btn-outline-light hover-item"
+                                                    data-toggle="tooltip"
+                                                    data-placement="top"
+                                                    title="@lang('site.exportPDF')"
+                                                    wire:click.prevent="emptySchoolsExportPDF">
+                                                    <i class="fa fa-file-pdf text-danger"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <input type="search" wire:model="emptySchoolSearchString" class="form-control"
+                                    placeholder="@lang('site.searchFor')" value="">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
                             <div class="table-responsive" dir="rtl">
                                 <div class="shadow rounded p-4 border">
                                     <div class="table-responsive">
@@ -267,12 +319,12 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @forelse ($empty_tasks as $task)
+                                                @forelse ($empty_schools as $school)
                                                 <tr>
                                                     <td class="bg-light">{{ $loop->iteration }}</td>
-                                                    <td>{{ $task->name }}</td>
-                                                    <td>{{ $task->level->name }}</td>
-                                                    <td class="text-red">{{ $task->events_count }}</td>
+                                                    <td>{{ $school->name }}</td>
+                                                    <td>{{ $school->level->name }}</td>
+                                                    <td class="text-red">{{ $school->events_count }}</td>
                                                 </tr>
                                                 @empty
                                                 <tr>
@@ -283,7 +335,7 @@
                                             <tfoot>
                                                 <tr>
                                                   <td colspan="10">
-                                                        {!! $empty_tasks->appends(request()->all())->links() !!}
+                                                        {!! $empty_schools->appends(request()->all())->links() !!}
                                                   </td>
                                                 </tr>
                                               </tfoot>
@@ -316,7 +368,7 @@
                             <div class="form-group d-flex justify-content-between align-items-center">
 
                                 <label class="flex-wrap"  style="width: 200px;">
-                                    @lang('site.totalRecord', ['name' => 'المستخدمين']) : &nbsp{{ $users->count() }}
+                                    @lang('site.totalRecord', ['name' => 'المستخدمين']) : &nbsp{{ $users->total() }}
                                 </label>
 
                                 <div>

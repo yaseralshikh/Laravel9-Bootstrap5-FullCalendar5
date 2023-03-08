@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<title>responsive HTML Users List</title>
+		<title>responsive HTML Tasks List</title>
 		<!-- Invoice styling -->
 		<style>
             *{
@@ -43,33 +43,25 @@
 
 	<body>
         {{-- <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}" width="180px;" alt=""> --}}
-		<h3>إحصائية خطط المشرفين خلال {{ $semester->title }} - {{ $users[0]->office->name }}</h3>
+		<h3>كشف بالمدارس التي لم تزار خلال {{ $semester->title }} - {{ $tasks[0]->office->name }}</h3>
         <p>{{ date('Y-m-d') }}</p>
 		<div>
             <table class="">
                 <thead class="">
                     <tr>
                         <th>#</th>
-                        <th>الاسم</th>
-                        <th>ألتخصص</th>
-                        <th>زيارات مدارس</th>
-                        <th>ايام مكتبية</th>
-                        <th>برامج تدريبية</th>
-                        <th>اجازات</th>
-                        <th>مجموع الخطط</th>
+                        <th>اسم المدرسة</th>
+                        <th>المرحلة</th>
+                        <th>عدد الزيارات</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($users as $index => $user)
+                    @foreach ($tasks as $index => $task)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->specialization->name }}</td>
-                            <td>{{ $user->events->whereNotIn('task.name',['إجازة','برنامج تدريبي','يوم مكتبي'])->count() }}</td>
-                            <td>{{ $user->events->where('task.name','يوم مكتبي' )->count() }}</td>
-                            <td>{{ $user->events->where('task.name','برنامج تدريبي' )->count() }}</td>
-                            <td>{{ $user->events->where('task.name','إجازة' )->count() }}</td>
-                            <td>{{ $user->events->count() }}</td>
+                            <td>{{ $task->name }}</td>
+                            <td>{{ $task->level->name }}</td>
+                            <td>{{ $task->events_count }}</td>
                         </tr>
                     @endforeach
                 </tbody>

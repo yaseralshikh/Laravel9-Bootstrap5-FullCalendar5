@@ -16,20 +16,24 @@ class UsersCountingExport implements FromCollection, WithHeadings, WithMapping, 
     * @return \Illuminate\Support\Collection
     */
 
-    protected $search;
+    protected $semester_id;
     protected $office_id;
 
-    function __construct($search,$office_id) {
-        $this->search = $search;
+    function __construct($semester_id,$office_id) {
+        $this->semester_id = $semester_id;
         $this->office_id = $office_id;
     }
+
     public function collection()
     {
-        return User::with('events')
-        ->where('name', 'like', '%'.$this->search.'%')
-        ->where('office_id', $this->office_id)
-        ->orderBy('name', 'asc')
-        ->get();
+        $bySemester = $this->semester_id;
+
+        $users = User::whereStatus(1)->where('office_id', $this->office_id)
+            ->with('events')->whereHas('events', function ($q) use($bySemester) {
+                $q->where('semester_id', $bySemester)->whereStatus(true);
+                })->orderBy('name', 'asc')->get();
+
+        return $users;
     }
 
     public function map($user) : array {
