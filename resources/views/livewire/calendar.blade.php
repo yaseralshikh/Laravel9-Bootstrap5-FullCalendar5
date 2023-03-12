@@ -262,7 +262,7 @@
 
                                 <!-- Modal User Type -->
 
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label for="type">@lang('site.type') *</label>
                                     <select id="type" class="form-control @error('type') is-invalid @enderror"
                                         wire:model.defer="profileData.type">
@@ -277,11 +277,11 @@
                                         {{ $message }}
                                     </div>
                                     @enderror
-                                </div>
+                                </div> --}}
 
                                 <!-- Modal Education Type -->
 
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label for="edu_type">@lang('site.eduType') *</label>
                                     <select id="edu_type" class="form-control @error('edu_type') is-invalid @enderror"
                                         wire:model.defer="profileData.edu_type">
@@ -295,7 +295,7 @@
                                         {{ $message }}
                                     </div>
                                     @enderror
-                                </div>
+                                </div> --}}
 
                                 <!-- Modal User Password -->
 

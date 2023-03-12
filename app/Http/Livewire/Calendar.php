@@ -2,23 +2,23 @@
 
 namespace App\Http\Livewire;
 
-use Carbon\Carbon;
-use App\Models\Task;
-use App\Models\User;
-use App\Models\Week;
 use App\Models\Event;
 use App\Models\Feature;
-//use App\Models\Office;
 use App\Models\JobType;
-//use App\Rules\WeekRule;
-use Livewire\Component;
 use App\Models\Semester;
-use App\Rules\UserOverLap;
-use App\Rules\EventOverLap;
-//use App\Rules\SemesterRule;
 use App\Models\Specialization;
+use App\Models\Task;
+//use App\Models\Office;
+use App\Models\User;
+//use App\Rules\WeekRule;
+use App\Models\Week;
+use App\Rules\EventOverLap;
+use App\Rules\UserOverLap;
+use Carbon\Carbon;
+//use App\Rules\SemesterRule;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class Calendar extends Component
 {
@@ -57,22 +57,22 @@ class Calendar extends Component
             $emailVerifiedMessage = null;
 
             $validatedData = Validator::make($this->profileData, [
-                'name'                      => 'required',
-                'email'                     => 'required|email|unique:users,email,'.$this->userProfile->id,
-                'office_id'                 => 'nullable',
-                'specialization_id'         => 'required',
-                'type'                      => 'required',
-                'edu_type'                  => 'required',
-                'status'                    => 'required',
-                'email_verified_at'         => 'nullable',
-                'password'                  => 'sometimes|confirmed',
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email,' . $this->userProfile->id,
+                'office_id' => 'nullable',
+                'specialization_id' => 'required',
+                'type' => 'required',
+                'edu_type' => 'required',
+                'status' => 'required',
+                'email_verified_at' => 'nullable',
+                'password' => 'sometimes|confirmed',
             ])->validate();
 
-            if(!empty($validatedData['password'])) {
+            if (!empty($validatedData['password'])) {
                 $validatedData['password'] = bcrypt($validatedData['password']);
             }
 
-            if($validatedData['email'] != $this->userProfile->email){
+            if ($validatedData['email'] != $this->userProfile->email) {
                 $validatedData['email_verified_at'] = null;
                 $emailVerifiedMessage = true;
                 $this->userProfile->sendEmailVerificationNotification();
@@ -82,23 +82,23 @@ class Calendar extends Component
 
             $this->dispatchBrowserEvent('hide-profile');
 
-            $this->alert('success', __('site.updateSuccessfully') . ($emailVerifiedMessage ? ' <p dir="rtl"> <br> ' . __('site.emailVerifiedMessage') . '</p>' : '') , [
-                'position'  =>  'top-end',
-                'timer'  =>  4000,
-                'toast'  =>  true,
-                'text'  =>  null,
-                'showCancelButton'  =>  false,
-                'showConfirmButton'  =>  false
+            $this->alert('success', __('site.updateSuccessfully') . ($emailVerifiedMessage ? ' <p dir="rtl"> <br> ' . __('site.emailVerifiedMessage') . '</p>' : ''), [
+                'position' => 'top-end',
+                'timer' => 4000,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
             ]);
 
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             $message = $this->alert('error', $th->getMessage(), [
-                'position'  =>  'top-end',
-                'timer'  =>  3000,
-                'toast'  =>  true,
-                'text'  =>  null,
-                'showCancelButton'  =>  false,
-                'showConfirmButton'  =>  false
+                'position' => 'top-end',
+                'timer' => 3000,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
             ]);
             return $message;
         }
@@ -187,7 +187,7 @@ class Calendar extends Component
 
         } else {
             $this->dispatchBrowserEvent('swal', [
-                'title' => 'الأسبوع الدراسي غير مطابق للفصل الدراسي',
+                'title' => 'اليوم المحدد غير مطابق للفصل الدراسي',
                 'timer' => 3500,
                 'icon' => 'error',
                 'toast' => true,
@@ -258,7 +258,7 @@ class Calendar extends Component
 
             $this->dispatchBrowserEvent('swal', [
 
-                'title' => 'الأسبوع الدراسي غير مطابق للفصل الدراسي',
+                'title' => 'اليوم المحدد غير مطابق للفصل الدراسي',
                 'timer' => 3500,
                 'icon' => 'error',
                 'toast' => true,
@@ -285,7 +285,7 @@ class Calendar extends Component
         ]);
     }
 
-    public function eventDrop($event,$oldEvent)
+    public function eventDrop($event, $oldEvent)
     {
         $eventdata = Event::find($event['id']);
         if (($eventdata->user_id == auth()->user()->id) || (auth()->user()->roles[0]->id != 3)) {
@@ -302,7 +302,7 @@ class Calendar extends Component
 
                 $eventOverLap = Event::where('task_id', $eventdata->task_id)
                     ->where('start', $event['start'])
-                    ->whereNotIn('task_id', [1,2,3])
+                    ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})
                     ->count() <= 0;
 
                 if ($eventOverLap) {
@@ -331,7 +331,7 @@ class Calendar extends Component
 
                     } else {
                         $this->dispatchBrowserEvent('swal', [
-                            'title' => 'الأسبوع الدراسي غير مطابق للفصل الدراسي',
+                            'title' => 'اليوم المحدد غير مطابق للفصل الدراسي',
                             'timer' => 3500,
                             'icon' => 'error',
                             'toast' => true,
@@ -378,13 +378,13 @@ class Calendar extends Component
 
         $educationTypes = [
             [
-                'id'    => 1,
-                'title' => 'الشؤون التعليمية'
+                'id' => 1,
+                'title' => 'الشؤون التعليمية',
             ],
             [
-                'id'    => 2,
-                'title' => 'الشؤون المدرسية'
-            ]
+                'id' => 2,
+                'title' => 'الشؤون المدرسية',
+            ],
         ];
 
         return view('livewire.calendar', compact(

@@ -111,7 +111,7 @@ return [
     'eventsSchool' => 'زيارات مدارس',
     'eventsOffice' => 'ايام مكتبية',
     'eventsTraining' => 'برامج تدريبية',
-    'eventsVacation' => 'اجازات',
+    'eventsTask' => 'مكلف بمهمة',
     'importAs' => 'نوع الإضافة : ',
     'new' => 'جديد',
     'update' => 'تحديث',

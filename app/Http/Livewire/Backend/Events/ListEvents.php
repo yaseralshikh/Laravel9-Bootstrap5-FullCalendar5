@@ -2,26 +2,26 @@
 
 namespace App\Http\Livewire\Backend\Events;
 
-use PDF;
-use Carbon\Carbon;
+use App\Exports\EventsExport;
+use App\Models\Event;
+use App\Models\Feature;
+use App\Models\Office;
+use App\Models\Semester;
+use App\Models\Subtask;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Week;
-use App\Models\Event;
-use App\Models\Office;
-use App\Models\Feature;
-use App\Models\Subtask;
-use App\Rules\WeekRule;
-use Livewire\Component;
-use App\Models\Semester;
 use App\Rules\SemesterRule;
-use Livewire\WithPagination;
-use App\Exports\EventsExport;
-use Livewire\WithFileUploads;
+use App\Rules\WeekRule;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 class ListEvents extends Component
 {
@@ -218,68 +218,68 @@ class ListEvents extends Component
     public function createEvent()
     {
         // try {
-            $validatedData = Validator::make($this->data, [
-                'user_id' => 'required',
-                'task_id' => 'required',
-                // 'week_id' => ['required_with:start', new WeekRule($this->data['start'])],
-                'start' => 'required',
-                'status' => 'required',
-            ])->validate();
+        $validatedData = Validator::make($this->data, [
+            'user_id' => 'required',
+            'task_id' => 'required',
+            // 'week_id' => ['required_with:start', new WeekRule($this->data['start'])],
+            'start' => 'required',
+            'status' => 'required',
+        ])->validate();
 
-            switch ($validatedData['task_id']) {
-                case 1:
-                    $color = '#000000';
-                    break;
-                case 2:
-                    $color = '#cf87fa';
-                    break;
-                case 3:
-                    $color = '#eb6c0c';
-                    break;
-                default:
-                    $color = '#298A08';
+        switch ($validatedData['task_id']) {
+            case 1:
+                $color = '#000000';
+                break;
+            case 2:
+                $color = '#cf87fa';
+                break;
+            case 3:
+                $color = '#eb6c0c';
+                break;
+            default:
+                $color = '#298A08';
+        }
+
+        $validatedData['end'] = date('Y-m-d', strtotime($validatedData['start'] . ' + 1 days'));
+        $validatedData['color'] = $color;
+
+        $semester_Id = Semester::where('start', '<=', $validatedData['start'])->where('end', '>=', $validatedData['end'])->pluck('id')->first();
+        $week_Id = Week::where('start', '<=', $validatedData['start'])->where('end', '>=', $validatedData['end'])->pluck('id')->first();
+
+        if ($semester_Id && $week_Id) {
+
+            if (empty($validatedData['office_id'])) {
+                $validatedData['office_id'] = auth()->user()->office_id;
             }
 
-            $validatedData['end'] = date('Y-m-d', strtotime($validatedData['start'] . ' + 1 days'));
-            $validatedData['color'] = $color;
+            $validatedData['semester_id'] = $semester_Id;
+            $validatedData['week_id'] = $week_Id;
 
-            $semester_Id = Semester::where('start', '<=', $validatedData['start'])->where('end', '>=',  $validatedData['end'])->pluck('id')->first();
-            $week_Id = Week::where('start', '<=', $validatedData['start'])->where('end', '>=',  $validatedData['end'])->pluck('id')->first();
+            Event::create($validatedData);
 
-            if ($semester_Id && $week_Id) {
+            $this->dispatchBrowserEvent('hide-form');
 
-                if (empty($validatedData['office_id'])) {
-                    $validatedData['office_id'] = auth()->user()->office_id;
-                }
+            $this->alert('success', __('site.saveSuccessfully'), [
+                'position' => 'top-end',
+                'timer' => 3000,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
+            ]);
 
-                $validatedData['semester_id']   = $semester_Id ;
-                $validatedData['week_id']       = $week_Id ;
+        } else {
 
-                Event::create($validatedData);
+            $this->alert('error', 'اليوم المحدد غير مطابق للفصل الدراسي', [
+                'position' => 'center',
+                'timer' => 3000,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
+            ]);
 
-                $this->dispatchBrowserEvent('hide-form');
-
-                $this->alert('success', __('site.saveSuccessfully'), [
-                    'position' => 'top-end',
-                    'timer' => 3000,
-                    'toast' => true,
-                    'text' => null,
-                    'showCancelButton' => false,
-                    'showConfirmButton' => false,
-                ]);
-
-            } else {
-
-                $this->alert('error', 'الأسبوع الدراسي غير مطابق للفصل الدراسي' , [
-                    'position' => 'center',
-                    'timer' => 3000,
-                    'toast' => true,
-                    'text' => null,
-                    'showCancelButton' => false,
-                    'showConfirmButton' => false,
-                ]);
-
-            }
+        }
 
         // } catch (\Throwable$th) {
         //     $message = $this->alert('error', $th->getMessage() , [
@@ -401,7 +401,7 @@ class ListEvents extends Component
                 'showConfirmButton' => false,
             ]);
 
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             $message = $this->alert('error', $th->getMessage(), [
                 'position' => 'top-end',
                 'timer' => 3000,
@@ -505,7 +505,7 @@ class ListEvents extends Component
                     'text' => null,
                     'showCancelButton' => false,
                     'showConfirmButton' => true,
-                    'width'=> '500px',
+                    'width' => '500px',
                 ]);
 
                 $this->items = [];
@@ -518,7 +518,7 @@ class ListEvents extends Component
                     'text' => null,
                     'showCancelButton' => false,
                     'showConfirmButton' => false,
-                    'width'=> '500px',
+                    'width' => '500px',
                 ]);
 
                 $this->items = [];
@@ -532,7 +532,7 @@ class ListEvents extends Component
                 'text' => null,
                 'showCancelButton' => false,
                 'showConfirmButton' => false,
-                'width'=> '500px',
+                'width' => '500px',
             ]);
         }
     }
@@ -612,7 +612,7 @@ class ListEvents extends Component
                 ]);
             }
 
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             $message = $this->alert('error', $th->getMessage(), [
                 'position' => 'top-end',
                 'timer' => 3000,

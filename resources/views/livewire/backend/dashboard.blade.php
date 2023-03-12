@@ -175,11 +175,11 @@
                 <!-- ./col -->
                 <div class="col-lg-3 col-3">
                     <!-- small box -->
-                    <div class="small-box" style="background-color:rgba(124, 47, 239, 0.3);">
+                    <div class="small-box" style="background-color:rgba(24, 37, 88, 0.342);">
                         <div class="inner">
-                            <h3>{{ $eventsVacationCount }}</h3>
+                            <h3>{{ $eventsTaskCount }}</h3>
 
-                            <p>@lang('site.eventsVacation')</p>
+                            <p>@lang('site.eventsTask')</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-plane"></i>
@@ -434,7 +434,7 @@
                                                     <th>@lang('site.eventsSchool')</th>
                                                     <th>@lang('site.eventsOffice')</th>
                                                     <th>@lang('site.eventsTraining')</th>
-                                                    <th>@lang('site.eventsVacation')</th>
+                                                    <th>@lang('site.eventsTask')</th>
                                                     <th>@lang('site.eventsTotal')</th>
                                                 </tr>
                                             </thead>
@@ -445,10 +445,10 @@
                                                     <td>{{ $user->name }}</td>
                                                     <td>{{ $user->specialization->name }}</td>
                                                     <td>{{ $user->type }}</td>
-                                                    <td>{{ $user->events->whereNotIn('task.name',['يوم مكتبي','برنامج تدريبي','إجازة'])->count() }}</td>
+                                                    <td>{{ $user->events->whereNotIn('task.name',['يوم مكتبي','برنامج تدريبي','إجازة','مكلف بمهمة'])->count() }}</td>
                                                     <td>{{ $user->events->where('task.name','يوم مكتبي')->count() }}</td>
                                                     <td>{{ $user->events->where('task.name','برنامج تدريبي')->count() }}</td>
-                                                    <td>{{ $user->events->where('task.name','إجازة')->count() }}</td>
+                                                    <td>{{ $user->events->where('task.name','مكلف بمهمة')->count() }}</td>
                                                     <td class="bg-light">{{ $user->events->count() }}</td>
                                                 </tr>
                                                 @empty

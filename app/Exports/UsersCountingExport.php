@@ -28,10 +28,13 @@ class UsersCountingExport implements FromCollection, WithHeadings, WithMapping, 
     {
         $bySemester = $this->semester_id;
 
-        $users = User::whereStatus(1)->where('office_id', $this->office_id)
-            ->with('events')->whereHas('events', function ($q) use($bySemester) {
-                $q->where('semester_id', $bySemester)->whereStatus(true);
-                })->orderBy('name', 'asc')->get();
+        $users = User::whereStatus(true)->where('office_id', $this->office_id)->with([
+            'events' => function ($query) use($bySemester) {
+                $query->where('semester_id', $bySemester);
+            }
+        ])
+        ->orderBy('name', 'asc')
+        ->get();
 
         return $users;
     }
@@ -42,10 +45,10 @@ class UsersCountingExport implements FromCollection, WithHeadings, WithMapping, 
             $user->email,
             $user->specialization->name,
             $user->type,
-            $user->events->whereNotIn('task.name',['إجازة','برنامج تدريبي','يوم مكتبي'])->count(),
+            $user->events->whereNotIn('task.name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة'])->count(),
             $user->events->where('task.name','يوم مكتبي' )->count(),
             $user->events->where('task.name','برنامج تدريبي' )->count(),
-            $user->events->where('task.name','إجازة' )->count(),
+            $user->events->where('task.name','مكلف بمهمة' )->count(),
             $user->events->count(),
         ] ;
     }
@@ -60,7 +63,7 @@ class UsersCountingExport implements FromCollection, WithHeadings, WithMapping, 
             'زيارات مدارس',
             'ايام مكتبية',
             'برامج تدريبية',
-            'اجازات',
+            'مكلف بمهمة',
             'مجموع الخطط',
         ];
     }
