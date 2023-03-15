@@ -374,24 +374,24 @@ class Calendar extends Component
 
         $featureValue = Feature::where('office_id', auth()->user()->office_id)->where('title', 'قفل إدخال الخطط')->first();
 
-        $jobs_type = JobType::whereStatus(true)->get();
+        // $jobs_type = JobType::whereStatus(true)->get();
 
-        $educationTypes = [
-            [
-                'id' => 1,
-                'title' => 'الشؤون التعليمية',
-            ],
-            [
-                'id' => 2,
-                'title' => 'الشؤون المدرسية',
-            ],
-        ];
+        // $educationTypes = [
+        //     [
+        //         'id' => 1,
+        //         'title' => 'الشؤون التعليمية',
+        //     ],
+        //     [
+        //         'id' => 2,
+        //         'title' => 'الشؤون المدرسية',
+        //     ],
+        // ];
 
         return view('livewire.calendar', compact(
             'tasks',
             'specializations',
-            'jobs_type',
-            'educationTypes',
+            //'jobs_type',
+            //'educationTypes',
             'featureValue',
         ));
     }

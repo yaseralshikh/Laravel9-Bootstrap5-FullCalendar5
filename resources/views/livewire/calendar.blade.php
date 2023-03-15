@@ -74,12 +74,12 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="save">
-                        <!-- Task -->
 
+                        <!-- Modal Create Task (Event Title) -->
                         <div class="form-group mb-3" wire:ignore.self>
                             <label for="task_id" class="col-form-label">@lang('site.task') :</label>
                             <select wire:model.defer="task_id"
-                                class="form-select @error('task_id') is-invalid @enderror" id="task_id">
+                                class="form-control createSelect2bs4 @error('task_id') is-invalid @enderror" id="task_id">
                                 <option value="" selected>@lang('site.choise', ['name' => 'المهمة']) :</option>
                                 @foreach ($tasks as $task)
                                 <option value="{{ $task->id }}" style="
@@ -87,7 +87,8 @@
                                         {{ $task->level_id == 2 ? 'background:#E6F8E0;' : '' }}
                                         {{ $task->level_id == 3 ? 'background:#F7F8E0;' : '' }}
                                         {{ $task->level_id == 4 ? 'background:#F8ECE0;' : '' }}
-                                        {{ $task->level_id == 5 ? 'background:#E0F2F7;' : '' }}">
+                                        {{ $task->level_id == 5 ? 'background:#E0F2F7;' : '' }}
+                                        {{ $task->level_id == 7 ? 'background:#F5F5F5;' : '' }}">
                                     {{ $task->name }}
                                 </option>
                                 @endforeach
@@ -148,10 +149,10 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="update">
-                        <!-- Task -->
+                        <!-- Modal Edit Task (Event Title) -->
                         <div class="form-group mb-3" wire:ignore.self>
                             <label for="task_id_edit" class="col-form-label">@lang('site.task') :</label>
-                            <select wire:model.defer="task_id" class="form-select @error('task_id') is-invalid @enderror"
+                            <select wire:model.defer="task_id" class="form-control editSelect2bs4 @error('task_id') is-invalid @enderror"
                                 id="task_id_edit">
                                 @foreach ($tasks as $task)
                                 <option value="{{ $task->id }}" style="
@@ -338,9 +339,13 @@
     @push('script')
 
     <script>
+
         document.addEventListener('DOMContentLoaded', function() {
+
             const createModalEl = document.getElementById('createModal');
+
             createModalEl.addEventListener('hidden.bs.modal', event => {
+
                 @this.office_id = '';
                 @this.task_id = '';
                 @this.start = '';
@@ -348,6 +353,7 @@
             });
 
             const editModalEl = document.getElementById('editModal');
+
             editModalEl.addEventListener('hidden.bs.modal', event => {
                 @this.event_id = '';
                 @this.office_id = '';
@@ -528,11 +534,31 @@
                     }
                 });
 
-                $('.select2').select2();
+                Livewire.hook('message.processed', (message, component) => {
 
-                $('.select2bs4').select2({
-                    theme: 'bootstrap4'
-                });
+                    $('.createSelect2bs4').select2({
+                        theme: 'bootstrap4',
+                        dropdownParent: $('#createModal'),
+                    });
+
+
+                    $('.createSelect2bs4').on("select2:select", function (e) {
+                        var selectedValue = $(e.currentTarget).val();
+                        @this.task_id = selectedValue;
+                    });
+
+                    $('.editSelect2bs4').select2({
+                        theme: 'bootstrap4',
+                        dropdownParent: $('#editModal')
+                    });
+
+                    $('.editSelect2bs4').on("select2:select", function (e) {
+                        var selectedValue = $(e.currentTarget).val();
+                        @this.task_id = selectedValue;
+                    });
+
+                })
+
             };
 
             // Listener for SweetAleart
@@ -547,6 +573,7 @@
             window.addEventListener('show-profile', function (event) {
                 $('#editProfile').modal('show');
             });
+
         });
 
     </script>
