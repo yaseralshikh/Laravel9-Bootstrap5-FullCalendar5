@@ -28,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'office_id',
         'type',
         'edu_type',
+        'gender',
         'password',
         'status',
         'email_verified_at',
@@ -60,6 +61,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function status(): string
     {
         return $this->status ? __('site.active') : __('site.inActive');
+    }
+
+    public function gender(): string
+    {
+        return $this->status ? __('site.male') : __('site.female');
     }
 
     public function events(): HasMany

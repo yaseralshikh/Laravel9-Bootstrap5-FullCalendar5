@@ -55,6 +55,7 @@ class RegisterController extends Controller
             'office_id'         => ['required',],
             'type'              => ['required'],
             'edu_type'          => ['required'],
+            'gender'            => ['required'],
             'email'             => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password'          => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -75,6 +76,7 @@ class RegisterController extends Controller
             'office_id'         => $data['office_id'],
             'type'              => $data['type'],
             'edu_type'          => $data['edu_type'],
+            'gender'            => $data['gender'],
             'password'          => Hash::make($data['password']),
             'status'            => 0
         ]);

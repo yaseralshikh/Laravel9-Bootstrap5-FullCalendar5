@@ -43,9 +43,9 @@
                     </form>
                     <!-- /.form-box -->
                 </div><!-- /.card -->
-                <div class="card-footer text-muted text-center">
+                {{-- <div class="card-footer text-muted text-center">
                     <a href="{{ route('login') }}" class="text-center">@lang('site.login')</a>
-                </div>
+                </div> --}}
             </div>
             <!-- /.register-box -->
 

@@ -486,7 +486,7 @@ class ListEvents extends Component
                 $query->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
             }])->get();
 
-            array_push($this->items, '<b dir="rtl">' . 'مشروفن خططهم غير مكتملة !' . "</b><br><br>");
+            array_push($this->items, '<b dir="rtl">' . 'مشرفون خططهم غير مكتملة !' . "</b><br><br>");
             array_push($this->items, '<ol dir="rtl">');
 
             foreach ($users as $user) {

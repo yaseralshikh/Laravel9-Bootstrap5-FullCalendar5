@@ -405,6 +405,24 @@
                                     @enderror
                                 </div>
 
+                                <!-- Modal Gender -->
+
+                                <div class="form-group">
+                                    <label for="gender">@lang('site.gender')</label>
+                                    <select id="gender" class="form-control @error('gender') is-invalid @enderror"
+                                        wire:model.defer="data.gender">
+                                        <option hidden selected>@lang('site.gender')</option>
+                                        @foreach ($genders as $gender)
+                                            <option class="bg-light" value="{{ $gender['id'] }}">{{ $gender['name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('gender')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
                                 <!-- Modal User Password -->
 
                                 <div class="form-group">

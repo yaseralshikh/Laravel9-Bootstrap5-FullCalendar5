@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->foreignId('specialization_id')->constrained();
             $table->foreignId('office_id')->constrained()->onDelete('cascade');
             $table->string('type');
+            $table->unsignedTinyInteger('gender')->default(1);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->unsignedTinyInteger('status')->default(0);

@@ -139,6 +139,25 @@
                         </span>
                         @enderror
                     </div>
+                    <!-- Gender -->
+                    <div class="input-group mb-3">
+                        <select name="gender" class="custom-select @error('gender') is-invalid @enderror"
+                            id="inputGroupSelect02">
+                            <option selected>@lang('site.gender')</option>
+                            @foreach ($genders as $gender)
+                            <option value="{{ $gender['id'] }}">{{ $gender['name'] }}</option>
+                            @endforeach
+                        </select>
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="inputGroupSelect02"><i class="fa fa-briefcase"
+                                    aria-hidden="true"></i></label>
+                        </div>
+                        @error('gender')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
                     <!-- Password -->
                     <div class="input-group mb-3">
                         <input id="password" type="password"

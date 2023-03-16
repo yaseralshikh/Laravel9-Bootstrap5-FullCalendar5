@@ -212,6 +212,7 @@ class ListUsers extends Component
 			'specialization_id'     => 'required',
 			'type'                  => 'required',
 			'edu_type'              => 'required',
+			'gender'                => 'required',
 			'password'              => 'required|confirmed',
             'status'                => 'required',
 		])->validate();
@@ -259,15 +260,16 @@ class ListUsers extends Component
         try {
 
             $validatedData = Validator::make($this->data, [
-                'name'                      => 'required',
-                'email'                     => 'required|email|unique:users,email,'.$this->user->id,
-                'office_id'                 => 'nullable',
-                'specialization_id'         => 'required',
-                'type'                      => 'required',
-                'edu_type'                  => 'required',
-                'status'                    => 'required',
-                'password'                  => 'sometimes|confirmed',
-                'email_verified_at'         => 'nullable',
+                'name'                  => 'required',
+                'email'                 => 'required|email|unique:users,email,'.$this->user->id,
+                'office_id'             => 'nullable',
+                'specialization_id'     => 'required',
+                'type'                  => 'required',
+                'edu_type'              => 'required',
+                'gender'                => 'required',
+                'status'                => 'required',
+                'password'              => 'sometimes|confirmed',
+                'email_verified_at'     => 'nullable',
             ])->validate();
 
             if(!empty($validatedData['password'])) {
@@ -513,12 +515,24 @@ class ListUsers extends Component
             ]
         ];
 
+        $genders = [
+            [
+                'id'    => 1,
+                'name' => __('site.male')
+            ],
+            [
+                'id'    => 0,
+                'name' => __('site.female')
+            ]
+        ];
+
         return view('livewire.backend.users.list-users',[
             'users'             => $users,
             'specializations'   => $specializations ,
             'offices'           => $offices ,
             'jobs_type'         => $jobs_type ,
             'educationTypes'    => $educationTypes ,
+            'genders'           => $genders ,
             'roles'             => $roles ,
         ])->layout('layouts.admin');
     }
