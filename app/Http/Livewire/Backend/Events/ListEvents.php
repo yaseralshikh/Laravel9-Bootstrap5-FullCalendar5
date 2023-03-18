@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Backend\Events;
 
 use App\Exports\EventsExport;
 use App\Models\Event;
+use App\Models\Level;
 use App\Models\Feature;
 use App\Models\Office;
 use App\Models\Semester;
@@ -33,6 +34,9 @@ class ListEvents extends Component
     public $paginateValue = 50;
 
     public $data = [];
+
+    public $tasks = [];
+    public $level_id;
 
     public $items = [];
 
@@ -203,7 +207,7 @@ class ListEvents extends Component
 
     public function addNewEvent()
     {
-        $this->reset('data');
+        $this->reset(['data','tasks','level_id']);
         //$this->resetExcept(['byStatus','byWeek','searchTerm']);
         $this->showEditModal = false;
         $this->data['status'] = 1;
@@ -219,11 +223,11 @@ class ListEvents extends Component
     {
         // try {
         $validatedData = Validator::make($this->data, [
-            'user_id' => 'required',
-            'task_id' => 'required',
+            'user_id'   => 'required',
+            'task_id'   => 'required',
             // 'week_id' => ['required_with:start', new WeekRule($this->data['start'])],
-            'start' => 'required',
-            'status' => 'required',
+            'start'     => 'required',
+            'status'    => 'required',
         ])->validate();
 
         switch ($validatedData['task_id']) {
@@ -298,15 +302,17 @@ class ListEvents extends Component
 
     public function edit(Event $event)
     {
-        $this->reset('data');
+        $this->reset(['data','tasks','level_id']);
 
         $this->showEditModal = true;
+
+        $this->level_id = $event->task->level_id;
+
+        $this->LevelOption();
 
         $this->event = $event;
 
         $this->data = $event->toArray();
-
-        // dd($this->data);
 
         $this->data['start'] = Carbon::parse($this->data['start'])->toDateString();
 
@@ -319,13 +325,13 @@ class ListEvents extends Component
     {
         try {
             $validatedData = Validator::make($this->data, [
-                'task_id' => 'required',
-                'user_id' => 'required',
-                'semester_id' => ['required', new SemesterRule($this->data['start'])],
-                'week_id' => ['required', new WeekRule($this->data['start'])],
-                'office_id' => 'nullable',
-                'start' => 'required',
-                'status' => 'required',
+                'task_id'       => 'required',
+                'user_id'       => 'required',
+                'semester_id'   => ['required', new SemesterRule($this->data['start'])],
+                'week_id'       => ['required', new WeekRule($this->data['start'])],
+                'office_id'     => 'nullable',
+                'start'         => 'required',
+                'status'        => 'required',
             ])->validate();
 
             switch ($validatedData['task_id']) {
@@ -482,7 +488,7 @@ class ListEvents extends Component
 
         if ($byWeek && $byEduType) {
 
-            $users = User::where('status', true)->where('edu_type', $byEduType)->where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)->with(['events' => function ($query) use ($byWeek) {
+            $users = User::where('status', true)->whereNotIn('type', ['إداري'])->where('edu_type', $byEduType)->where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)->with(['events' => function ($query) use ($byWeek) {
                 $query->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
             }])->get();
 
@@ -671,11 +677,45 @@ class ListEvents extends Component
         return $events;
     }
 
+    // public function getTasksProperty()
+	// {
+    //     $tasks = Task::where('office_id', auth()->user()->office_id)
+    //     ->whereStatus(1)->where('level_id' , $this->level_id)
+    //     ->orderBy('level_id', 'asc')
+    //     ->orderBy('name', 'asc')
+    //     ->get();
+
+    //     return $tasks;
+	// }
+
+    public function updated()
+    {
+        $this->getTaskesData();
+    }
+
+    public function LevelOption()
+    {
+        $this->getTaskesData();
+    }
+
+    public function getTaskesData()
+    {
+        $this->tasks = Task::where('office_id', auth()->user()->office_id)
+        ->whereStatus(1)->where('level_id' , $this->level_id)
+        ->orderBy('level_id', 'asc')
+        ->orderBy('name', 'asc')
+        ->get();
+    }
+
     public function render()
     {
         $events = $this->events;
+
+        $levels = Level::all();
+        $tasks = $this->getTaskesData();
+
         $users = User::whereStatus(1)->where('office_id', auth()->user()->office_id)->orderBy('name', 'asc')->get();
-        $tasks = Task::whereStatus(1)->where('office_id', auth()->user()->office_id)->orderBy('level_id', 'asc')->orderBy('name', 'asc')->get();
+        // $tasks = Task::whereStatus(1)->where('office_id', auth()->user()->office_id)->orderBy('level_id', 'asc')->orderBy('name', 'asc')->get();
         $weeks = Week::whereStatus(1)->where('semester_id', $this->semesterActive())->get();
 
         $feature = Feature::where('office_id', auth()->user()->office_id)->where('title', 'قفل إدخال الخطط')->first();
@@ -697,6 +737,7 @@ class ListEvents extends Component
             'users' => $users,
             'weeks' => $weeks,
             'educationTypes' => $educationTypes,
+            'levels' => $levels,
             'tasks' => $tasks,
         ])->layout('layouts.admin');
     }

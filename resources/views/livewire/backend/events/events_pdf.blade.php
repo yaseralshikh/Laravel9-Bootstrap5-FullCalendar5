@@ -193,7 +193,7 @@
                                     </ul>
                                 </td>
                                 <td class="logo_header" style="width: 45%;">
-                                    <h3>{{ $office->name }}</h3>
+                                    <h3>مدير {{ $office->name }}</h3>
 
                                     @if ($office->director_signature_path)
                                         <img src="{{ $office->director_url }}" style="" width="130px" alt="">

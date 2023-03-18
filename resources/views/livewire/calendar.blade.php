@@ -63,7 +63,7 @@
     @endif
 
     {{-- Create Event Modal --}}
-    <div dir="rtl" class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    <div class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog">
             <div class="modal-content">
@@ -75,20 +75,40 @@
                 <div class="modal-body">
                     <form wire:submit.prevent="save">
 
-                        <!-- Modal Create Task (Event Title) -->
+                        <!-- Modal Levels -->
+                        <div class="form-group mb-3" wire:ignore.self>
+                            <label for="level_id" class="col-form-label">@lang('site.level') :</label>
+                            <select wire:model.defer="level_id" wire:change="LevelOption($event.target.value)" id="level_id"
+                                class="form-control @error('level_id') is-invalid @enderror">
+                                <option value="" selected>@lang('site.choise', ['name' => 'المرحلة']) :</option>
+                                @foreach ($levels as $level)
+                                    <option value="{{ $level->id }}">{{ $level->name }}</option>
+                                @endforeach
+                            </select>
+
+                            @error('level_id')
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <!-- Modal Task (Event Title) -->
                         <div class="form-group mb-3" wire:ignore.self>
                             <label for="task_id" class="col-form-label">@lang('site.task') :</label>
-                            <select wire:model.defer="task_id"
+                            <select wire:model.defer="task_id" id="task_id"
                                 class="form-control createSelect2bs4 @error('task_id') is-invalid @enderror" id="task_id">
                                 <option value="" selected>@lang('site.choise', ['name' => 'المهمة']) :</option>
                                 @foreach ($tasks as $task)
-                                <option value="{{ $task->id }}" style="
+                                <option value="{{ $task->id }}"
+                                         {{-- style="
                                         {{ $task->level_id == 1 ? 'background:#FBEFF2;' : '' }}
                                         {{ $task->level_id == 2 ? 'background:#E6F8E0;' : '' }}
                                         {{ $task->level_id == 3 ? 'background:#F7F8E0;' : '' }}
                                         {{ $task->level_id == 4 ? 'background:#F8ECE0;' : '' }}
                                         {{ $task->level_id == 5 ? 'background:#E0F2F7;' : '' }}
-                                        {{ $task->level_id == 7 ? 'background:#F5F5F5;' : '' }}">
+                                        {{ $task->level_id == 7 ? 'background:#F5F5F5;' : '' }}" --}}
+                                        >
                                     {{ $task->name }}
                                 </option>
                                 @endforeach
@@ -99,7 +119,6 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
-
                         </div>
 
                         <!-- start -->
@@ -138,7 +157,7 @@
     </div>
 
     {{-- Edit Event Modal --}}
-    <div dir="rtl" class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    <div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog">
             <div class="modal-content">
@@ -149,18 +168,39 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="update">
+
+                        <!-- Modal Create Levels -->
+                        <div class="form-group mb-3" wire:ignore.self>
+                            <label for="level_id_edit" class="col-form-label">@lang('site.level') :</label>
+                            <select wire:model.defer="level_id" wire:change="LevelOption($event.target.value)" id="level_id_edit"
+                                class="form-control @error('level_id') is-invalid @enderror">
+                                <option value="" selected>@lang('site.choise', ['name' => 'المرحلة']) :</option>
+                                @foreach ($levels as $level)
+                                    <option value="{{ $level->id }}">{{ $level->name }}</option>
+                                @endforeach
+                            </select>
+
+                            @error('level_id')
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
                         <!-- Modal Edit Task (Event Title) -->
                         <div class="form-group mb-3" wire:ignore.self>
                             <label for="task_id_edit" class="col-form-label">@lang('site.task') :</label>
                             <select wire:model.defer="task_id" class="form-control editSelect2bs4 @error('task_id') is-invalid @enderror"
                                 id="task_id_edit">
                                 @foreach ($tasks as $task)
-                                <option value="{{ $task->id }}" style="
-                                        {{ $task->level_id == 1 ? 'background:#FBEFF2;' : '' }}
-                                        {{ $task->level_id == 2 ? 'background:#E6F8E0;' : '' }}
-                                        {{ $task->level_id == 3 ? 'background:#F7F8E0;' : '' }}
-                                        {{ $task->level_id == 4 ? 'background:#F8ECE0;' : '' }}
-                                        {{ $task->level_id == 5 ? 'background:#E0F2F7;' : '' }}">
+                                <option value="{{ $task->id }}"
+                                    {{-- style="
+                                    {{ $task->level_id == 1 ? 'background:#FBEFF2;' : '' }}
+                                    {{ $task->level_id == 2 ? 'background:#E6F8E0;' : '' }}
+                                    {{ $task->level_id == 3 ? 'background:#F7F8E0;' : '' }}
+                                    {{ $task->level_id == 4 ? 'background:#F8ECE0;' : '' }}
+                                    {{ $task->level_id == 5 ? 'background:#E0F2F7;' : '' }}" --}}
+                                    >
                                     {{ $task->name }}
                                 </option>
                                 @endforeach
@@ -347,6 +387,7 @@
             createModalEl.addEventListener('hidden.bs.modal', event => {
 
                 @this.office_id = '';
+                @this.level_id = '';
                 @this.task_id = '';
                 @this.start = '';
                 @this.end = '';
@@ -357,6 +398,7 @@
             editModalEl.addEventListener('hidden.bs.modal', event => {
                 @this.event_id = '';
                 @this.office_id = '';
+                @this.level_id = '';
                 @this.task_id = '';
                 @this.start = '';
                 @this.end = '';
@@ -416,7 +458,6 @@
                     // },
 
                     eventClick: function({event}) {
-
                         if (userID == event.extendedProps.user_id || userRole != 3) {
                             if (event.extendedProps.status && userRole == 3) {
                                 Swal.fire({
@@ -430,6 +471,7 @@
                             } else {
                                 @this.event_id      = event.id;
                                 @this.office_id     = event.extendedProps.office_id;
+                                @this.level_id      = event.extendedProps.task.level_id;
                                 @this.task_id       = event.extendedProps.task_id;
                                 @this.start         = dayjs(event.startStr).format('YYYY-MM-DD');
                                 @this.end           = dayjs(event.endStr).format('YYYY-MM-DD');

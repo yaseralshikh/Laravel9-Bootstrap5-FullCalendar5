@@ -4,18 +4,17 @@ namespace App\Http\Livewire;
 
 use App\Models\Event;
 use App\Models\Feature;
-use App\Models\JobType;
+use App\Models\Level;
 use App\Models\Semester;
 use App\Models\Specialization;
 use App\Models\Task;
-//use App\Models\Office;
 use App\Models\User;
 //use App\Rules\WeekRule;
+//use App\Rules\SemesterRule;
 use App\Models\Week;
 use App\Rules\EventOverLap;
 use App\Rules\UserOverLap;
 use Carbon\Carbon;
-//use App\Rules\SemesterRule;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -25,9 +24,11 @@ class Calendar extends Component
     use LivewireAlert;
 
     public $data = [];
+    public $tasks = [];
 
     public $all_user;
     public $office_id;
+    public $level_id;
     public $task_id;
     public $start;
     public $end;
@@ -108,6 +109,7 @@ class Calendar extends Component
     protected function rules(): array
     {
         return ([
+            'level_id' => ['required'],
             'task_id' => ['required', new EventOverLap($this->start), new UserOverLap($this->start)],
         ]);
     }
@@ -201,6 +203,7 @@ class Calendar extends Component
     {
         $this->data = [
             'office_id' => $this->office_id,
+            'level_id' => $this->level_id,
             'task_id' => $this->task_id,
             'start' => $this->start,
             'end' => $this->end,
@@ -366,32 +369,40 @@ class Calendar extends Component
         $this->dispatchBrowserEvent('refreshEventCalendar', ['refresh' => true]);
     }
 
+    public function updated()
+    {
+        $this->getTaskesData();
+    }
+
+    public function LevelOption()
+    {
+        $this->getTaskesData();
+    }
+
+    public function getTaskesData()
+    {
+        $this->tasks = Task::where('office_id', auth()->user()->office_id)
+        ->whereStatus(1)->where('level_id' , $this->level_id)
+        ->orderBy('level_id', 'asc')
+        ->orderBy('name', 'asc')
+        ->get();
+    }
+
     public function render()
     {
-        $tasks = Task::where('office_id', auth()->user()->office_id)->whereStatus(1)->orderBy('level_id', 'asc')->orderBy('name', 'asc')->get();
+
+        $levels = Level::all();
+
+        $tasks = $this->getTaskesData();
 
         $specializations = Specialization::whereStatus(true)->orderBy('name', 'asc')->get();
 
         $featureValue = Feature::where('office_id', auth()->user()->office_id)->where('title', 'قفل إدخال الخطط')->first();
 
-        // $jobs_type = JobType::whereStatus(true)->get();
-
-        // $educationTypes = [
-        //     [
-        //         'id' => 1,
-        //         'title' => 'الشؤون التعليمية',
-        //     ],
-        //     [
-        //         'id' => 2,
-        //         'title' => 'الشؤون المدرسية',
-        //     ],
-        // ];
-
         return view('livewire.calendar', compact(
             'tasks',
+            'levels',
             'specializations',
-            //'jobs_type',
-            //'educationTypes',
             'featureValue',
         ));
     }
