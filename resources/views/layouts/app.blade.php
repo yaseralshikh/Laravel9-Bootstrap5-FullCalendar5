@@ -24,12 +24,13 @@
     <link rel="stylesheet" href="{{ asset('backend/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     @livewireStyles
     @stack('style')
     <style>
-        body{
+        body {
             font-family: 'noto-naskh';
             font-weight: bold;
         }
@@ -42,7 +43,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{-- {{ config('app.name', 'Laravel') }} --}}
-                    {{ __('خطة المشرف الأسبوعية') }}
+                    {{ __('(( خطتي ))') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -59,40 +60,41 @@
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->
                         @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('site.Login') }}</a>
-                                </li>
-                            @endif
+                        @if (Route::has('login'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('site.Login') }}</a>
+                        </li>
+                        @endif
 
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('site.Register') }}</a>
-                                </li>
-                            @endif
+                        @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">{{ __('site.Register') }}</a>
+                        </li>
+                        @endif
                         @else
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    {{ Auth::user()->name }}
-                                </a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ Auth::user()->name }}
+                            </a>
 
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <li>
-                                        @role(['admin|superadmin'])
-                                            <a class="dropdown-item" href="{{ route('admin.dashboard') }}">@lang('site.dashboard')</a>
-                                        @endrole
-                                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            {{ __('site.logout') }}
-                                        </a>
-                                    </li>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li>
+                                    @role(['admin|superadmin'])
+                                    <a class="dropdown-item"
+                                        href="{{ route('admin.dashboard') }}">@lang('site.dashboard')</a>
+                                    @endrole
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        {{ __('site.logout') }}
+                                    </a>
+                                </li>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </ul>
-                            </li>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </ul>
+                        </li>
                         @endguest
                     </ul>
                 </div>
@@ -139,7 +141,8 @@
                     <div class="float-start d-none d-sm-inline-block">
                         <strong>@lang('site.copyRight') &copy; 2023 </strong>
                     </div>
-                    <a dir="rtl" style="color: white;text-decoration: none;" href="https://twitter.com/yaser95" target="_blank">حقوق النشر محفوظة لموقع  https://sweeklyplan.com</a>
+                    <a dir="rtl" style="color: white;text-decoration: none;" href="https://twitter.com/yaser95"
+                        target="_blank">حقوق النشر محفوظة لموقع https://sweeklyplan.com</a>
                     <div class="float-end d-none d-sm-inline-block">
                         <b>الإصدار</b> 1.0.0
                     </div>

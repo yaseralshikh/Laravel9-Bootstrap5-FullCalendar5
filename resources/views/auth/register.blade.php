@@ -23,7 +23,7 @@
             <div class="card-header text-center">
                 <img src="{{ asset('backend/img/sweeklyplan_logo.jpg') }}" class="img-circle elevation-2">
                 <a href="{{ route('home') }}" class="h1"><b>Admin</b>LTE</a>
-                <h4 class="text-primary">خطة المشرف الأسبوعية</h4>
+                <h4 class="text-primary">(( خطتي ))</h4>
             </div>
             <div class="card-body">
                 <p class="login-box-msg">@lang('site.registerNewMembership')</p>
