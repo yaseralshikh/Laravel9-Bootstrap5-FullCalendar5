@@ -65,7 +65,7 @@ class Dashboard extends Component
 
             $semester = Semester::findOrFail($bySemester);
 
-            $users = User::whereStatus(true)->with([
+            $users = User::whereStatus(true)->whereNotIn('type', ['إداري'])->with([
                 'events' => function ($query) use($bySemester) {
                     $query->where('semester_id', $bySemester)->whereStatus(true);
                 }
@@ -184,7 +184,7 @@ class Dashboard extends Component
         $bySemester = $this->bySemester  ? $this->bySemester : $this->semesterActive();
 
         // for users plans
-        $users = User::whereStatus(true)->where('office_id', $byOffice)->with([
+        $users = User::whereStatus(true)->whereNotIn('type', ['إداري'])->where('office_id', $byOffice)->with([
             'events' => function ($query) use($bySemester) {
                 $query->where('semester_id', $bySemester)->whereStatus(true);
             }

@@ -28,7 +28,7 @@ class UsersCountingExport implements FromCollection, WithHeadings, WithMapping, 
     {
         $bySemester = $this->semester_id;
 
-        $users = User::whereStatus(true)->where('office_id', $this->office_id)->with([
+        $users = User::whereStatus(true)->whereNotIn('type', ['إداري'])->where('office_id', $this->office_id)->with([
             'events' => function ($query) use($bySemester) {
                 $query->where('semester_id', $bySemester);
             }

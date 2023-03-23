@@ -554,7 +554,7 @@ class ListEvents extends Component
 
             if ($selectedRows) {
                 if ($byWeek && $byEduType) {
-                    $users = User::where('status', true)->where('office_id', $byOffice)->where('edu_type', $byEduType)->orderBy('name', 'asc')
+                    $users = User::where('status', true)->whereNotIn('type', ['إداري'])->where('office_id', $byOffice)->where('edu_type', $byEduType)->orderBy('name', 'asc')
                         ->whereHas('events', function ($query) use ($byWeek) {
                             $query->where('week_id', $byWeek)->where('status', true);
                         })->with(['events' => function ($query) use ($byWeek, $selectedRows) {
@@ -714,7 +714,7 @@ class ListEvents extends Component
         $levels = Level::all();
         $tasks = $this->getTaskesData();
 
-        $users = User::whereStatus(1)->where('office_id', auth()->user()->office_id)->orderBy('name', 'asc')->get();
+        $users = User::whereStatus(1)->whereNotIn('type', ['إداري'])->where('office_id', auth()->user()->office_id)->orderBy('name', 'asc')->get();
         // $tasks = Task::whereStatus(1)->where('office_id', auth()->user()->office_id)->orderBy('level_id', 'asc')->orderBy('name', 'asc')->get();
         $weeks = Week::whereStatus(1)->where('semester_id', $this->semesterActive())->get();
 
