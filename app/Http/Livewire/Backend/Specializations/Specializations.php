@@ -37,7 +37,7 @@ class Specializations extends Component
     public function updatedSelectPageRows($value)
     {
         if ($value) {
-            $this->selectedRows = $this->levels->pluck('id')->map(function ($id) {
+            $this->selectedRows = $this->specializations->pluck('id')->map(function ($id) {
                 return (string) $id;
             });
         } else {

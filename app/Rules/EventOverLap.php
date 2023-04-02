@@ -2,22 +2,23 @@
 
 namespace App\Rules;
 
-use App\Models\Task;
 use App\Models\Event;
 use Illuminate\Contracts\Validation\Rule;
 
 class EventOverLap implements Rule
 {
     public $start;
+    public $specialization;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($start)
+    public function __construct($start ,$specialization)
     {
         $this->start = $start;
+        $this->specialization = $specialization;
     }
 
     /**
@@ -29,9 +30,17 @@ class EventOverLap implements Rule
      */
     public function passes($attribute, $value)
     {
-        $event = Event::where('task_id', $value)->where('start', $this->start)
+        $excepted_specialization_id = [4];
+
+        if (in_array($this->specialization, $excepted_specialization_id, true)) {
+            $event = Event::where('task_id', $value)->where('start', $this->start)
+                ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})
+                ->count() <= 1;
+        } else {
+            $event = Event::where('task_id', $value)->where('start', $this->start)
             ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})
             ->count() <= 0;
+        }
 
         return $event ;
     }
@@ -43,6 +52,6 @@ class EventOverLap implements Rule
      */
     public function message()
     {
-        return 'تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرفين أخرين.';
+        return 'تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرف أخر.';
     }
 }

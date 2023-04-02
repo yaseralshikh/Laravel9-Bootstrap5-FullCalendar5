@@ -110,7 +110,7 @@ class Calendar extends Component
     {
         return ([
             'level_id' => ['required'],
-            'task_id' => ['required', new EventOverLap($this->start), new UserOverLap($this->start)],
+            'task_id' => ['required', new EventOverLap($this->start, auth()->user()->specialization_id), new UserOverLap($this->start)],
         ]);
     }
 
@@ -210,7 +210,7 @@ class Calendar extends Component
         ];
 
         $validatedData = Validator::make($this->data, [
-            'task_id' => ['required', new EventOverLap($this->start)],
+            'task_id' => ['required', new EventOverLap($this->start, auth()->user()->specialization_id)],
         ])->validate();
 
         $color = null;
@@ -303,10 +303,19 @@ class Calendar extends Component
                 ]);
             } else {
 
-                $eventOverLap = Event::where('task_id', $eventdata->task_id)
+                $excepted_specialization_id = [4];
+
+                if (in_array(auth()->user()->specialization_id, $excepted_specialization_id, true)) {
+                    $eventOverLap = Event::where('task_id', $eventdata->task_id)
+                        ->where('start', $event['start'])
+                        ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})
+                        ->count() <= 1;
+                } else {
+                    $eventOverLap = Event::where('task_id', $eventdata->task_id)
                     ->where('start', $event['start'])
                     ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})
                     ->count() <= 0;
+                }
 
                 if ($eventOverLap) {
 
@@ -345,7 +354,7 @@ class Calendar extends Component
 
                 } else {
                     $this->dispatchBrowserEvent('swal', [
-                        'title' => 'تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرفين أخرين.',
+                        'title' => 'تم حجز الزيارة في هذا الموعد لنفس المدرسة من قبل مشرف أخر.',
                         'timer' => 3500,
                         'icon' => 'error',
                         'toast' => true,

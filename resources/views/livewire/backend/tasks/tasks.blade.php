@@ -139,7 +139,7 @@
                             aria-describedby="example2_info">
                             <thead class="bg-light">
                                 <tr>
-                                    <th class="no-sort" scope="col">
+                                    <th scope="col">
                                         <div class="custom-control custom-checkbox small">
                                             <input type="checkbox" wire:model="selectPageRows" value=""
                                                 class="custom-control-input" id="customCheck">
