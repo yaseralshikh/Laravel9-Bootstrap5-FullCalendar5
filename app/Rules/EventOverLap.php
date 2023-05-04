@@ -30,17 +30,21 @@ class EventOverLap implements Rule
      */
     public function passes($attribute, $value)
     {
-        $excepted_specialization_id = [4];
+        // $excepted_specialization_id = [4];
 
-        if (in_array($this->specialization, $excepted_specialization_id, true)) {
-            $event = Event::where('task_id', $value)->where('start', $this->start)
-                ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})
-                ->count() <= 1;
-        } else {
-            $event = Event::where('task_id', $value)->where('start', $this->start)
+        // if (in_array($this->specialization, $excepted_specialization_id, true)) {
+        //     $event = Event::where('task_id', $value)->where('start', $this->start)
+        //         ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})
+        //         ->count() <= 1;
+        // } else {
+        //     $event = Event::where('task_id', $value)->where('start', $this->start)
+        //     ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})
+        //     ->count() <= 0;
+        // }
+
+        $event = Event::where('task_id', $value)->where('start', $this->start)
             ->whereHas('task', function ($q) {$q->whereNotIn('name',['إجازة','برنامج تدريبي','يوم مكتبي','مكلف بمهمة']);})
             ->count() <= 0;
-        }
 
         return $event ;
     }

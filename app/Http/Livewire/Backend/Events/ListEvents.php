@@ -488,33 +488,52 @@ class ListEvents extends Component
 
         if ($byWeek && $byEduType) {
 
-            $users = User::where('status', true)->whereNotIn('type', ['إداري'])->where('edu_type', $byEduType)->where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)->with(['events' => function ($query) use ($byWeek) {
-                $query->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
+            $week_range = Week::whereId($byWeek)->get()->first();
+
+            $start = Carbon::parse($week_range->start);
+            $end = Carbon::parse($week_range->end);
+
+            $dates = [];
+
+            while ($start->lte($end)) {
+                $dates[] = $start->toDateString();
+                $start->addDay();
+            }
+
+            $days_range = count($dates)-1;
+
+            $users = User::where('status', true)->where('edu_type', $byEduType)->where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)->with(['events' => function ($query) use ($byWeek) {
+                $query->where('week_id', $byWeek)->orderBy('start', 'asc');
             }])->get();
 
-            array_push($this->items, '<b dir="rtl">' . 'مشرفون خططهم غير مكتملة !' . "</b><br><br>");
-            array_push($this->items, '<ol dir="rtl">');
+            $table = '<table style="border-collapse: collapse;">';
+            $table .= '<thead><tr><th style="border: 1px solid;text-align: center;background-color: #f2f2f2;">! مشرفين خططهم غير مكتملة</th><th style="border: 1px solid;text-align: center;background-color: #f2f2f2;">م</th></tr></thead>';
+            $table .= '<tbody>';
+
+            $index = 0;
 
             foreach ($users as $user) {
-                if ($user->events->count() == null || $user->events->count() < 5) {
-                    $this->items[] = '<li>' . $user->name . ' ( ' . $user->events->count() . ' )' . "</li><br>";
+                if ($user->events->count() < $days_range ) {
+                    $index = $index+ 1;
+                    $table .= '<tr>';
+                    $table .= '<td style="border: 1px solid;text-align: center;">' . $user->name . ' (<span style="color:red"> ' . $user->events->count() . ' </span>)' . '</td>';
+                    $table .= '<td style="border: 1px solid;text-align: center;">' . $index . '</td>';
+                    $table .= '</td>';
                 }
             }
 
-            array_push($this->items, '</ol>');
+            $table .= '</tbody></table>';
 
-            if (count($this->items) > 3) {
-                $this->alert('error', implode(" ", $this->items), [
+            if (count($users)) {
+                $this->alert('error', $table, [
                     'position' => 'center',
                     'timer' => null,
                     'toast' => true,
-                    'text' => null,
+                    'text'  => null,
                     'showCancelButton' => false,
                     'showConfirmButton' => true,
-                    'width' => '500px',
+                    //'width' => '550px',
                 ]);
-
-                $this->items = [];
 
             } else {
                 $this->alert('success', __('site.noReviews'), [
@@ -524,14 +543,62 @@ class ListEvents extends Component
                     'text' => null,
                     'showCancelButton' => false,
                     'showConfirmButton' => false,
-                    'width' => '500px',
+                    //'width' => '500px',
                 ]);
-
-                $this->items = [];
             }
 
         } else {
             $this->alert('error', __('site.selectWeek') . ' وكذلك ' . __('site.selectEduType'), [
+                'position' => 'center',
+                'timer' => 6000,
+                'toast' => true,
+                'text' => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => false,
+                'width' => '500px',
+            ]);
+        }
+    }
+
+    public function taskNullPlan()
+    {
+        $byWeek = $this->byWeek;
+        $byOffice = auth()->user()->office_id;
+
+        if ($byWeek) {
+
+            $events = Event::where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)->where('week_id', $byWeek)->pluck('task_id')->toArray();
+
+            $tasks_null_plan = Task::where('office_id', $byOffice ? $byOffice : auth()->user()->office_id)->whereNotIn('id' , array_values($events))->whereNotIn('level_id',[5])->get();
+
+            $chunks = $tasks_null_plan->chunk(3);
+
+            $tableRows = '';
+
+            foreach ($chunks as $chunk) {
+                $tableRow = '<tr>';
+                foreach ($chunk as $task) {
+                    $tableRow .= '<td style="border: 1px solid;text-align: center;">' . $task->name . '</td>';
+                }
+                $tableRow .= str_repeat('<td style="border: 1px solid;text-align: center;"></td>', 3 - count($chunk));
+                $tableRow .= '</tr>';
+                $tableRows .= $tableRow;
+            }
+
+            $table = '<table style="border-collapse: collapse;"><thead><tr><th colspan="3" style="border: 1px solid;text-align: center;background-color: #f2f2f2;">! مدارس لم تدرج في خطة هذا الاسبوع</th></tr></thead><tbody>' . $tableRows . '</tbody></table>';
+
+            $this->alert('warning', $table, [
+                'position' => 'center',
+                'timer' => null,
+                'toast' => true,
+                'text'  => null,
+                'showCancelButton' => false,
+                'showConfirmButton' => true,
+                'width' => '700px',
+            ]);
+
+        } else {
+            $this->alert('error', __('site.selectWeek'), [
                 'position' => 'center',
                 'timer' => 6000,
                 'toast' => true,

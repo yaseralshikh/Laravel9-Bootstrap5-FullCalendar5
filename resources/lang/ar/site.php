@@ -51,6 +51,7 @@ return [
     'eventForAllUsers' => 'جميع المشرفين',
     'action' => 'الإجراءات',
     'userWithoutPlan' => 'مشرفون بدون خطط',
+    'taskWithoutPlan' => 'مدارس لم تدرج في الخطة',
     'chooseFile' => 'حدد موقع الملف',
     'importExcel' => 'الإستيراد من Excel',
     'exportExcel' => 'التصدير إلى Excel',

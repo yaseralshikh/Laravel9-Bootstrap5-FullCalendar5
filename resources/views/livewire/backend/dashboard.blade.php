@@ -564,6 +564,7 @@
                     series: [{
                         name: 'خطط المشرفين',
                         data: count,
+                        color: '#95ceff',
                         format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                         useHTML: true,
                     }],
@@ -653,6 +654,7 @@
                             series: [{
                                 name: 'خطط المشرفين',
                                 data: count,
+                                color: '#95ceff',
                                 format: '\u202B' + '{point.name}', // \u202B is RLE char for RTL support
                                 useHTML: true,
                             }],

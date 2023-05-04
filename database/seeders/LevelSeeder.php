@@ -15,7 +15,7 @@ class LevelSeeder extends Seeder
      */
     public function run()
     {
-        $levels = ['ابتدائي' ,'متوسط' ,'ثانوي' , 'مجمع' , 'أخرى'];
+        $levels = ['ابتدائي' ,'متوسط' ,'ثانوي' , 'مجمع' , 'أخرى', 'التعليم المستمر', 'رياض الأطفال'];
 
         foreach ($levels as $level) {
             Level::create([

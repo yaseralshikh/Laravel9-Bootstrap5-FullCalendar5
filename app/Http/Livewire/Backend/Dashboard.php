@@ -181,7 +181,7 @@ class Dashboard extends Component
         $emptySchoolsPaginateValue = $this->emptySchoolsPaginateValue;
         $byLevel = $this->byLevel;
         $byOffice = $this->byOffice ? $this->byOffice : auth()->user()->office_id;
-        $bySemester = $this->bySemester  ? $this->bySemester : $this->semesterActive();
+        $bySemester = $this->bySemester ? $this->bySemester : $this->semesterActive();
 
         // for users plans
         $users = User::whereStatus(true)->whereNotIn('type', ['إداري'])->where('office_id', $byOffice)->with([

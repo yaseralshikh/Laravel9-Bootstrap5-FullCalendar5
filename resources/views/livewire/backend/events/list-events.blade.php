@@ -58,6 +58,8 @@
                             <div class="dropdown-menu" role="menu" style="">
                                 <a class="dropdown-item" wire:click.prevent="userNullPlan"
                                     href="#">@lang('site.userWithoutPlan')</a>
+                                <a class="dropdown-item" wire:click.prevent="taskNullPlan"
+                                    href="#">@lang('site.taskWithoutPlan')</a>
                                 <div class="dropdown-divider"></div>
                                 <a dir="rtl" class="dropdown-item" wire:click.prevent="exportExcel" href="#"
                                     aria-disabled="true">@lang('site.exportExcel')</a>

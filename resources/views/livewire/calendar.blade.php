@@ -169,7 +169,7 @@
                 <div class="modal-body">
                     <form wire:submit.prevent="update">
 
-                        <!-- Modal Create Levels -->
+                        <!-- Modal Edit Levels -->
                         <div class="form-group mb-3" wire:ignore.self>
                             <label for="level_id_edit" class="col-form-label">@lang('site.level') :</label>
                             <select wire:model.defer="level_id" wire:change="LevelOption($event.target.value)" id="level_id_edit"
@@ -223,6 +223,7 @@
                             <input type="hidden" wire:model.defer="end" class="form-control" id="end1">
                         </div>
 
+                        {{-- Action --}}
                         <div class="d-flex justify-content-between mt-5">
                             <div>
                                 <button type="button" class="btn btn-secondary" wire:click="resetErrorMsg"
@@ -382,6 +383,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
 
+            // Create Modal variables
             const createModalEl = document.getElementById('createModal');
 
             createModalEl.addEventListener('hidden.bs.modal', event => {
@@ -393,6 +395,7 @@
                 @this.end = '';
             });
 
+            // Edit Modal variables
             const editModalEl = document.getElementById('editModal');
 
             editModalEl.addEventListener('hidden.bs.modal', event => {
@@ -404,6 +407,7 @@
                 @this.end = '';
             });
 
+            // Calendar variables and methods
             const calendarEl = document.getElementById('calendar');
 
             if (calendarEl != null) {
@@ -432,6 +436,8 @@
                     selectable: false,
                     droppable: true, // this allows things to be dropped onto the calendar
                     editable: true,
+                    selectOverlap: false,
+                    eventOverlap:false,
 
                     eventContent: function(info) {
                         return {
@@ -458,11 +464,13 @@
                     // },
 
                     eventClick: function({event}) {
+                        console.log({event});
                         if (userID == event.extendedProps.user_id || userRole != 3) {
                             if (event.extendedProps.status && userRole == 3) {
                                 Swal.fire({
                                     title: 'تم اعتماد المهمة ، لا يمكن التعديل الا بعد فك الاعتماد من المكتب',
                                     timer: 2000,
+                                    timerProgressBar: true,
                                     icon: 'error',
                                     toast: true,
                                     showConfirmButton: false,
