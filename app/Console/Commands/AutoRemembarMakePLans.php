@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\RememberToMakePlans;
 use App\Models\User;
 use Illuminate\Console\Command;
-use App\Mail\RememberToMakePlans;
 use Illuminate\Support\Facades\Mail;
 
 class AutoRemembarMakePLans extends Command
@@ -31,7 +31,7 @@ class AutoRemembarMakePLans extends Command
     public function handle()
     {
 
-        $users = User::all();
+        $users = User::whereNotNull('email_verified_at')->get();
 
         if ($users->count() > 0) {
             foreach ($users as $user) {

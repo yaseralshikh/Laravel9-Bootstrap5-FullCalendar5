@@ -620,13 +620,31 @@ class ListEvents extends Component
         try {
 
             if ($selectedRows) {
+
                 if ($byWeek && $byEduType) {
-                    $users = User::where('status', true)->whereNotIn('type', ['إداري'])->where('office_id', $byOffice)->where('edu_type', $byEduType)->orderBy('name', 'asc')
-                        ->whereHas('events', function ($query) use ($byWeek) {
-                            $query->where('week_id', $byWeek)->where('status', true);
-                        })->with(['events' => function ($query) use ($byWeek, $selectedRows) {
-                        $query->with('task')->whereHas('task', function ($q) {$q->whereNotIn('name', ['إجازة']);})->whereIn('id', $selectedRows)->WhereNotNull('id')->where('week_id', $byWeek)->where('status', true)->orderBy('start', 'asc');
-                    }])->get();
+
+                    $users = User::where('status', true)
+                    ->whereNotIn('type', ['إداري'])
+                    ->where('office_id', $byOffice)
+                    ->where('edu_type', $byEduType)
+                    ->orderBy('name', 'asc')
+                    ->with(['events' => function ($query) use ($byWeek, $selectedRows) {
+                        $query->whereIn('id', $selectedRows)
+                            ->where('week_id', $byWeek)
+                            ->where('status', true)
+                            ->orderBy('start', 'asc');
+                    }])
+                    ->whereHas('events', function ($query) use ($byWeek, $selectedRows) {
+                        $query->whereIn('id', $selectedRows)
+                            ->where('week_id', $byWeek)
+                            ->where('status', true)
+                            ->orderBy('start', 'asc')
+                            ->whereHas('task', function ($q) {
+                                $q->whereNotIn('name', ['إجازة']);
+                            });
+                    })
+                    ->get();
+
 
                     if ($users->count() != null) {
                         $subtasks = Subtask::where('status', 1)->where('office_id', $byOffice)->where('edu_type', $byEduType)->orderBy('position', 'asc')->get();
