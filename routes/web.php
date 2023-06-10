@@ -7,6 +7,7 @@ use App\Http\Livewire\Backend\Dashboard;
 //use App\Http\Livewire\Backend\LogViewer;
 use App\Http\Livewire\Backend\Tasks\Tasks;
 use App\Http\Livewire\Backend\Weeks\Weeks;
+use App\Http\Controllers\ContactController;
 use App\Http\Livewire\Backend\Levels\Levels;
 use App\Http\Livewire\Backend\Offices\Office;
 use App\Http\Livewire\Backend\Subtask\Subtask;
@@ -60,4 +61,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware' => ['auth', 'ro
     Route::get('jobs_type', JobsType::class )->name('jobs_type');
     Route::get('/logs', [LogViewerController::class, 'index'])->name('log-viewer');
 });
+
+Route::post('/contact', [ContactController::class, 'sendEmail'])->name('contact.send');
 
